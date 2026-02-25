@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, Save, Loader2, Link as LinkIcon, FileText, CheckCircle2 } from "lucide-react";
+import { LogOut, Save, Loader2, Link as LinkIcon, FileText, CheckCircle2, ArrowLeft } from "lucide-react";
 
 export default function TeamDashboard() {
     const [teamId, setTeamId] = useState<string | null>(null);
@@ -100,16 +100,16 @@ export default function TeamDashboard() {
             <header className="flex items-center justify-between mb-8 pb-6 border-b border-[var(--border)]">
                 <div>
                     <h1 className="text-2xl md:text-3xl font-display font-bold text-white mb-1">
-                        <span className="text-[#FF9D00]">{teamName}</span> Portal
+                        <span className="text-[#FF9D00]">{teamName}</span> Портал
                     </h1>
-                    <p className="text-slate-400 text-sm">Update your project submission for the jury.</p>
+                    <p className="text-slate-400 text-sm">Обновете подаването на проекта си за журито.</p>
                 </div>
                 <button
                     onClick={handleLogout}
                     className="flex items-center space-x-2 text-slate-400 hover:text-white px-4 py-2 rounded-full hover:bg-slate-800/50 transition-colors"
                 >
                     <LogOut className="w-4 h-4" />
-                    <span className="hidden sm:inline text-sm font-medium">Log Out</span>
+                    <span className="hidden sm:inline text-sm font-medium">Изход</span>
                 </button>
             </header>
 
@@ -135,12 +135,12 @@ export default function TeamDashboard() {
                         <div className="space-y-3">
                             <label className="text-sm font-bold text-slate-300 ml-1 block flex items-center gap-2">
                                 <FileText className="w-4 h-4 text-[#FF9D00]" />
-                                Idea Description (Elevator Pitch)
+                                Описание на идеята (Elevator Pitch)
                             </label>
                             <textarea
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                placeholder="In one paragraph, describe your hacking solution, the problem it solves, and its unique value..."
+                                placeholder="В един параграф опишете вашето решение, проблема, който решава, и уникалната му стойност..."
                                 rows={5}
                                 className="w-full p-4 bg-slate-900/50 border border-slate-700 rounded-2xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#FF9D00] focus:border-transparent transition-all"
                                 required
@@ -150,7 +150,7 @@ export default function TeamDashboard() {
                         <div className="space-y-3">
                             <label className="text-sm font-bold text-slate-300 ml-1 block flex items-center gap-2">
                                 <LinkIcon className="w-4 h-4 text-[#FF9D00]" />
-                                Project URL (GitHub, Figma, Vercel, Live Site)
+                                URL на проекта (GitHub, Figma, Vercel, Сайт)
                             </label>
                             <input
                                 type="url"
@@ -164,7 +164,7 @@ export default function TeamDashboard() {
                         <div className="space-y-3">
                             <label className="text-sm font-bold text-slate-300 ml-1 block flex items-center gap-2">
                                 <LinkIcon className="w-4 h-4 text-[#FF9D00]" />
-                                Presentation URL (Google Slides, Canva)
+                                URL на презентацията (Google Slides, Canva)
                             </label>
                             <input
                                 type="url"
@@ -184,12 +184,12 @@ export default function TeamDashboard() {
                         {isSaving ? (
                             <>
                                 <Loader2 className="w-5 h-5 animate-spin" />
-                                <span>Saving Profile...</span>
+                                <span>Запазва се...</span>
                             </>
                         ) : (
                             <>
                                 <Save className="w-5 h-5" />
-                                <span>Save Project Submission</span>
+                                <span>Запази подаването на проекта</span>
                             </>
                         )}
                     </button>

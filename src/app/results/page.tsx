@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Trophy, RefreshCw, AlertCircle, MessageSquare } from "lucide-react";
+import { Trophy, RefreshCw, AlertCircle, MessageSquare, ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type JuryBreakdown = {
     jury_name: string;
@@ -21,6 +22,7 @@ export default function ResultsPage() {
     const [data, setData] = useState<LeaderboardRow[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
 
     const fetchResults = async () => {
         try {
@@ -47,16 +49,19 @@ export default function ResultsPage() {
 
     return (
         <div className="animate-in fade-in duration-500 max-w-4xl mx-auto">
+            <div className="flex items-center gap-3 mb-6">
+                <button onClick={() => router.push("/")} className="flex items-center gap-2 text-slate-400 hover:text-white text-sm transition-colors">
+                    <ArrowLeft className="w-4 h-4" /> Начало
+                </button>
+            </div>
             <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 pb-6 border-b border-[var(--border)] gap-4">
                 <div className="flex items-center space-x-4">
                     <div className="w-14 h-14 rounded-3xl bg-[#C4FF00] flex items-center justify-center shadow-[0_0_20px_rgba(196,255,0,0.3)]">
                         <Trophy className="text-[#0A1128] w-7 h-7" />
                     </div>
                     <div>
-                        <h1 className="text-3xl font-display font-bold text-white mb-1">
-                            Live Results
-                        </h1>
-                        <p className="text-slate-400 text-sm">Real-time hackathon leaderboard</p>
+                        <h1 className="text-3xl font-display font-bold text-white mb-1">Класация На Живо</h1>
+                        <p className="text-slate-400 text-sm">Класация на хакатона в реално време</p>
                     </div>
                 </div>
                 <button
@@ -65,7 +70,7 @@ export default function ResultsPage() {
                     className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-[#C4FF00] px-4 py-2 rounded-full transition-colors shrink-0 disabled:opacity-50"
                 >
                     <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-                    <span className="text-sm font-medium">Refresh</span>
+                    <span className="text-sm font-medium">Обнови</span>
                 </button>
             </header>
 
@@ -73,7 +78,7 @@ export default function ResultsPage() {
                 <div className="mb-8 p-4 bg-red-500/10 border border-red-500/50 rounded-xl flex items-start space-x-3">
                     <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
                     <div>
-                        <h3 className="text-red-500 font-medium">Error loading leaderboard</h3>
+                        <h3 className="text-red-500 font-medium">Грешка при зареждане на класацията</h3>
                         <p className="text-red-400/80 text-sm mt-1">{error}</p>
                     </div>
                 </div>
@@ -86,8 +91,8 @@ export default function ResultsPage() {
             ) : data.length === 0 && !error ? (
                 <div className="glass p-12 rounded-3xl text-center">
                     <Trophy className="w-16 h-16 text-slate-700 mx-auto mb-4" />
-                    <h2 className="text-xl font-medium text-white mb-2">No Evaluations Yet</h2>
-                    <p className="text-slate-400">Scores will appear here once juries begin submitting.</p>
+                    <h2 className="text-xl font-medium text-white mb-2">Все още няма оценки</h2>
+                    <p className="text-slate-400">Резултатите ще се появят тук след като журито започне да подава оценки.</p>
                 </div>
             ) : (
                 <div className="space-y-4">
@@ -118,9 +123,9 @@ export default function ResultsPage() {
                                         </h3>
                                         <p className="text-sm text-slate-400 flex items-center mt-1">
                                             <span className="bg-[#C4FF00]/20 text-[#C4FF00] px-2 py-0.5 rounded text-xs mr-2 border border-[#C4FF00]/20 font-bold">
-                                                {row.evaluations_count} Juries
+                                                {row.evaluations_count} Журита
                                             </span>
-                                            evaluated this team
+                                            оцениха отбора
                                         </p>
                                     </div>
                                 </div>
@@ -141,7 +146,7 @@ export default function ResultsPage() {
                                 <div className="mt-6 pt-6 border-t border-slate-700/50">
                                     <h4 className="text-sm font-semibold text-slate-300 flex items-center mb-4">
                                         <MessageSquare className="w-4 h-4 mr-2 text-[#C4FF00]" />
-                                        Jury Feedback
+                                        Обратна връзка от журито
                                     </h4>
                                     <div className="grid gap-3 sm:grid-cols-2">
                                         {row.jury_breakdown.filter(j => j.comments && j.comments.trim() !== '').map((jury, jIdx) => (

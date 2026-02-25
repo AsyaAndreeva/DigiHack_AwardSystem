@@ -1,92 +1,109 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { JURY_MEMBERS } from "../constants/teams";
-import { User, ArrowRight, Code } from "lucide-react";
+import { Trophy, Users, Shield, BarChart3, ArrowRight } from "lucide-react";
 
-export default function Home() {
-    const [selectedJury, setSelectedJury] = useState<string>("");
-    const [isMounted, setIsMounted] = useState(false);
+const portals = [
+    {
+        href: "/jury",
+        icon: Shield,
+        title: "Портал на Журито",
+        subtitle: "Вход за членове на журито",
+        color: "volt",
+        border: "border-[#C4FF00]/30 hover:border-[#C4FF00]",
+        iconBg: "bg-[#C4FF00]",
+        iconColor: "text-[#0A1128]",
+        glow: "hover:shadow-[0_0_30px_rgba(196,255,0,0.15)]",
+        badge: "Жури",
+        badgeClass: "bg-[#C4FF00]/10 text-[#C4FF00] border-[#C4FF00]/20",
+    },
+    {
+        href: "/team",
+        icon: Users,
+        title: "Портал на Отборите",
+        subtitle: "Вход за участващи отбори",
+        color: "orange",
+        border: "border-[#FF9D00]/30 hover:border-[#FF9D00]",
+        iconBg: "bg-[#FF9D00]",
+        iconColor: "text-[#0A1128]",
+        glow: "hover:shadow-[0_0_30px_rgba(255,157,0,0.15)]",
+        badge: "Отбор",
+        badgeClass: "bg-[#FF9D00]/10 text-[#FF9D00] border-[#FF9D00]/20",
+    },
+    {
+        href: "/results",
+        icon: BarChart3,
+        title: "Резултати На Живо",
+        subtitle: "Класация в реално време",
+        color: "gold",
+        border: "border-yellow-400/30 hover:border-yellow-400",
+        iconBg: "bg-yellow-400",
+        iconColor: "text-[#0A1128]",
+        glow: "hover:shadow-[0_0_30px_rgba(250,204,21,0.15)]",
+        badge: "Публично",
+        badgeClass: "bg-yellow-400/10 text-yellow-400 border-yellow-400/20",
+    },
+    {
+        href: "/admin",
+        icon: Trophy,
+        title: "Администратор",
+        subtitle: "Управление на системата",
+        color: "slate",
+        border: "border-slate-600/30 hover:border-slate-500",
+        iconBg: "bg-slate-700",
+        iconColor: "text-slate-300",
+        glow: "hover:shadow-[0_0_30px_rgba(100,116,139,0.15)]",
+        badge: "Защитено",
+        badgeClass: "bg-slate-700/50 text-slate-400 border-slate-600/30",
+    },
+];
+
+export default function HubPage() {
     const router = useRouter();
 
-    // Prevent hydration mismatch
-    useEffect(() => {
-        setIsMounted(true);
-        const existing = localStorage.getItem("juryName");
-        if (existing) {
-            router.push("/dashboard");
-        }
-    }, [router]);
-
-    if (!isMounted) return null;
-
-    const handleLogin = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!selectedJury) return;
-
-        // Find the name mapped to that ID just to keep it clean, or just save ID
-        const juryName = JURY_MEMBERS.find(j => j.id === selectedJury)?.name || selectedJury;
-        localStorage.setItem("juryName", juryName);
-        router.push("/dashboard");
-    };
-
     return (
-        <div className="flex flex-col items-center justify-center min-h-[80vh] px-4">
-            <div className="mb-10 flex flex-col items-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <div className="w-16 h-16 rounded-3xl bg-brand-500 flex items-center justify-center shadow-[0_0_30px_rgba(196,255,0,0.3)]">
-                    <Code className="text-[#0A1128] w-8 h-8" />
+        <div className="animate-in fade-in duration-500 flex flex-col items-center justify-center min-h-[80vh] py-8 px-4">
+            {/* Header */}
+            <div className="text-center mb-12">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-[#C4FF00] shadow-[0_0_40px_rgba(196,255,0,0.3)] mb-6">
+                    <Trophy className="w-10 h-10 text-[#0A1128]" />
                 </div>
-                <h1 className="text-4xl md:text-5xl font-display font-bold text-center tracking-tight text-white mb-2">
-                    <span className="text-brand-500">DigiHack</span> 2.0
+                <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-3">
+                    DigiHack <span className="text-[#C4FF00]">2.0</span>
                 </h1>
-                <p className="text-slate-400 text-center max-w-sm">
-                    Select your jury profile to begin evaluating the participating teams.
+                <p className="text-slate-400 text-lg max-w-sm mx-auto">
+                    Платформа за оценяване на хакатон проекти
                 </p>
             </div>
 
-            <div className="w-full max-w-md p-8 rounded-3xl glass animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150 fill-mode-both">
-                <form onSubmit={handleLogin} className="space-y-6">
-                    <div className="space-y-3">
-                        <label className="text-sm font-medium text-slate-300 ml-1 block">
-                            Jury Identity
-                        </label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <User className="h-5 w-5 text-slate-400" />
+            {/* Portal Cards Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full max-w-2xl">
+                {portals.map((p) => {
+                    const Icon = p.icon;
+                    return (
+                        <button
+                            key={p.href}
+                            onClick={() => router.push(p.href)}
+                            className={`glass p-6 rounded-3xl border ${p.border} ${p.glow} transition-all duration-300 text-left group active:scale-[0.98]`}
+                        >
+                            <div className="flex items-start justify-between mb-5">
+                                <div className={`w-12 h-12 rounded-2xl ${p.iconBg} flex items-center justify-center`}>
+                                    <Icon className={`w-6 h-6 ${p.iconColor}`} />
+                                </div>
+                                <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${p.badgeClass}`}>
+                                    {p.badge}
+                                </span>
                             </div>
-                            <select
-                                value={selectedJury}
-                                onChange={(e) => setSelectedJury(e.target.value)}
-                                className="w-full pl-11 pr-10 py-4 bg-slate-900/50 border border-slate-700 rounded-xl appearance-none text-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
-                                required
-                            >
-                                <option value="" disabled className="bg-slate-900 text-slate-500">
-                                    Select your profile...
-                                </option>
-                                {JURY_MEMBERS.map((jury) => (
-                                    <option key={jury.id} value={jury.id} className="bg-slate-900 text-white">
-                                        {jury.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                                <svg className="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                                </svg>
+                            <div className="flex items-end justify-between">
+                                <div>
+                                    <h2 className="text-lg font-bold text-white mb-1">{p.title}</h2>
+                                    <p className="text-sm text-slate-400">{p.subtitle}</p>
+                                </div>
+                                <ArrowRight className="w-5 h-5 text-slate-600 group-hover:text-slate-400 group-hover:translate-x-1 transition-all shrink-0 ml-3" />
                             </div>
-                        </div>
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={!selectedJury}
-                        className="w-full flex items-center justify-center space-x-2 py-4 px-8 bg-brand-500 hover:bg-brand-400 disabled:opacity-50 disabled:cursor-not-allowed text-[#0A1128] rounded-full font-bold transition-all duration-300 shadow-[0_0_20px_rgba(196,255,0,0.2)] hover:shadow-[0_0_30px_rgba(196,255,0,0.4)] hover:scale-[1.02] active:scale-[0.98] group"
-                    >
-                        <span>Enter Dashboard</span>
-                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                </form>
+                        </button>
+                    );
+                })}
             </div>
         </div>
     );
