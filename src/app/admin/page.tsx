@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
     Shield, Users, BookOpen, Plus, Trash2, Loader2,
-    LogOut, ArrowLeft, Check, Edit2, X, Copy
+    LogOut, ArrowLeft, Check, Edit2, X, Copy, RefreshCw
 } from "lucide-react";
 
 const ADMIN_CODE = process.env.NEXT_PUBLIC_ADMIN_CODE || "digihack2026";
@@ -40,6 +40,34 @@ export default function AdminPage() {
     const [saving, setSaving] = useState(false);
     const [feedback, setFeedback] = useState<{ msg: string; ok: boolean } | null>(null);
     const [copiedId, setCopiedId] = useState<string | null>(null);
+
+    // Passcode inline edit
+    const [editPasscodeId, setEditPasscodeId] = useState<string | null>(null);
+    const [editPasscodeValue, setEditPasscodeValue] = useState("");
+    const [savingPasscode, setSavingPasscode] = useState(false);
+
+    const startEditPasscode = (id: string, current: string) => {
+        setEditPasscodeId(id);
+        setEditPasscodeValue(current);
+    };
+
+    const updatePasscode = async (type: "teams" | "jury", id: string, passcode?: string) => {
+        setSavingPasscode(true);
+        const res = await fetch(`/api/admin/${type}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id, passcode: passcode ?? "" }),
+        });
+        const d = await res.json();
+        setSavingPasscode(false);
+        if (d.success) {
+            const newCode: string = d.passcode;
+            if (type === "teams") setTeams(p => p.map(t => t.id === id ? { ...t, passcode: newCode } : t));
+            else setJury(p => p.map(m => m.id === id ? { ...m, passcode: newCode } : m));
+            setEditPasscodeId(null);
+            showFeedback(`Паролата е сменена: ${newCode}`, true);
+        } else showFeedback(d.error || "Грешка", false);
+    };
 
     const copyPasscode = (id: string, code: string) => {
         navigator.clipboard.writeText(code).then(() => {
@@ -301,15 +329,43 @@ export default function AdminPage() {
                                         <div key={t.id} className="glass p-4 rounded-2xl flex items-center justify-between gap-3">
                                             <span className="text-white font-medium truncate">{t.name}</span>
                                             <div className="flex items-center gap-2 shrink-0">
-                                                {t.passcode && (
-                                                    <button
-                                                        onClick={() => copyPasscode(t.id, t.passcode!)}
-                                                        className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-xl text-xs font-mono text-[#C4FF00] transition-colors"
-                                                        title="Копирай паролата"
-                                                    >
-                                                        {copiedId === t.id ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                                                        {t.passcode}
-                                                    </button>
+                                                {editPasscodeId === t.id ? (
+                                                    <div className="flex items-center gap-1.5">
+                                                        <input
+                                                            autoFocus
+                                                            value={editPasscodeValue}
+                                                            onChange={e => setEditPasscodeValue(e.target.value.toUpperCase())}
+                                                            onKeyDown={e => { if (e.key === "Enter") updatePasscode("teams", t.id, editPasscodeValue); if (e.key === "Escape") setEditPasscodeId(null); }}
+                                                            placeholder="нова парола..."
+                                                            maxLength={12}
+                                                            className="w-28 p-1.5 bg-slate-900 border border-[#C4FF00]/40 rounded-xl text-xs font-mono text-[#C4FF00] text-center focus:outline-none focus:ring-1 focus:ring-[#C4FF00]"
+                                                        />
+                                                        <button onClick={() => updatePasscode("teams", t.id, editPasscodeValue)} disabled={savingPasscode} className="p-1.5 bg-[#C4FF00] hover:bg-[#a1d600] text-[#0A1128] rounded-lg transition-colors" title="Запази">
+                                                            {savingPasscode ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
+                                                        </button>
+                                                        <button onClick={() => updatePasscode("teams", t.id, "")} disabled={savingPasscode} className="p-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors" title="Генерирай нова">
+                                                            <RefreshCw className="w-3 h-3" />
+                                                        </button>
+                                                        <button onClick={() => setEditPasscodeId(null)} className="p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors">
+                                                            <X className="w-3 h-3" />
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    t.passcode && (
+                                                        <div className="flex items-center gap-1">
+                                                            <button
+                                                                onClick={() => copyPasscode(t.id, t.passcode!)}
+                                                                className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-xl text-xs font-mono text-[#C4FF00] transition-colors"
+                                                                title="Копирай паролата"
+                                                            >
+                                                                {copiedId === t.id ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                                                                {t.passcode}
+                                                            </button>
+                                                            <button onClick={() => startEditPasscode(t.id, t.passcode!)} className="p-1.5 text-slate-500 hover:text-[#C4FF00] hover:bg-[#C4FF00]/10 rounded-xl transition-colors" title="Промени паролата">
+                                                                <Edit2 className="w-3 h-3" />
+                                                            </button>
+                                                        </div>
+                                                    )
                                                 )}
                                                 <button onClick={() => deleteTeam(t.id)} className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors">
                                                     <Trash2 className="w-4 h-4" />
@@ -348,15 +404,43 @@ export default function AdminPage() {
                                         <div key={m.id} className="glass p-4 rounded-2xl flex items-center justify-between gap-3">
                                             <span className="text-white font-medium truncate">{m.name}</span>
                                             <div className="flex items-center gap-2 shrink-0">
-                                                {m.passcode && (
-                                                    <button
-                                                        onClick={() => copyPasscode(m.id, m.passcode!)}
-                                                        className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-xl text-xs font-mono text-[#C4FF00] transition-colors"
-                                                        title="Копирай паролата"
-                                                    >
-                                                        {copiedId === m.id ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                                                        {m.passcode}
-                                                    </button>
+                                                {editPasscodeId === m.id ? (
+                                                    <div className="flex items-center gap-1.5">
+                                                        <input
+                                                            autoFocus
+                                                            value={editPasscodeValue}
+                                                            onChange={e => setEditPasscodeValue(e.target.value.toUpperCase())}
+                                                            onKeyDown={e => { if (e.key === "Enter") updatePasscode("jury", m.id, editPasscodeValue); if (e.key === "Escape") setEditPasscodeId(null); }}
+                                                            placeholder="нова парола..."
+                                                            maxLength={12}
+                                                            className="w-28 p-1.5 bg-slate-900 border border-[#C4FF00]/40 rounded-xl text-xs font-mono text-[#C4FF00] text-center focus:outline-none focus:ring-1 focus:ring-[#C4FF00]"
+                                                        />
+                                                        <button onClick={() => updatePasscode("jury", m.id, editPasscodeValue)} disabled={savingPasscode} className="p-1.5 bg-[#C4FF00] hover:bg-[#a1d600] text-[#0A1128] rounded-lg transition-colors" title="Запази">
+                                                            {savingPasscode ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
+                                                        </button>
+                                                        <button onClick={() => updatePasscode("jury", m.id, "")} disabled={savingPasscode} className="p-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors" title="Генерирай нова">
+                                                            <RefreshCw className="w-3 h-3" />
+                                                        </button>
+                                                        <button onClick={() => setEditPasscodeId(null)} className="p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors">
+                                                            <X className="w-3 h-3" />
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    m.passcode && (
+                                                        <div className="flex items-center gap-1">
+                                                            <button
+                                                                onClick={() => copyPasscode(m.id, m.passcode!)}
+                                                                className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-xl text-xs font-mono text-[#C4FF00] transition-colors"
+                                                                title="Копирай паролата"
+                                                            >
+                                                                {copiedId === m.id ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                                                                {m.passcode}
+                                                            </button>
+                                                            <button onClick={() => startEditPasscode(m.id, m.passcode!)} className="p-1.5 text-slate-500 hover:text-[#C4FF00] hover:bg-[#C4FF00]/10 rounded-xl transition-colors" title="Промени паролата">
+                                                                <Edit2 className="w-3 h-3" />
+                                                            </button>
+                                                        </div>
+                                                    )
                                                 )}
                                                 <button onClick={() => deleteJury(m.id)} className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors">
                                                     <Trash2 className="w-4 h-4" />

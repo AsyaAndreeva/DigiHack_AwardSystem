@@ -25,6 +25,19 @@ export async function POST(req: Request) {
   }
 }
 
+export async function PATCH(req: Request) {
+  try {
+    const sql = getDb();
+    const { id, passcode } = await req.json();
+    if (!id) return NextResponse.json({ error: 'Липсва ID.' }, { status: 400 });
+    const newPasscode = passcode?.trim() || genPasscode();
+    await sql`UPDATE jury_members SET passcode = ${newPasscode} WHERE id = ${id}`;
+    return NextResponse.json({ success: true, passcode: newPasscode });
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message }, { status: 500 });
+  }
+}
+
 export async function DELETE(req: Request) {
   try {
     const sql = getDb();
