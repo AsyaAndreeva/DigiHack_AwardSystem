@@ -49,8 +49,8 @@ export default function ResultsPage() {
         <div className="animate-in fade-in duration-500 max-w-4xl mx-auto">
             <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 pb-6 border-b border-[var(--border)] gap-4">
                 <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-emerald-500 flex items-center justify-center shadow-lg">
-                        <Trophy className="text-white w-6 h-6" />
+                    <div className="w-14 h-14 rounded-3xl bg-[#C4FF00] flex items-center justify-center shadow-[0_0_20px_rgba(196,255,0,0.3)]">
+                        <Trophy className="text-[#0A1128] w-7 h-7" />
                     </div>
                     <div>
                         <h1 className="text-3xl font-display font-bold text-white mb-1">
@@ -62,7 +62,7 @@ export default function ResultsPage() {
                 <button
                     onClick={fetchResults}
                     disabled={loading}
-                    className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-xl transition-colors shrink-0 disabled:opacity-50"
+                    className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-[#C4FF00] px-4 py-2 rounded-full transition-colors shrink-0 disabled:opacity-50"
                 >
                     <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
                     <span className="text-sm font-medium">Refresh</span>
@@ -81,7 +81,7 @@ export default function ResultsPage() {
 
             {loading && !data.length ? (
                 <div className="flex justify-center items-center py-20">
-                    <div className="w-8 h-8 rounded-full border-t-2 border-brand-500 animate-spin"></div>
+                    <div className="w-8 h-8 rounded-full border-t-2 border-[#C4FF00] animate-spin"></div>
                 </div>
             ) : data.length === 0 && !error ? (
                 <div className="glass p-12 rounded-3xl text-center">
@@ -113,11 +113,11 @@ export default function ResultsPage() {
                                         {index + 1}
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-bold text-white group-hover:text-brand-300 transition-colors">
+                                        <h3 className="text-xl font-bold text-white group-hover:text-[#C4FF00] transition-colors">
                                             {row.team_name}
                                         </h3>
                                         <p className="text-sm text-slate-400 flex items-center mt-1">
-                                            <span className="bg-brand-500/20 text-brand-300 px-2 py-0.5 rounded text-xs mr-2 border border-brand-500/20">
+                                            <span className="bg-[#C4FF00]/20 text-[#C4FF00] px-2 py-0.5 rounded text-xs mr-2 border border-[#C4FF00]/20 font-bold">
                                                 {row.evaluations_count} Juries
                                             </span>
                                             evaluated this team
@@ -140,15 +140,15 @@ export default function ResultsPage() {
                             {row.jury_breakdown.some(j => j.comments && j.comments.trim() !== '') && (
                                 <div className="mt-6 pt-6 border-t border-slate-700/50">
                                     <h4 className="text-sm font-semibold text-slate-300 flex items-center mb-4">
-                                        <MessageSquare className="w-4 h-4 mr-2 text-brand-400" />
+                                        <MessageSquare className="w-4 h-4 mr-2 text-[#C4FF00]" />
                                         Jury Feedback
                                     </h4>
                                     <div className="grid gap-3 sm:grid-cols-2">
                                         {row.jury_breakdown.filter(j => j.comments && j.comments.trim() !== '').map((jury, jIdx) => (
                                             <div key={jIdx} className="bg-slate-900/40 p-4 rounded-xl border border-slate-700/30">
                                                 <div className="flex justify-between items-center mb-2">
-                                                    <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">{jury.jury_name}</span>
-                                                    <span className="text-xs text-slate-500 font-medium">Scored: {jury.total_score}</span>
+                                                    <span className="text-xs font-bold text-[#FF9D00] bg-[#FF9D00]/10 px-2 py-1 rounded border border-[#FF9D00]/20">{jury.jury_name}</span>
+                                                    <span className="text-xs text-slate-500 font-bold">Scored: <span className="text-white">{jury.total_score}</span></span>
                                                 </div>
                                                 <p className="text-sm text-slate-300 italic whitespace-pre-wrap leading-relaxed">
                                                     "{jury.comments}"

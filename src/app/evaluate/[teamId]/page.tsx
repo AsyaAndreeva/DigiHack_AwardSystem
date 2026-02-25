@@ -141,7 +141,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
 
             {/* Team Profile Overview Card */}
             {teamProfile && (
-                <div className="mb-10 glass p-6 rounded-2xl border-l-4 border-l-brand-500 shadow-xl w-full">
+                <div className="mb-10 glass p-6 rounded-3xl border-l-4 border-l-[#C4FF00] shadow-xl w-full">
                     <h2 className="text-xl font-display font-bold text-white mb-3">Project Overview</h2>
 
                     {teamProfile.description && (
@@ -158,7 +158,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                 href={teamProfile.project_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-brand-300 hover:text-brand-200 px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+                                className="flex items-center space-x-2 bg-[#C4FF00]/10 hover:bg-[#C4FF00]/20 text-[#C4FF00] px-4 py-2 rounded-full text-sm font-bold transition-colors"
                             >
                                 <FileText className="w-4 h-4" />
                                 <span>View Project</span>
@@ -171,7 +171,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                 href={teamProfile.presentation_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-emerald-400 hover:text-emerald-300 px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+                                className="flex items-center space-x-2 bg-[#FF9D00]/10 hover:bg-[#FF9D00]/20 text-[#FF9D00] px-4 py-2 rounded-full text-sm font-bold transition-colors"
                             >
                                 <FileVideo className="w-4 h-4" />
                                 <span>Pitch Deck</span>
@@ -223,16 +223,16 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                                     key={`${criterion.id}-${scoreDef.value}`}
                                                     onClick={() => handleScoreChange(criterion.id, scoreDef.value)}
                                                     className={`
-                            relative text-left p-4 rounded-xl border transition-all duration-200
+                            relative text-left p-4 rounded-2xl border transition-all duration-200
                             ${isSelected
-                                                            ? "bg-brand-600/20 border-brand-500 text-white shadow-[0_0_15px_rgba(101,123,242,0.15)] transform scale-[1.02]"
+                                                            ? "bg-[#C4FF00]/10 border-[#C4FF00] text-white shadow-[0_0_15px_rgba(196,255,0,0.15)] transform scale-[1.02]"
                                                             : "bg-slate-900/50 border-slate-700/50 text-slate-400 hover:bg-slate-800 hover:border-slate-600 hover:text-slate-200"
                                                         }
                           `}
                                                 >
                                                     {isSelected && (
                                                         <div className="absolute top-2 right-2">
-                                                            <CheckCircle2 className="w-4 h-4 text-brand-400" />
+                                                            <CheckCircle2 className="w-4 h-4 text-[#C4FF00]" />
                                                         </div>
                                                     )}
                                                     <div className="text-2xl font-display font-bold mb-1 opacity-90">
@@ -281,10 +281,10 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                         onClick={handleSubmit}
                         disabled={isSubmitting}
                         className={`
-              flex-1 max-w-sm flex items-center justify-center space-x-2 py-3 px-6 rounded-xl font-medium transition-all
+              flex-1 max-w-sm flex items-center justify-center space-x-2 py-4 px-6 rounded-full font-bold transition-all
               ${isSubmitting
                                 ? "bg-slate-800 text-slate-500 cursor-not-allowed"
-                                : "bg-brand-600 hover:bg-brand-500 text-white shadow-lg shadow-brand-500/25 active:scale-95"
+                                : "bg-[#C4FF00] hover:bg-[#a1d600] text-[#0A1128] shadow-[0_0_20px_rgba(196,255,0,0.2)] active:scale-95"
                             }
             `}
                     >

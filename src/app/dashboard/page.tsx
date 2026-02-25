@@ -53,7 +53,7 @@ export default function Dashboard() {
             <header className="flex items-center justify-between mb-8 pb-6 border-b border-[var(--border)]">
                 <div>
                     <h1 className="text-2xl md:text-3xl font-display font-bold text-white mb-1">
-                        Welcome, <span className="text-brand-400">{juryName}</span>
+                        Welcome, <span className="text-brand-500">{juryName}</span>
                     </h1>
                     <p className="text-slate-400 text-sm">Hackathon Evaluation Dashboard</p>
                 </div>
@@ -68,12 +68,12 @@ export default function Dashboard() {
 
             {/* Progress Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                <div className="glass rounded-2xl p-6 flex flex-col">
+                <div className="glass rounded-3xl p-6 flex flex-col">
                     <div className="flex items-center space-x-3 mb-4">
-                        <div className="w-10 h-10 rounded-xl bg-brand-500/20 flex items-center justify-center text-brand-400">
-                            <Activity className="w-5 h-5" />
+                        <div className="w-12 h-12 rounded-2xl bg-brand-500/20 flex items-center justify-center text-brand-500 shadow-[0_0_15px_rgba(196,255,0,0.15)]">
+                            <Activity className="w-6 h-6" />
                         </div>
-                        <h2 className="text-lg font-medium text-white">Your Progress</h2>
+                        <h2 className="text-lg font-bold text-white">Your Progress</h2>
                     </div>
                     <div className="flex-1 flex flex-col justify-end">
                         <div className="flex justify-between text-sm mb-2 text-slate-300">
@@ -91,14 +91,14 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                <div className="glass rounded-2xl p-6 flex flex-col justify-center border-emerald-500/20">
+                <div className="glass rounded-3xl p-6 flex flex-col justify-center border-slate-700/30">
                     <div className="flex items-center space-x-3 mb-1">
-                        <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400">
-                            <Users className="w-5 h-5" />
+                        <div className="w-12 h-12 rounded-2xl bg-[#FF9D00]/20 flex items-center justify-center text-[#FF9D00] shadow-[0_0_15px_rgba(255,157,0,0.15)]">
+                            <Users className="w-6 h-6" />
                         </div>
-                        <h2 className="text-lg font-medium text-white">Teams</h2>
+                        <h2 className="text-lg font-bold text-white">Teams</h2>
                     </div>
-                    <p className="text-3xl font-display font-bold text-white mt-2">
+                    <p className="text-4xl font-display font-bold text-white mt-2">
                         {completedCount} <span className="text-xl text-slate-500 font-normal">/ {totalCount}</span>
                     </p>
                 </div>
@@ -123,15 +123,15 @@ export default function Dashboard() {
                                 }`}
                         >
                             <div className="flex items-center space-x-4">
-                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-display font-bold text-lg ${isEvaluated ? "bg-slate-700/50 text-slate-400" : "bg-brand-500/20 text-brand-400"
+                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-display font-bold text-xl transition-all ${isEvaluated ? "bg-slate-800 text-slate-500" : "bg-brand-500/20 text-brand-500 group-hover:bg-brand-500 group-hover:text-[#0A1128]"
                                     }`}>
                                     {index + 1}
                                 </div>
                                 <div>
-                                    <h3 className={`font-medium text-lg ${isEvaluated ? "text-slate-300" : "text-white"}`}>
+                                    <h3 className={`font-bold text-xl ${isEvaluated ? "text-slate-400" : "text-white"}`}>
                                         {team.name}
                                     </h3>
-                                    <p className="text-sm text-slate-500">
+                                    <p className={`text-sm ${isEvaluated ? "text-slate-600" : "text-slate-400"}`}>
                                         {isEvaluated ? "Evaluation Submitted" : "Pending Evaluation"}
                                     </p>
                                 </div>
@@ -139,10 +139,10 @@ export default function Dashboard() {
 
                             <div className="flex items-center space-x-3">
                                 {isEvaluated ? (
-                                    <CheckCircle2 className="w-6 h-6 text-emerald-500" />
+                                    <CheckCircle2 className="w-8 h-8 text-[#FF5733] opacity-80" />
                                 ) : (
-                                    <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-brand-500 group-hover:text-white transition-colors text-slate-400">
-                                        <ChevronRight className="w-5 h-5" />
+                                    <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#C4FF00] group-hover:text-[#0A1128] transition-colors text-slate-400 shadow-sm">
+                                        <ChevronRight className="w-6 h-6" />
                                     </div>
                                 )}
                             </div>

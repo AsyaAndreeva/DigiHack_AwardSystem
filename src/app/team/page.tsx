@@ -35,11 +35,11 @@ export default function TeamLogin() {
     return (
         <div className="flex flex-col items-center justify-center min-h-[80vh] px-4">
             <div className="mb-10 flex flex-col items-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-600 to-emerald-500 flex items-center justify-center shadow-lg shadow-brand-500/30">
-                    <Users className="text-white w-8 h-8" />
+                <div className="w-16 h-16 rounded-3xl bg-[#FF9D00] flex items-center justify-center shadow-[0_0_30px_rgba(255,157,0,0.3)]">
+                    <Users className="text-[#0A1128] w-8 h-8" />
                 </div>
-                <h1 className="text-4xl md:text-5xl font-display font-bold text-center tracking-tight">
-                    <span className="text-gradient">Hacker</span> Portal
+                <h1 className="text-4xl md:text-5xl font-display font-bold text-center tracking-tight text-white mb-2">
+                    <span className="text-[#FF9D00]">Hacker</span> Portal
                 </h1>
                 <p className="text-slate-400 text-center max-w-sm">
                     Select your team to submit your project URL, presentation link, and description for the jury.
@@ -82,10 +82,10 @@ export default function TeamLogin() {
                     <button
                         type="submit"
                         disabled={!selectedTeam}
-                        className="w-full flex items-center justify-center space-x-2 py-4 px-4 bg-brand-600 hover:bg-brand-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-medium transition-all duration-300 shadow-lg shadow-brand-500/25 group"
+                        className="w-full flex items-center justify-center space-x-2 py-4 px-8 bg-[#FF9D00] hover:bg-[#E68D00] disabled:opacity-50 disabled:cursor-not-allowed text-[#0A1128] rounded-full font-bold transition-all duration-300 shadow-[0_0_20px_rgba(255,157,0,0.2)] hover:shadow-[0_0_30px_rgba(255,157,0,0.4)] hover:scale-[1.02] active:scale-[0.98] group"
                     >
                         <span>Enter Team Dashboard</span>
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
                 </form>
             </div>

@@ -100,13 +100,13 @@ export default function TeamDashboard() {
             <header className="flex items-center justify-between mb-8 pb-6 border-b border-[var(--border)]">
                 <div>
                     <h1 className="text-2xl md:text-3xl font-display font-bold text-white mb-1">
-                        <span className="text-emerald-400">{teamName}</span> Portal
+                        <span className="text-[#FF9D00]">{teamName}</span> Portal
                     </h1>
                     <p className="text-slate-400 text-sm">Update your project submission for the jury.</p>
                 </div>
                 <button
                     onClick={handleLogout}
-                    className="flex items-center space-x-2 text-slate-400 hover:text-white px-4 py-2 rounded-lg hover:bg-slate-800/50 transition-colors"
+                    className="flex items-center space-x-2 text-slate-400 hover:text-white px-4 py-2 rounded-full hover:bg-slate-800/50 transition-colors"
                 >
                     <LogOut className="w-4 h-4" />
                     <span className="hidden sm:inline text-sm font-medium">Log Out</span>
@@ -115,26 +115,26 @@ export default function TeamDashboard() {
 
             {isLoading ? (
                 <div className="flex justify-center items-center py-20">
-                    <div className="w-8 h-8 rounded-full border-t-2 border-emerald-500 animate-spin"></div>
+                    <div className="w-8 h-8 rounded-full border-t-2 border-[#FF9D00] animate-spin"></div>
                 </div>
             ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {errorMsg && (
-                        <div className="p-4 bg-red-500/10 border border-red-500/50 rounded-xl text-red-400 text-sm">
+                        <div className="p-4 bg-red-500/10 border border-red-500/50 rounded-2xl text-red-400 text-sm">
                             {errorMsg}
                         </div>
                     )}
                     {successMsg && (
-                        <div className="p-4 bg-emerald-500/10 border border-emerald-500/50 rounded-xl text-emerald-400 text-sm flex items-center">
+                        <div className="p-4 bg-[#FF9D00]/10 border border-[#FF9D00]/50 rounded-2xl text-[#FF9D00] text-sm flex items-center shadow-[0_0_15px_rgba(255,157,0,0.1)]">
                             <CheckCircle2 className="w-5 h-5 mr-2" />
                             {successMsg}
                         </div>
                     )}
 
-                    <div className="glass p-6 md:p-8 rounded-2xl space-y-8">
+                    <div className="glass p-6 md:p-8 rounded-3xl space-y-8">
                         <div className="space-y-3">
-                            <label className="text-sm font-medium text-slate-300 ml-1 block flex items-center gap-2">
-                                <FileText className="w-4 h-4 text-emerald-400" />
+                            <label className="text-sm font-bold text-slate-300 ml-1 block flex items-center gap-2">
+                                <FileText className="w-4 h-4 text-[#FF9D00]" />
                                 Idea Description (Elevator Pitch)
                             </label>
                             <textarea
@@ -142,14 +142,14 @@ export default function TeamDashboard() {
                                 onChange={(e) => setDescription(e.target.value)}
                                 placeholder="In one paragraph, describe your hacking solution, the problem it solves, and its unique value..."
                                 rows={5}
-                                className="w-full p-4 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                                className="w-full p-4 bg-slate-900/50 border border-slate-700 rounded-2xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#FF9D00] focus:border-transparent transition-all"
                                 required
                             />
                         </div>
 
                         <div className="space-y-3">
-                            <label className="text-sm font-medium text-slate-300 ml-1 block flex items-center gap-2">
-                                <LinkIcon className="w-4 h-4 text-emerald-400" />
+                            <label className="text-sm font-bold text-slate-300 ml-1 block flex items-center gap-2">
+                                <LinkIcon className="w-4 h-4 text-[#FF9D00]" />
                                 Project URL (GitHub, Figma, Vercel, Live Site)
                             </label>
                             <input
@@ -157,13 +157,13 @@ export default function TeamDashboard() {
                                 value={projectUrl}
                                 onChange={(e) => setProjectUrl(e.target.value)}
                                 placeholder="https://github.com/..."
-                                className="w-full p-4 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                                className="w-full p-4 bg-slate-900/50 border border-slate-700 rounded-2xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#FF9D00] focus:border-transparent transition-all"
                             />
                         </div>
 
                         <div className="space-y-3">
-                            <label className="text-sm font-medium text-slate-300 ml-1 block flex items-center gap-2">
-                                <LinkIcon className="w-4 h-4 text-emerald-400" />
+                            <label className="text-sm font-bold text-slate-300 ml-1 block flex items-center gap-2">
+                                <LinkIcon className="w-4 h-4 text-[#FF9D00]" />
                                 Presentation URL (Google Slides, Canva)
                             </label>
                             <input
@@ -171,7 +171,7 @@ export default function TeamDashboard() {
                                 value={presentationUrl}
                                 onChange={(e) => setPresentationUrl(e.target.value)}
                                 placeholder="https://docs.google.com/presentation/..."
-                                className="w-full p-4 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                                className="w-full p-4 bg-slate-900/50 border border-slate-700 rounded-2xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#FF9D00] focus:border-transparent transition-all"
                             />
                         </div>
                     </div>
@@ -179,7 +179,7 @@ export default function TeamDashboard() {
                     <button
                         type="submit"
                         disabled={isSaving}
-                        className="w-full flex items-center justify-center space-x-2 py-4 px-4 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-xl font-medium transition-all duration-300 shadow-lg shadow-emerald-500/25 group"
+                        className="w-full flex items-center justify-center space-x-2 py-4 px-8 bg-[#FF9D00] hover:bg-[#E68D00] disabled:opacity-50 text-[#0A1128] rounded-full font-bold transition-all duration-300 shadow-[0_0_20px_rgba(255,157,0,0.2)] hover:shadow-[0_0_30px_rgba(255,157,0,0.4)] active:scale-95 group"
                     >
                         {isSaving ? (
                             <>
