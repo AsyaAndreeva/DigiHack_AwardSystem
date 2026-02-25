@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
 
+function genPasscode(): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no ambiguous I,O,1,0
+  return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+}
+
 function getDb() {
   if (!process.env.DATABASE_URL) throw new Error('No DB URL');
   return neon(process.env.DATABASE_URL);
@@ -10,10 +15,11 @@ export async function POST(req: Request) {
   try {
     const sql = getDb();
     const { name } = await req.json();
-    if (!name?.trim()) return NextResponse.json({ error: 'Моля, въведете име на журито.' }, { status: 400 });
-    const id = name.trim().toLowerCase().replace(/\s+/g, '-') + '-' + Date.now();
-    await sql`INSERT INTO jury_members (id, name) VALUES (${id}, ${name.trim()})`;
-    return NextResponse.json({ success: true, member: { id, name: name.trim() } });
+    if (!name?.trim()) return NextResponse.json({ error: 'Моля, въведете ime на журито.' }, { status: 400 });
+    const id = 'jury-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
+    const passcode = genPasscode();
+    await sql`INSERT INTO jury_members (id, name, passcode) VALUES (${id}, ${name.trim()}, ${passcode})`;
+    return NextResponse.json({ success: true, member: { id, name: name.trim(), passcode } });
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }

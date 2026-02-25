@@ -17,18 +17,22 @@ export async function GET() {
       CREATE TABLE IF NOT EXISTS jury_members (
         id VARCHAR(255) PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
+        passcode VARCHAR(20),
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
     `;
+    await sql`ALTER TABLE jury_members ADD COLUMN IF NOT EXISTS passcode VARCHAR(20);`;
 
     // 2. Teams table
     await sql`
       CREATE TABLE IF NOT EXISTS teams (
         id VARCHAR(255) PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
+        passcode VARCHAR(20),
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
     `;
+    await sql`ALTER TABLE teams ADD COLUMN IF NOT EXISTS passcode VARCHAR(20);`;
 
     // 3. Rubric categories and criteria
     await sql`

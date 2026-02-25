@@ -4,13 +4,13 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
     Shield, Users, BookOpen, Plus, Trash2, Loader2,
-    LogOut, ChevronDown, ChevronUp, ArrowLeft, Check, Edit2, X
+    LogOut, ArrowLeft, Check, Edit2, X, Copy
 } from "lucide-react";
 
 const ADMIN_CODE = process.env.NEXT_PUBLIC_ADMIN_CODE || "digihack2026";
 
-type Team = { id: string; name: string };
-type JuryMember = { id: string; name: string };
+type Team = { id: string; name: string; passcode?: string };
+type JuryMember = { id: string; name: string; passcode?: string };
 type Criterion = {
     id: number;
     category: string;
@@ -39,6 +39,14 @@ export default function AdminPage() {
     const [newCrit, setNewCrit] = useState({ category: "", criterion: "", max_score: "3", scoring_guide: "" });
     const [saving, setSaving] = useState(false);
     const [feedback, setFeedback] = useState<{ msg: string; ok: boolean } | null>(null);
+    const [copiedId, setCopiedId] = useState<string | null>(null);
+
+    const copyPasscode = (id: string, code: string) => {
+        navigator.clipboard.writeText(code).then(() => {
+            setCopiedId(id);
+            setTimeout(() => setCopiedId(null), 2000);
+        });
+    };
 
     // Rubric edit
     const [editId, setEditId] = useState<number | null>(null);
@@ -81,7 +89,7 @@ export default function AdminPage() {
         const res = await fetch("/api/admin/teams", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: newTeamName }) });
         const d = await res.json();
         setSaving(false);
-        if (d.success) { setTeams(p => [...p, d.team]); setNewTeamName(""); showFeedback("Отборът е добавен!", true); }
+        if (d.success) { setTeams(p => [...p, d.team]); setNewTeamName(""); showFeedback(`Отборът е добавен! Парола: ${d.team.passcode}`, true); }
         else showFeedback(d.error || "Грешка", false);
     };
 
@@ -99,7 +107,7 @@ export default function AdminPage() {
         const res = await fetch("/api/admin/jury", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: newJuryName }) });
         const d = await res.json();
         setSaving(false);
-        if (d.success) { setJury(p => [...p, d.member]); setNewJuryName(""); showFeedback("Членът на журито е добавен!", true); }
+        if (d.success) { setJury(p => [...p, d.member]); setNewJuryName(""); showFeedback(`Журистът е добавен! Парола: ${d.member.passcode}`, true); }
         else showFeedback(d.error || "Грешка", false);
     };
 
@@ -290,11 +298,23 @@ export default function AdminPage() {
                             ) : (
                                 <div className="space-y-2">
                                     {teams.map(t => (
-                                        <div key={t.id} className="glass p-4 rounded-2xl flex items-center justify-between">
-                                            <span className="text-white font-medium">{t.name}</span>
-                                            <button onClick={() => deleteTeam(t.id)} className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors">
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
+                                        <div key={t.id} className="glass p-4 rounded-2xl flex items-center justify-between gap-3">
+                                            <span className="text-white font-medium truncate">{t.name}</span>
+                                            <div className="flex items-center gap-2 shrink-0">
+                                                {t.passcode && (
+                                                    <button
+                                                        onClick={() => copyPasscode(t.id, t.passcode!)}
+                                                        className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-xl text-xs font-mono text-[#C4FF00] transition-colors"
+                                                        title="Копирай паролата"
+                                                    >
+                                                        {copiedId === t.id ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                                                        {t.passcode}
+                                                    </button>
+                                                )}
+                                                <button onClick={() => deleteTeam(t.id)} className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors">
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -325,11 +345,23 @@ export default function AdminPage() {
                             ) : (
                                 <div className="space-y-2">
                                     {jury.map(m => (
-                                        <div key={m.id} className="glass p-4 rounded-2xl flex items-center justify-between">
-                                            <span className="text-white font-medium">{m.name}</span>
-                                            <button onClick={() => deleteJury(m.id)} className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors">
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
+                                        <div key={m.id} className="glass p-4 rounded-2xl flex items-center justify-between gap-3">
+                                            <span className="text-white font-medium truncate">{m.name}</span>
+                                            <div className="flex items-center gap-2 shrink-0">
+                                                {m.passcode && (
+                                                    <button
+                                                        onClick={() => copyPasscode(m.id, m.passcode!)}
+                                                        className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-xl text-xs font-mono text-[#C4FF00] transition-colors"
+                                                        title="Копирай паролата"
+                                                    >
+                                                        {copiedId === m.id ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                                                        {m.passcode}
+                                                    </button>
+                                                )}
+                                                <button onClick={() => deleteJury(m.id)} className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors">
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
