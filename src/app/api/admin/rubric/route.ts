@@ -9,13 +9,13 @@ function getDb() {
 export async function POST(req: Request) {
   try {
     const sql = getDb();
-    const { category, criterion, max_score, scoring_guide, order_idx } = await req.json();
+    const { category, description, criterion, max_score, scoring_guide, order_idx } = await req.json();
     if (!category?.trim() || !criterion?.trim() || max_score == null) {
       return NextResponse.json({ error: 'Липсват задължителни полета.' }, { status: 400 });
     }
     const result = await sql`
-      INSERT INTO rubric_criteria (category, criterion, max_score, scoring_guide, order_idx)
-      VALUES (${category.trim()}, ${criterion.trim()}, ${parseInt(max_score)}, ${scoring_guide || ''}, ${order_idx ?? 99})
+      INSERT INTO rubric_criteria (category, description, criterion, max_score, scoring_guide, order_idx)
+      VALUES (${category.trim()}, ${description?.trim() || ''}, ${criterion.trim()}, ${parseInt(max_score)}, ${scoring_guide || ''}, ${order_idx ?? 99})
       RETURNING id
     `;
     return NextResponse.json({ success: true, id: result[0].id });
@@ -27,11 +27,11 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const sql = getDb();
-    const { id, category, criterion, max_score, scoring_guide, order_idx } = await req.json();
+    const { id, category, description, criterion, max_score, scoring_guide, order_idx } = await req.json();
     if (!id) return NextResponse.json({ error: 'Липсва ID.' }, { status: 400 });
     await sql`
       UPDATE rubric_criteria
-      SET category = ${category}, criterion = ${criterion}, max_score = ${parseInt(max_score)},
+      SET category = ${category}, description = ${description || ''}, criterion = ${criterion}, max_score = ${parseInt(max_score)},
           scoring_guide = ${scoring_guide || ''}, order_idx = ${order_idx ?? 99}
       WHERE id = ${id}
     `;

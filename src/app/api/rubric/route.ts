@@ -6,7 +6,7 @@ export async function GET() {
   const sql = neon(process.env.DATABASE_URL);
   try {
     const criteria = await sql`
-      SELECT id, category, criterion, max_score, scoring_guide, order_idx
+      SELECT id, category, description, criterion, max_score, scoring_guide, order_idx
       FROM rubric_criteria
       ORDER BY order_idx ASC
     `;

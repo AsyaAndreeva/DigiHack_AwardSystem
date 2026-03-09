@@ -62,17 +62,17 @@ export default function HubPage() {
     const router = useRouter();
 
     return (
-        <div className="animate-in fade-in duration-500 flex flex-col items-center justify-center min-h-[80vh] py-8 px-4">
+        <div className="animate-in fade-in duration-500 flex flex-col items-center justify-center min-h-[80vh] py-8 px-4 max-w-3xl mx-auto">
             {/* Header */}
-            <div className="text-center mb-12">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-[#C4FF00] shadow-[0_0_40px_rgba(196,255,0,0.3)] mb-6">
+            <div className="text-center mb-16">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-none bg-[#C4FF00] shadow-[0_0_40px_rgba(196,255,0,0.3)] mb-8">
                     <Trophy className="w-10 h-10 text-[#0A1128]" />
                 </div>
-                <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-3">
+                <h1 className="text-4xl md:text-6xl font-display font-black text-white mb-4 tracking-tight">
                     DigiHack <span className="text-[#C4FF00]">2.0</span>
                 </h1>
-                <p className="text-slate-400 text-lg max-w-sm mx-auto">
-                    Платформа за оценяване на хакатон проекти
+                <p className="text-slate-500 text-lg max-w-sm mx-auto font-sans font-medium uppercase tracking-[0.2em] opacity-80">
+                    Платформа за оценяване
                 </p>
             </div>
 
@@ -84,22 +84,24 @@ export default function HubPage() {
                         <button
                             key={p.href}
                             onClick={() => router.push(p.href)}
-                            className={`glass p-6 rounded-3xl border ${p.border} ${p.glow} transition-all duration-300 text-left group active:scale-[0.98]`}
+                            className={`glass p-8 rounded-none border-l-4 ${p.border} ${p.glow} transition-all duration-500 text-left group active:scale-[0.98] bg-white/[0.02]`}
                         >
-                            <div className="flex items-start justify-between mb-5">
-                                <div className={`w-12 h-12 rounded-2xl ${p.iconBg} flex items-center justify-center`}>
-                                    <Icon className={`w-6 h-6 ${p.iconColor}`} />
+                            <div className="flex items-start justify-between mb-8">
+                                <div className={`w-14 h-14 rounded-none ${p.iconBg} flex items-center justify-center shadow-lg`}>
+                                    <Icon className={`w-7 h-7 ${p.iconColor}`} />
                                 </div>
-                                <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${p.badgeClass}`}>
+                                <span className={`text-[10px] font-black px-3 py-1 rounded-none border uppercase tracking-widest font-sans ${p.badgeClass}`}>
                                     {p.badge}
                                 </span>
                             </div>
                             <div className="flex items-end justify-between">
                                 <div>
-                                    <h2 className="text-lg font-bold text-white mb-1">{p.title}</h2>
-                                    <p className="text-sm text-slate-400">{p.subtitle}</p>
+                                    <h2 className="text-xl font-display font-black text-white mb-2 uppercase tracking-tight group-hover:text-white transition-colors">{p.title}</h2>
+                                    <p className="text-sm text-slate-500 font-sans font-medium group-hover:text-slate-400 transition-colors">{p.subtitle}</p>
                                 </div>
-                                <ArrowRight className="w-5 h-5 text-slate-600 group-hover:text-slate-400 group-hover:translate-x-1 transition-all shrink-0 ml-3" />
+                                <div className="w-10 h-10 rounded-none bg-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-[#0A1128] transition-all">
+                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                </div>
                             </div>
                         </button>
                     );
