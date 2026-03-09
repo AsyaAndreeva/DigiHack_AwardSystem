@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
+import { revalidatePath } from 'next/cache';
 
 export async function POST(req: Request) {
   try {
@@ -45,6 +46,7 @@ export async function POST(req: Request) {
       `;
     }
 
+    revalidatePath('/results');
     return NextResponse.json({ success: true, message: 'Оценката е записана успешно.' });
   } catch (error: any) {
     console.error('Submit API Error:', error);
