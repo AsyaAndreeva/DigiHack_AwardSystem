@@ -23,6 +23,9 @@ export default function TeamDashboard() {
     const [isLoading, setIsLoading] = useState(true);
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    
+    // Countdown Timer State
+    const [timeLeft, setTimeLeft] = useState<string>("");
 
     const router = useRouter();
 
@@ -42,6 +45,26 @@ export default function TeamDashboard() {
         // Fetch existing profile if any
         fetchProfile(storedTeamId);
     }, [router]);
+
+    useEffect(() => {
+        const calculateTimeLeft = () => {
+            const difference = new Date('2026-03-29T13:30:00+03:00').getTime() - new Date().getTime();
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((difference / 1000 / 60) % 60);
+                const seconds = Math.floor((difference / 1000) % 60);
+                
+                setTimeLeft(`${days}д ${hours}ч ${minutes}м ${seconds}с`);
+            } else {
+                setTimeLeft("Времето изтече");
+            }
+        };
+
+        calculateTimeLeft();
+        const timer = setInterval(calculateTimeLeft, 1000);
+        return () => clearInterval(timer);
+    }, []);
 
     const fetchProfile = async (id: string) => {
         try {
@@ -69,7 +92,7 @@ export default function TeamDashboard() {
     const handleLogout = () => {
         localStorage.removeItem("teamId");
         localStorage.removeItem("teamName");
-        router.push("/team");
+        router.push("/");
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -142,9 +165,15 @@ export default function TeamDashboard() {
                 </div>
 
                 <div className="flex items-center gap-6">
+                    <div className="hidden sm:flex flex-col items-end mr-4">
+                        <span className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] mb-1 opacity-60">Оставащо време</span>
+                        <div className="text-[#FF9D00] font-mono text-xl font-bold tracking-widest bg-black/40 px-3 py-1 rounded-md border border-[#FF9D00]/20">
+                            {timeLeft}
+                        </div>
+                    </div>
                     <button
                         onClick={handleLogout}
-                        className="flex items-center gap-2 py-3 px-6 rounded-full font-display font-black text-[10px] uppercase tracking-widest transition-all bg-white/5 text-slate-400 border border-white/10 hover:bg-red-500 hover:text-white hover:border-red-500"
+                        className="flex items-center gap-2 py-3 px-6 rounded-md font-display font-black text-[10px] uppercase tracking-widest transition-all bg-white/5 text-slate-400 border border-white/10 hover:bg-red-500 hover:text-white hover:border-red-500"
                     >
                         <LogOut className="w-4 h-4" />
                         Изход
@@ -161,18 +190,18 @@ export default function TeamDashboard() {
             ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {errorMsg && (
-                        <div className="p-5 bg-red-500/10 border border-red-500/50 rounded-none text-red-500 text-xs font-black uppercase tracking-widest">
+                        <div className="p-5 bg-red-500/10 border border-red-500/50 rounded-md text-red-500 text-xs font-black uppercase tracking-widest">
                             {errorMsg}
                         </div>
                     )}
                     {successMsg && (
-                        <div className="p-5 bg-[#FF9D00]/10 border border-[#FF9D00]/50 rounded-none text-[#FF9D00] text-xs font-black uppercase tracking-widest flex items-center shadow-[0_0_20px_rgba(255,157,0,0.1)]">
+                        <div className="p-5 bg-[#FF9D00]/10 border border-[#FF9D00]/50 rounded-md text-[#FF9D00] text-xs font-black uppercase tracking-widest flex items-center shadow-[0_0_20px_rgba(255,157,0,0.1)]">
                             <CheckCircle2 className="w-5 h-5 mr-3" />
                             {successMsg}
                         </div>
                     )}
 
-                    <div className="glass p-8 md:p-12 rounded-none border-l-4 border-[#FF9D00] space-y-10 shadow-2xl">
+                    <div className="glass p-8 md:p-12 rounded-md border-l-4 border-[#FF9D00] space-y-10 shadow-2xl">
                         <div className="space-y-4">
                             <label className="text-xs font-black text-slate-400 ml-1 block flex items-center gap-2 uppercase tracking-widest font-sans">
                                 <FileText className="w-4 h-4 text-[#FF9D00]" />
@@ -183,7 +212,7 @@ export default function TeamDashboard() {
                                 onChange={(e) => setDescription(e.target.value)}
                                 placeholder="В един параграф опишете вашето решение..."
                                 rows={6}
-                                className="w-full p-6 bg-black/40 border border-white/10 rounded-none text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#FF9D00] focus:border-transparent transition-all font-sans text-lg"
+                                className="w-full p-6 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#FF9D00] focus:border-transparent transition-all font-sans text-lg"
                                 required
                             />
                         </div>
@@ -198,7 +227,7 @@ export default function TeamDashboard() {
                                     <img 
                                         src={imageUrl.includes('blob.vercel-storage.com') ? `/api/blob?url=${encodeURIComponent(imageUrl)}` : imageUrl} 
                                         alt="Project image" 
-                                        className="max-h-48 rounded-none border border-white/10 shadow-lg" 
+                                        className="max-h-48 rounded-md border border-white/10 shadow-lg" 
                                     />
                                 </div>
                             )}
@@ -224,7 +253,7 @@ export default function TeamDashboard() {
                                 value={projectUrl}
                                 onChange={(e) => setProjectUrl(e.target.value)}
                                 placeholder="https://github.com/..."
-                                className="w-full p-5 bg-black/40 border border-white/10 rounded-none text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#FF9D00] focus:border-transparent transition-all font-sans"
+                                className="w-full p-5 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#FF9D00] focus:border-transparent transition-all font-sans"
                             />
                         </div>
 
@@ -238,7 +267,7 @@ export default function TeamDashboard() {
                                 value={presentationUrl}
                                 onChange={(e) => setPresentationUrl(e.target.value)}
                                 placeholder="https://docs.google.com/presentation/..."
-                                className="w-full p-5 bg-black/40 border border-white/10 rounded-none text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#FF9D00] focus:border-transparent transition-all font-sans"
+                                className="w-full p-5 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#FF9D00] focus:border-transparent transition-all font-sans"
                             />
                         </div>
 
@@ -258,7 +287,7 @@ export default function TeamDashboard() {
                                             newLinks[idx].title = e.target.value;
                                             setLinks(newLinks);
                                         }}
-                                        className="w-1/3 p-4 bg-black/40 border border-white/10 rounded-none text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#FF9D00] transition-all font-sans"
+                                        className="w-1/3 p-4 bg-black/40 border border-white/10 rounded-md text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#FF9D00] transition-all font-sans"
                                     />
                                     <input
                                         type="url"
@@ -269,12 +298,12 @@ export default function TeamDashboard() {
                                             newLinks[idx].url = e.target.value;
                                             setLinks(newLinks);
                                         }}
-                                        className="flex-1 p-4 bg-black/40 border border-white/10 rounded-none text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#FF9D00] transition-all font-sans"
+                                        className="flex-1 p-4 bg-black/40 border border-white/10 rounded-md text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#FF9D00] transition-all font-sans"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setLinks(links.filter((_, i) => i !== idx))}
-                                        className="p-4 text-red-500 hover:bg-red-500/10 rounded-none transition-colors shrink-0 border border-white/5"
+                                        className="p-4 text-red-500 hover:bg-red-500/10 rounded-md transition-colors shrink-0 border border-white/5"
                                     >
                                         &times;
                                     </button>

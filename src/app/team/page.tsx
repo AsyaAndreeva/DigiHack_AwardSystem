@@ -60,7 +60,7 @@ export default function TeamLogin() {
 
             <main className="flex flex-col items-center justify-center pt-20 px-4">
             <div className="mb-12 flex flex-col items-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <div className="w-16 h-16 rounded-none bg-[#FF9D00] flex items-center justify-center shadow-[0_0_30px_rgba(255,157,0,0.3)] mb-2">
+                <div className="w-16 h-16 rounded-md bg-[#FF9D00] flex items-center justify-center shadow-[0_0_30px_rgba(255,157,0,0.3)] mb-2">
                     <Users className="text-[#0A1128] w-8 h-8" />
                 </div>
                 <h1 className="text-4xl md:text-6xl font-display font-black text-center tracking-tight text-white uppercase">
@@ -71,7 +71,7 @@ export default function TeamLogin() {
                 </p>
             </div>
 
-            <div className="w-full max-w-sm p-8 rounded-none glass border-l-4 border-[#FF9D00] animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
+            <div className="w-full max-w-sm p-8 rounded-md glass border-l-4 border-[#FF9D00] animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div className="space-y-3">
                         <label className="text-xs font-black text-slate-400 ml-1 flex items-center gap-2 uppercase tracking-widest font-sans">
@@ -83,7 +83,7 @@ export default function TeamLogin() {
                             onChange={e => setPasscode(e.target.value.toUpperCase())}
                             placeholder="B7RX4K"
                             maxLength={8}
-                            className="w-full p-5 bg-black/40 border border-white/10 rounded-none text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#FF9D00] focus:border-transparent transition-all tracking-[0.4em] text-center font-mono text-2xl uppercase"
+                            className="w-full p-5 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#FF9D00] focus:border-transparent transition-all tracking-[0.4em] text-center font-mono text-2xl uppercase"
                             required
                         />
                         {error && <p className="text-red-500 text-xs font-bold uppercase tracking-wider ml-1 mt-2">{error}</p>}

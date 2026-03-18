@@ -58,6 +58,15 @@
     --card-hover: rgba(30, 42, 70, 0.85);
     --border: rgba(255, 255, 255, 0.08);
   }
+
+  ::placeholder {
+    opacity: 0.75 !important;
+  }
+  
+  :disabled {
+    opacity: 0.75 !important;
+    pointer-events: none !important;
+  }
 }
 
 body {

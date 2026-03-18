@@ -55,14 +55,14 @@ export default function Jelly() {
             <main className="flex flex-col items-center justify-center pt-20 px-4">
                 <div className="w-full max-w-sm">
                     <div className="text-center mb-12">
-                        <div className="inline-flex w-16 h-16 rounded-none bg-[#C4FF00] items-center justify-center shadow-[0_0_30px_rgba(196,255,0,0.25)] mb-6">
+                        <div className="inline-flex w-16 h-16 rounded-md bg-[#C4FF00] items-center justify-center shadow-[0_0_30px_rgba(196,255,0,0.25)] mb-6">
                             <Shield className="w-8 h-8 text-[#0A1128]" />
                         </div>
                         <h1 className="text-4xl font-display font-black text-white mb-2 uppercase tracking-tight">Вход за Жури</h1>
                         <p className="text-slate-500 text-sm font-sans font-medium uppercase tracking-widest opacity-80 decoration-[#C4FF00]/30">Код за достъп</p>
                     </div>
 
-                    <div className="glass p-8 rounded-none border-l-4 border-[#C4FF00] space-y-6">
+                    <div className="glass p-8 rounded-md border-l-4 border-[#C4FF00] space-y-6">
                         <div className="space-y-3">
                             <label className="text-xs font-black text-slate-400 ml-1 flex items-center gap-2 uppercase tracking-widest font-sans">
                                 <KeyRound className="w-4 h-4 text-[#C4FF00]" /> Парола за жури
@@ -74,7 +74,7 @@ export default function Jelly() {
                                 onKeyDown={(e) => { if (e.key === 'Enter') handleEnter(); }}
                                 placeholder="A3K9MX"
                                 maxLength={8}
-                                className="w-full p-5 bg-black/40 border border-white/10 rounded-none text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#C4FF00] focus:border-transparent transition-all tracking-[0.4em] text-center font-mono text-2xl uppercase"
+                                className="w-full p-5 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#C4FF00] focus:border-transparent transition-all tracking-[0.4em] text-center font-mono text-2xl uppercase"
                             />
                             {error && <p className="text-red-500 text-xs font-bold uppercase tracking-wider ml-1 mt-2">{error}</p>}
                         </div>

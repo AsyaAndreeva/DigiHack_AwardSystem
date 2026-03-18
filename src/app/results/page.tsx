@@ -80,8 +80,8 @@ export default function ResultsPage() {
                 </header>
 
                 <main className="max-w-sm mx-auto pt-16 px-4">
-                <div className="glass p-10 rounded-none border-l-4 border-[#C4FF00] text-center shadow-2xl">
-                    <div className="w-20 h-20 rounded-none bg-[#C4FF00] flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_rgba(196,255,0,0.3)]">
+                <div className="glass p-10 rounded-md border-l-4 border-[#C4FF00] text-center shadow-2xl">
+                    <div className="w-20 h-20 rounded-md bg-[#C4FF00] flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_rgba(196,255,0,0.3)]">
                         <Trophy className="text-[#0A1128] w-10 h-10" />
                     </div>
                     <h1 className="text-3xl font-display font-black text-white mb-2 uppercase tracking-tight">Защитени Резултати</h1>
@@ -89,7 +89,7 @@ export default function ResultsPage() {
                     
                     <form onSubmit={handleLogin} className="space-y-6">
                         {error && (
-                            <div className="p-4 bg-red-500/10 border border-red-500/50 rounded-none text-red-500 text-xs font-black uppercase tracking-widest text-left">
+                            <div className="p-4 bg-red-500/10 border border-red-500/50 rounded-md text-red-500 text-xs font-black uppercase tracking-widest text-left">
                                 {error}
                             </div>
                         )}
@@ -98,7 +98,7 @@ export default function ResultsPage() {
                             value={passwordInput}
                             onChange={(e) => setPasswordInput(e.target.value)}
                             placeholder="Въведете парола..." 
-                            className="w-full bg-black/40 border border-white/10 text-white rounded-none px-5 py-4 focus:outline-none focus:border-[#C4FF00] focus:ring-2 focus:ring-[#C4FF00] transition-all text-center tracking-[0.3em] font-mono text-xl"
+                            className="w-full bg-black/40 border border-white/10 text-white rounded-md px-5 py-4 focus:outline-none focus:border-[#C4FF00] focus:ring-2 focus:ring-[#C4FF00] transition-all text-center tracking-[0.3em] font-mono text-xl"
                         />
                         <button 
                             type="submit"
@@ -158,7 +158,7 @@ export default function ResultsPage() {
                     <div className="w-8 h-8 rounded-full border-t-2 border-[#C4FF00] animate-spin"></div>
                 </div>
             ) : data.length === 0 && !error ? (
-                <div className="glass p-16 rounded-none border-l-4 border-slate-700 text-center shadow-xl">
+                <div className="glass p-16 rounded-md border-l-4 border-slate-700 text-center shadow-xl">
                     <Trophy className="w-20 h-20 text-slate-800 mx-auto mb-6" />
                     <h2 className="text-2xl font-display font-black text-white mb-3 uppercase tracking-tight">Все още няма оценки</h2>
                     <p className="text-slate-500 font-sans font-medium uppercase tracking-widest text-sm opacity-60">Резултатите ще се появят тук скоро</p>
@@ -168,7 +168,7 @@ export default function ResultsPage() {
                     {data.map((row, index) => (
                         <div
                             key={row.team_id}
-                            className="glass p-8 rounded-none border-l-4 border-l-slate-800 flex flex-col relative overflow-hidden group shadow-lg hover:bg-white/[0.05] transition-all"
+                            className="glass p-8 rounded-md border-l-4 border-l-slate-800 flex flex-col relative overflow-hidden group shadow-lg hover:bg-white/[0.05] transition-all"
                         >
                             {/* Rank Highlight Background for Top 3 */}
                             {index === 0 && <div className="absolute top-0 left-0 w-1 h-full bg-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.5)]"></div>}
@@ -179,7 +179,7 @@ export default function ResultsPage() {
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                                 <div className="flex items-center space-x-8">
                                     <div className={`
-                                        w-16 h-16 rounded-none flex items-center justify-center text-3xl font-black font-display shadow-md
+                                        w-16 h-16 rounded-md flex items-center justify-center text-3xl font-black font-display shadow-md
                                         ${index === 0 ? "bg-yellow-400/20 text-yellow-400 ring-1 ring-yellow-400/50 shadow-[0_0_30px_rgba(250,204,21,0.2)]" : ""}
                                         ${index === 1 ? "bg-slate-300/20 text-slate-300 ring-1 ring-slate-300/50" : ""}
                                         ${index === 2 ? "bg-amber-700/20 text-amber-500 ring-1 ring-amber-700/50" : ""}
@@ -192,7 +192,7 @@ export default function ResultsPage() {
                                             {row.team_name}
                                         </h3>
                                         <p className="text-xs font-sans font-black uppercase tracking-[0.2em] flex items-center mt-2 opacity-60">
-                                            <span className="bg-[#C4FF00]/10 text-[#C4FF00] px-3 py-1 rounded-none mr-3 border border-[#C4FF00]/20">
+                                            <span className="bg-[#C4FF00]/10 text-[#C4FF00] px-3 py-1 rounded-md mr-3 border border-[#C4FF00]/20">
                                                 {row.evaluations_count} Журита
                                             </span>
                                             оцениха отбора
@@ -200,7 +200,7 @@ export default function ResultsPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-between md:justify-end gap-10 bg-black/40 p-6 rounded-none border border-white/5 shadow-inner">
+                                <div className="flex items-center justify-between md:justify-end gap-10 bg-black/40 p-6 rounded-md border border-white/5 shadow-inner">
                                     <div className="flex flex-col text-right">
                                         <span className="text-[10px] text-slate-600 uppercase font-black tracking-[0.3em] mb-1">TOTAL SCORE</span>
                                         <div className="text-5xl font-display font-black text-white flex items-baseline tracking-tighter">
@@ -220,9 +220,9 @@ export default function ResultsPage() {
                                     </h4>
                                     <div className="grid gap-4 sm:grid-cols-2">
                                         {row.jury_breakdown.filter(j => j.comments && j.comments.trim() !== '').map((jury, jIdx) => (
-                                            <div key={jIdx} className="bg-black/20 p-6 rounded-none border border-white/5 shadow-md group/comment">
+                                            <div key={jIdx} className="bg-black/20 p-6 rounded-md border border-white/5 shadow-md group/comment">
                                                 <div className="flex justify-between items-center mb-4">
-                                                    <span className="text-[10px] font-black text-[#FF9D00] bg-[#FF9D00]/5 px-3 py-1 rounded-none border border-[#FF9D00]/20 uppercase tracking-widest font-sans">{jury.jury_name}</span>
+                                                    <span className="text-[10px] font-black text-[#FF9D00] bg-[#FF9D00]/5 px-3 py-1 rounded-md border border-[#FF9D00]/20 uppercase tracking-widest font-sans">{jury.jury_name}</span>
                                                     <span className="text-[10px] text-slate-700 font-black uppercase tracking-tighter">SCORE: <span className="text-white ml-1">{jury.total_score}</span></span>
                                                 </div>
                                                 <p className="text-sm text-slate-400 italic whitespace-pre-wrap leading-relaxed font-sans font-medium">

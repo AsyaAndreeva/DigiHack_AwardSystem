@@ -230,7 +230,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
     return (
         <div className="animate-in fade-in duration-500 min-h-screen bg-[#070b1a]">
             {/* Top Focused Header */}
-            <header className="flex items-center justify-between px-8 py-6 bg-[#0A1128]/80 backdrop-blur-md border-b border-white/5 sticky top-0 z-[50]">
+            <header className="flex items-center justify-between px-8 py-4 bg-[#0A1128]/80 backdrop-blur-md border-b border-white/5 relative z-[30]">
                 <div className="flex items-center gap-4">
                     <button 
                         onClick={() => router.push('/dashboard')}
@@ -283,7 +283,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                     const el = document.getElementById(`category-${category}`);
                                     if (el) window.scrollTo({ top: el.offsetTop - 120, behavior: 'smooth' });
                                 }}
-                                className={`group flex items-center justify-between p-4 rounded-none text-left text-xs font-bold transition-all border shadow-sm ${
+                                className={`group flex items-center justify-between p-4 rounded-md text-left text-xs font-bold transition-all border shadow-sm ${
                                     isDone 
                                     ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-400" 
                                     : "bg-white/[0.02] border-white/5 text-slate-500 hover:border-white/10 hover:text-white"
@@ -295,7 +295,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                 {isDone ? (
                                     <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-500" />
                                 ) : (
-                                    <div className="w-4 h-4 rounded-none border border-white/10 shrink-0" />
+                                    <div className="w-4 h-4 rounded-md border border-white/10 shrink-0" />
                                 )}
                             </button>
                         );
@@ -305,14 +305,14 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                 {/* Center: Evaluation Feed */}
                 <main className="flex-1 min-w-0 space-y-16">
                     {error && (
-                        <div className="p-5 bg-red-500/10 border border-red-500/30 rounded-none flex items-center gap-4 text-red-400 text-sm animate-in slide-in-from-top-4">
+                        <div className="p-5 bg-red-500/10 border border-red-500/30 rounded-md flex items-center gap-4 text-red-400 text-sm animate-in slide-in-from-top-4">
                             <AlertCircle className="w-6 h-6 shrink-0" />
                             <p className="font-medium">{error}</p>
                         </div>
                     )}
 
                     {criteria.length === 0 ? (
-                        <div className="glass p-20 rounded-none text-center border-dashed border-2 border-white/5">
+                        <div className="glass p-20 rounded-md text-center border-dashed border-2 border-white/5">
                             <Loader2 className="w-10 h-10 animate-spin text-brand-500 mx-auto mb-4" />
                             <p className="text-slate-500 font-medium font-sans">Конфигуриране на сесията...</p>
                         </div>
@@ -333,15 +333,15 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                         const guideLines = c.scoring_guide ? c.scoring_guide.split('\n').filter(Boolean) : [];
 
                                         return (
-                                            <div key={c.id} id={`criterion-${c.id}`} className="glass rounded-none p-8 md:p-10 border border-white/5 hover:border-white/10 transition-all relative overflow-hidden group shadow-xl bg-white/[0.01]">
+                                            <div key={c.id} id={`criterion-${c.id}`} className="glass rounded-md p-8 md:p-10 border border-white/5 hover:border-white/10 transition-all relative overflow-hidden group shadow-xl bg-white/[0.01]">
                                                 {/* Background Accent */}
-                                                <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-500/5 rounded-none blur-[80px] group-hover:bg-brand-500/10 transition-colors" />
+                                                <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-500/5 rounded-md blur-[80px] group-hover:bg-brand-500/10 transition-colors" />
                                                 
                                                 <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
                                                     <div className="max-w-2xl">
                                                         <h3 className="text-xl md:text-2xl font-display font-bold text-white mb-3 tracking-tight">{c.criterion}</h3>
                                                         <div className="flex items-center gap-2">
-                                                            <div className="px-2.5 py-1 rounded-none bg-brand-500/10 text-brand-500 text-[10px] font-black uppercase tracking-wider border border-brand-500/20 font-sans">
+                                                            <div className="px-2.5 py-1 rounded-md bg-brand-500/10 text-brand-500 text-[10px] font-black uppercase tracking-wider border border-brand-500/20 font-sans">
                                                                 до {c.max_score} точки
                                                             </div>
                                                             {selected !== undefined && (
@@ -365,7 +365,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                                             <button
                                                                 key={score}
                                                                 onClick={() => handleScoreChange(c.id, score)}
-                                                                className={`group/score relative flex flex-col p-6 rounded-none border transition-all duration-300 text-left h-full min-h-[160px] shadow-sm ${
+                                                                className={`group/score relative flex flex-col p-6 rounded-md border transition-all duration-300 text-left h-full min-h-[160px] shadow-sm ${
                                                                     isSelected
                                                                     ? "bg-brand-500 border-brand-500 text-[#0A1128] shadow-2xl shadow-brand-500/40 z-10 font-bold"
                                                                     : "bg-white/[0.03] border-white/5 text-slate-400 hover:border-white/20 hover:bg-white/[0.06]"
@@ -378,7 +378,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                                                      {guide ? guide.replace(/^\d+[ ]*т[. ]*-?[ ]*/, '') : `${score} точки`}
                                                                  </p>
                                                                 {isSelected && (
-                                                                    <div className="absolute top-6 right-6 w-2.5 h-2.5 rounded-none bg-[#0A1128] animate-pulse" />
+                                                                    <div className="absolute top-6 right-6 w-2.5 h-2.5 rounded-md bg-[#0A1128] animate-pulse" />
                                                                 )}
                                                             </button>
                                                         );
@@ -394,9 +394,9 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
 
                     {/* Final Comments Area */}
                      <section className="pt-12 pb-32">
-                        <div className="glass rounded-none p-10 border border-white/5 shadow-2xl">
+                        <div className="glass rounded-md p-10 border border-white/5 shadow-2xl">
                            <div className="flex items-center gap-4 mb-8">
-                                <div className="w-12 h-12 rounded-none bg-white/5 flex items-center justify-center text-brand-500">
+                                <div className="w-12 h-12 rounded-md bg-white/5 flex items-center justify-center text-brand-500">
                                     <Send className="w-6 h-6" />
                                 </div>
                                 <div>
@@ -410,7 +410,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                 onBlur={handleCommentBlur}
                                 placeholder="Напишете своите конструктивни коментари..."
                                 rows={6}
-                                className="w-full p-8 bg-black/40 border border-white/10 rounded-none text-white placeholder:text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all resize-none text-xl font-sans"
+                                className="w-full p-8 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all resize-none text-xl font-sans"
                             />
                         </div>
                     </section>
@@ -430,7 +430,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                             </div>
                             <button 
                                 onClick={() => setShowProfile(false)}
-                                className="p-4 bg-white/5 hover:bg-brand-500 hover:text-[#0A1128] rounded-none text-slate-400 transition-all active:scale-90"
+                                className="p-4 bg-white/5 hover:bg-brand-500 hover:text-[#0A1128] rounded-md text-slate-400 transition-all active:scale-90"
                             >
                                 <X className="w-6 h-6" />
                             </button>
@@ -439,7 +439,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                         {teamProfile ? (
                             <div className="space-y-12">
                                 {teamProfile.image_url && (
-                                    <div className="relative aspect-[4/3] rounded-none overflow-hidden border border-white/10 shadow-2xl group">
+                                    <div className="relative aspect-[4/3] rounded-md overflow-hidden border border-white/10 shadow-2xl group">
                                         <img 
                                             src={teamProfile.image_url.includes('blob.vercel-storage.com') ? `/api/blob?url=${encodeURIComponent(teamProfile.image_url)}` : teamProfile.image_url} 
                                             alt="Project" 
@@ -458,9 +458,9 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                     <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] font-sans">Ресурси</h3>
                                     <div className="grid gap-3">
                                         {teamProfile.project_url && (
-                                            <a href={teamProfile.project_url} target="_blank" className="flex items-center justify-between p-6 rounded-none bg-white/[0.02] border border-white/5 hover:border-brand-500 transition-all group shadow-sm">
+                                            <a href={teamProfile.project_url} target="_blank" className="flex items-center justify-between p-6 rounded-md bg-white/[0.02] border border-white/5 hover:border-brand-500 transition-all group shadow-sm">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 rounded-none bg-brand-500/10 flex items-center justify-center text-brand-500">
+                                                    <div className="w-12 h-12 rounded-md bg-brand-500/10 flex items-center justify-center text-brand-500">
                                                         <ExternalLink className="w-6 h-6" />
                                                     </div>
                                                     <div>
@@ -472,9 +472,9 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                             </a>
                                         )}
                                          {teamProfile.presentation_url && (
-                                            <a href={teamProfile.presentation_url} target="_blank" className="flex items-center justify-between p-6 rounded-none bg-white/[0.02] border border-white/5 hover:border-[#FF9D00] transition-all group shadow-sm">
+                                            <a href={teamProfile.presentation_url} target="_blank" className="flex items-center justify-between p-6 rounded-md bg-white/[0.02] border border-white/5 hover:border-[#FF9D00] transition-all group shadow-sm">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 rounded-none bg-[#FF9D00]/10 flex items-center justify-center text-[#FF9D00]">
+                                                    <div className="w-12 h-12 rounded-md bg-[#FF9D00]/10 flex items-center justify-center text-[#FF9D00]">
                                                         <FileVideo className="w-6 h-6" />
                                                     </div>
                                                     <div>
@@ -486,7 +486,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                             </a>
                                         )}
                                         {teamProfile.links?.map((link, i) => (
-                                            <a key={i} href={link.url} target="_blank" className="flex items-center justify-between p-6 rounded-none bg-white/[0.01] border border-white/5 hover:border-white/20 transition-all group text-sm italic font-sans">
+                                            <a key={i} href={link.url} target="_blank" className="flex items-center justify-between p-6 rounded-md bg-white/[0.01] border border-white/5 hover:border-white/20 transition-all group text-sm italic font-sans">
                                                 <span className="text-slate-500 group-hover:text-white transition-colors truncate pr-4">{link.title}</span>
                                                 <ExternalLink className="w-4 h-4 text-slate-800 group-hover:text-white" />
                                             </a>
@@ -513,30 +513,30 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
             </div>
 
              {/* Sticky Bottom Summary Bar */}
-            <div className="fixed bottom-0 left-0 right-0 py-6 px-12 bg-[#0A1128]/95 backdrop-blur-3xl border-t border-white/5 z-[49] shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
+            <div className="fixed bottom-0 left-0 right-0 py-2 px-6 bg-[#0A1128]/95 backdrop-blur-xl border-t border-white/5 z-[49] shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
                 <div className="max-w-[1600px] mx-auto flex items-center justify-between">
                     <div className="flex flex-col">
-                        <span className="text-[10px] text-slate-600 font-black uppercase tracking-[0.3em] leading-none mb-2 font-sans opacity-60">ЗАВЪРШЕНИ КРИТЕРИИ</span>
-                        <div className="flex items-center gap-3">
-                            <span className="text-4xl font-display font-black text-white">{Object.keys(scores).length}</span>
-                            <span className="text-slate-800 font-black text-xl">/</span>
-                            <span className="text-slate-600 font-black text-xl">{criteria.length}</span>
+                        <span className="text-[8px] text-slate-600 font-black uppercase tracking-[0.2em] leading-none mb-1 font-sans opacity-60">ЗАВЪРШЕНИ КРИТЕРИИ</span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-xl font-display font-black text-white">{Object.keys(scores).length}</span>
+                            <span className="text-slate-800 font-black text-sm">/</span>
+                            <span className="text-slate-600 font-black text-sm">{criteria.length}</span>
                         </div>
                     </div>
 
                     <button
                         onClick={handleFinish}
                         disabled={isSubmitting}
-                        className={`group relative flex items-center gap-4 py-4 px-12 rounded-full font-display font-black text-sm uppercase tracking-[0.2em] transition-all overflow-hidden ${
+                        className={`group relative flex items-center gap-2 py-2 px-6 rounded-full font-display font-black text-[10px] uppercase tracking-[0.1em] transition-all overflow-hidden ${
                             isSubmitting
                             ? "bg-slate-900 text-slate-600 cursor-not-allowed"
-                            : "bg-[#C4FF00] hover:bg-white text-[#0A1128] shadow-[0_20px_40px_rgba(196,255,0,0.2)] hover:shadow-[#C4FF00]/10 active:scale-95 translate-y-0 hover:-translate-y-1"
+                            : "bg-[#C4FF00] hover:bg-white text-[#0A1128] shadow-[0_10px_20px_rgba(196,255,0,0.15)] hover:shadow-[#C4FF00]/10 active:scale-95 translate-y-0 hover:-translate-y-px"
                         }`}
                     >
                         {isSubmitting ? (
-                            <><Loader2 className="w-6 h-6 animate-spin" /> <span className="uppercase tracking-widest text-xs">Запазване...</span></>
+                            <><Loader2 className="w-4 h-4 animate-spin" /> <span className="uppercase tracking-widest text-[8px]">Запазване...</span></>
                         ) : (
-                            <><CheckCircle2 className="w-8 h-8" /> <span className="uppercase tracking-widest">Готово</span></>
+                            <><CheckCircle2 className="w-4 h-4" /> <span className="uppercase tracking-widest">Готово</span></>
                         )}
                     </button>
                 </div>

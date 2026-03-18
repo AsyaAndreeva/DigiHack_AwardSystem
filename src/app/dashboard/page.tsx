@@ -34,7 +34,7 @@ export default function Dashboard() {
     const handleLogout = () => {
         localStorage.removeItem("juryName");
         localStorage.removeItem("juryId");
-        router.push("/jury");
+        router.push("/");
     };
 
     const completedCount = teams.filter(t => evaluatedTeams[t.id]).length;
@@ -44,7 +44,7 @@ export default function Dashboard() {
     return (
         <div className="animate-in fade-in duration-500 min-h-screen">
             {/* Standardized Header */}
-            <header className="flex items-center justify-between px-8 py-6 bg-[#0A1128]/80 backdrop-blur-md border-b border-white/5 sticky top-0 z-[50]">
+            <header className="flex items-center justify-between px-8 py-6 bg-[#0A1128]/80 backdrop-blur-md border-b border-white/5 relative z-[30]">
                 <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-[#C4FF00]/10 flex items-center justify-center text-[#C4FF00]">
                         <Activity className="w-6 h-6" />
@@ -72,9 +72,9 @@ export default function Dashboard() {
 
             {/* Progress Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                <div className="glass rounded-none border-l-4 border-[#C4FF00] p-8 flex flex-col shadow-xl">
+                <div className="glass rounded-md border-l-4 border-[#C4FF00] p-8 flex flex-col shadow-xl">
                     <div className="flex items-center gap-4 mb-6">
-                        <div className="w-14 h-14 rounded-none bg-[#C4FF00]/10 flex items-center justify-center text-[#C4FF00] shadow-inner">
+                        <div className="w-14 h-14 rounded-md bg-[#C4FF00]/10 flex items-center justify-center text-[#C4FF00] shadow-inner">
                             <Activity className="w-7 h-7" />
                         </div>
                         <h2 className="text-xl font-display font-black text-white uppercase tracking-tight">Вашият напредък</h2>
@@ -84,9 +84,9 @@ export default function Dashboard() {
                             <span>{completedCount} оценени</span>
                             <span className="text-[#C4FF00]">{totalCount} общо</span>
                         </div>
-                        <div className="w-full bg-slate-900 rounded-none h-4 overflow-hidden border border-white/5">
+                        <div className="w-full bg-slate-900 rounded-md h-4 overflow-hidden border border-white/5">
                             <div
-                                className="bg-[#C4FF00] h-full rounded-none transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(196,255,0,0.3)]"
+                                className="bg-[#C4FF00] h-full rounded-md transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(196,255,0,0.3)]"
                                 style={{ width: `${progressPct}%` }}
                             />
                         </div>
@@ -94,9 +94,9 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                <div className="glass rounded-none border-l-4 border-[#FF9D00] p-8 flex flex-col justify-center shadow-xl">
+                <div className="glass rounded-md border-l-4 border-[#FF9D00] p-8 flex flex-col justify-center shadow-xl">
                     <div className="flex items-center gap-4 mb-2">
-                        <div className="w-14 h-14 rounded-none bg-[#FF9D00]/10 flex items-center justify-center text-[#FF9D00] shadow-inner">
+                        <div className="w-14 h-14 rounded-md bg-[#FF9D00]/10 flex items-center justify-center text-[#FF9D00] shadow-inner">
                             <Users className="w-7 h-7" />
                         </div>
                         <h2 className="text-xl font-display font-black text-white uppercase tracking-tight">Отбори</h2>
@@ -113,7 +113,7 @@ export default function Dashboard() {
             {loading ? (
                 <div className="flex justify-center py-12"><Loader2 className="w-7 h-7 animate-spin text-[#C4FF00]" /></div>
             ) : teams.length === 0 ? (
-                <div className="glass p-10 rounded-none text-center">
+                <div className="glass p-10 rounded-md text-center">
                     <Users className="w-12 h-12 text-slate-700 mx-auto mb-3" />
                     <p className="text-slate-400">Все още няма добавени отбори. Моля, добавете ги от администраторския панел.</p>
                 </div>
@@ -125,13 +125,13 @@ export default function Dashboard() {
                             <div
                                 key={team.id}
                                 onClick={() => router.push(`/evaluate/${team.id}`)}
-                                className={`group flex items-center justify-between p-6 rounded-none cursor-pointer transition-all duration-500 ${isEvaluated
+                                className={`group flex items-center justify-between p-6 rounded-md cursor-pointer transition-all duration-500 ${isEvaluated
                                     ? "bg-white/[0.02] border border-white/5 opacity-60 hover:opacity-100"
                                     : "glass border-l-4 border-l-[#C4FF00] transform hover:-translate-y-1 shadow-lg bg-white/[0.04]"
                                     }`}
                             >
                                 <div className="flex items-center gap-6">
-                                    <div className={`w-16 h-16 rounded-none flex items-center justify-center font-display font-black text-2xl transition-all shadow-md ${isEvaluated ? "bg-slate-900 text-slate-700" : "bg-[#C4FF00]/10 text-[#C4FF00] group-hover:bg-[#C4FF00] group-hover:text-[#0A1128]"}`}>
+                                    <div className={`w-16 h-16 rounded-md flex items-center justify-center font-display font-black text-2xl transition-all shadow-md ${isEvaluated ? "bg-slate-900 text-slate-700" : "bg-[#C4FF00]/10 text-[#C4FF00] group-hover:bg-[#C4FF00] group-hover:text-[#0A1128]"}`}>
                                         {index + 1}
                                     </div>
                                     <div>
@@ -145,7 +145,7 @@ export default function Dashboard() {
                                     {isEvaluated ? (
                                         <CheckCircle2 className="w-8 h-8 text-[#C4FF00] opacity-30" />
                                     ) : (
-                                        <div className="w-12 h-12 rounded-none bg-white/5 flex items-center justify-center group-hover:bg-[#C4FF00] group-hover:text-[#0A1128] transition-all shadow-inner">
+                                        <div className="w-12 h-12 rounded-md bg-white/5 flex items-center justify-center group-hover:bg-[#C4FF00] group-hover:text-[#0A1128] transition-all shadow-inner">
                                             <ChevronRight className="w-6 h-6" />
                                         </div>
                                     )}
