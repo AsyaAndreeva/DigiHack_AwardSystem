@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DigiHack Award System 🏆
 
-## Getting Started
+A comprehensive, scalable, and dynamic hackathon evaluation and leaderboard system built with Next.js and Neon PostgreSQL.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 👑 Admin Console (`/admin`)
+- **Real-time Team Management**: Create, edit, and assign passcodes to participating hackathon teams.
+- **Jury Roster Control**: Provision access codes and monitor jury evaluation completion rates.
+- **Hierarchical Rubric Builder**: Construct unlimited granular evaluation sub-criteria sorted by overarching Parent Categories. Supports HTML-rich descriptions inside evaluation constraint boxes.
+- **Global Theme & Resource Injection**: Define the official hackathon thesis, context, and external resources. Pushes updates instantly to the centralized hub.
+- **System Settings**: Control the global App Theme Color instantly via color-picker CSS variable injection, and rigidly enforce submission deadlines.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### ⚖️ Jury Portal (`/jury` & `/evaluate/[teamId]`)
+- **Secure Access**: Passcode-protected entry for each authorized jury member.
+- **Dynamic Grading Matrix**: Seamless mapping of up to 17+ granular assessment inputs spread across modular categories (Innovation, Design, Technical, Business, Presentation).
+- **Responsive Points Scales**: Automatic maximum point constraints (`do N tocki`) assigned to individual criterion logic gates.
+- **Real-Time Auto-Save**: Saves evaluation telemetry on every single action to prevent data loss.
+- **Feedback & Remarks**: Dedicated HTML text areas for submitting constructive criticism.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 📊 Live Dashboards
+- **Global Leaderboard (`/dashboard`)**: Beautifully tracks live score cascades and final verdicts synced instantly from the jury. Visualizes point dispersion across all 5 evaluation dimensions.
+- **Team Dashboard (`/team-dashboard`)**: Allows participants to view their official submission profiles, uploaded links, and live rank post-evaluation.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🎨 Design Aesthetic
+- **Brand System**: Driven by a deep custom 7-color palette configured via Tailwind CSS. 
+- **Glassmorphism & Gradients**: Heavy use of modern pseudo-states, animated ambient glows, frosted glass cards, and precise micro-interactions.
+- **Fully Responsive**: Flawless scaling across Desktop, Tablet, and Mobile ecosystems.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ Tech Stack & Setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Framework**: [Next.js](https://nextjs.org/) (App Router, React Server Components)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Database**: [Neon Serverless PostgreSQL](https://neon.tech/) (`@neondatabase/serverless`)
+- **Icons**: [Lucide React](https://lucide.dev/)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Getting Started
 
-## Deploy on Vercel
+1. **Clone & Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Configure Environment Variables**
+   Create a `.env.local` containing your Neon Database connection URL:
+   ```env
+   DATABASE_URL="postgres://<user>:<password>@<project>.neon.tech/neondb?sslmode=require"
+   NEXT_PUBLIC_ADMIN_CODE="your_secure_admin_password"
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. **Initialize Database**
+   The tables will auto-generate based on API queries, or you can populate the Rubric categories initially running:
+   ```bash
+   node seed-rubric.js
+   ```
+
+4. **Launch Development Server**
+   ```bash
+   npm run dev
+   ```
+   *The application will boot on `http://localhost:3000`.*
+
+---
+
+## 🗄️ Database Schema
+Data propagates seamlessly through Neon Postgres without heavy ORMs. The core tables feature:
+- `teams`: Participants and project metadata.
+- `jury`: Accredited judges and secure access parameters.
+- `rubric_criteria`: Hierarchical tree for dynamic categories mapping into isolated assessment blocks.
+- `evaluations`: Intersecting records mapping a Jury Member -> Team -> Criterion -> Score.
+- `settings`: Global configuration overrides (End Date, Primary Hex Color, Global Hackathon Prompt).
+
+Crafted with pixel-precision and robust data integrity for competitive high-stakes Hackathon grading!

@@ -222,7 +222,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
     if (isLoading) {
         return (
             <div className="flex justify-center items-center min-h-[60vh]">
-                <Loader2 className="w-8 h-8 animate-spin text-[#C4FF00]" />
+                <Loader2 className="w-8 h-8 animate-spin text-brand-light-blue" />
             </div>
         );
     }
@@ -230,11 +230,11 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
     return (
         <div className="animate-in fade-in duration-500 min-h-screen bg-[#070b1a]">
             {/* Top Focused Header */}
-            <header className="flex items-center justify-between px-8 py-4 bg-[#0A1128]/80 backdrop-blur-md border-b border-white/5 relative z-[30]">
+            <header className="flex items-center justify-between px-8 py-4 bg-bg-main/80 backdrop-blur-md border-b border-white/5 relative z-[30]">
                 <div className="flex items-center gap-4">
                     <button 
                         onClick={() => router.push('/dashboard')}
-                        className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-white hover:text-[#0A1128] transition-all group"
+                        className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-white hover:text-brand-dark transition-all group"
                     >
                         <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
                     </button>
@@ -248,7 +248,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                     <div className="hidden sm:flex flex-col items-end">
                       <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest font-sans mb-1 opacity-60">ПРОГРЕС</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-2xl font-display font-black text-[#C4FF00]">{Object.keys(scores).length * 10}</span>
+                        <span className="text-2xl font-display font-black text-brand-light-blue">{Object.keys(scores).length * 10}</span>
                         <span className="text-[10px] text-slate-700 font-bold uppercase tracking-widest font-sans">точки</span>
                       </div>
                     </div>
@@ -257,8 +257,8 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                         onClick={() => setShowProfile(!showProfile)}
                         className={`flex items-center gap-2 py-3 px-6 rounded-full font-display font-black text-[10px] uppercase tracking-widest transition-all border ${
                             showProfile 
-                            ? "bg-white text-[#0A1128] border-white" 
-                            : "bg-[#FF9D00]/10 text-[#FF9D00] border-[#FF9D00]/20 hover:bg-[#FF9D00] hover:text-[#0A1128]"
+                            ? "bg-white text-brand-dark border-white" 
+                            : "bg-brand-orange/10 text-brand-orange border-brand-orange/20 hover:bg-brand-orange hover:text-brand-dark"
                         }`}
                     >
                         <FileText className="w-4 h-4" />
@@ -311,18 +311,36 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                         </div>
                     )}
 
+                    {/* Loading State */}
                     {criteria.length === 0 ? (
                         <div className="glass p-20 rounded-md text-center border-dashed border-2 border-white/5">
-                            <Loader2 className="w-10 h-10 animate-spin text-brand-500 mx-auto mb-4" />
+                            <Loader2 className="w-10 h-10 animate-spin text-brand-light-blue mx-auto mb-4" />
                             <p className="text-slate-500 font-medium font-sans">Конфигуриране на сесията...</p>
                         </div>
                     ) : (
-                        Object.entries(grouped).map(([category, crits]) => (
+                        <>
+                        {/* Generic Rubric Advice */}
+                        <div className="glass rounded-md p-6 md:p-8 border border-white/5 border-l-4 border-l-brand-light-blue shadow-lg mb-8 bg-white/[0.02]">
+                            <h3 className="text-white font-display font-bold text-lg mb-4 flex items-center gap-2 tracking-tight">
+                                <FileText className="w-5 h-5 text-brand-light-blue" />
+                                Съвети как да използвате тези критерии (Скала от 0 до 10)
+                            </h3>
+                            <ul className="space-y-4 font-sans text-sm text-slate-300">
+                                <li><strong className="text-white">10 точки (Изключително ниво / "Wow" ефект):</strong> Перфектно изпълнение. Проектът надхвърля очакванията, готов е за професионална среда и демонстрира изключително внимание към детайла.</li>
+                                <li><strong className="text-white">8-9 точки (Много добро / Отлично изпълнение):</strong> Солидна, завършена и качествена работа. Отборът е покрил всички изисквания на критерия, като може да има само много дребни, незначителни пропуски.</li>
+                                <li><strong className="text-white">6-7 точки (Добро изпълнение, но с пропуски):</strong> Положена е добра основа и логиката е правилна, но липсват детайли, завършеност или изпипване в някои аспекти. Има видим потенциал, който се нуждае от доработка.</li>
+                                <li><strong className="text-white">3-5 точки (Базово / Посредствено изпълнение):</strong> Категорията е засегната само повърхностно. Налице са сериозни логически, технически, визуални или бизнес пропуски, които пречат на цялостното възприемане на продукта.</li>
+                                <li><strong className="text-white">1-2 точки (Слаба разработка):</strong> Едва загатнато или некачествено изпълнение, което изобщо не отговаря на стандартите на хакатона.</li>
+                                <li><strong className="text-white">0 точки:</strong> Напълно липсващ елемент в проекта или презентацията.</li>
+                            </ul>
+                        </div>
+                        
+                        {Object.entries(grouped).map(([category, crits]) => (
                             <section key={category} id={`category-${category}`} className="space-y-8 scroll-mt-32">
-                                <div className="flex flex-col gap-3 pl-2 border-l-2 border-brand-500/30">
+                                <div className="flex flex-col gap-3 pl-2 border-l-2 border-brand-light-blue/30">
                                     <h2 className="text-3xl font-display font-bold text-white tracking-tight uppercase">{category}</h2>
-                                    {crits[0]?.description && (
-                                        <p className="text-slate-400 text-sm max-w-2xl leading-relaxed italic opacity-80 font-sans">{crits[0].description}</p>
+                                    {crits[0]?.scoring_guide && (
+                                        <div className="mt-2 font-sans italic text-slate-400 text-sm max-w-2xl leading-relaxed opacity-80" dangerouslySetInnerHTML={{ __html: crits[0].scoring_guide }} />
                                     )}
                                 </div>
 
@@ -335,51 +353,44 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                         return (
                                             <div key={c.id} id={`criterion-${c.id}`} className="glass rounded-md p-8 md:p-10 border border-white/5 hover:border-white/10 transition-all relative overflow-hidden group shadow-xl bg-white/[0.01]">
                                                 {/* Background Accent */}
-                                                <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-500/5 rounded-md blur-[80px] group-hover:bg-brand-500/10 transition-colors" />
+                                                <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-light-blue/5 rounded-md blur-[80px] group-hover:bg-brand-light-blue/10 transition-colors" />
                                                 
                                                 <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
                                                     <div className="max-w-2xl">
                                                         <h3 className="text-xl md:text-2xl font-display font-bold text-white mb-3 tracking-tight">{c.criterion}</h3>
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="px-2.5 py-1 rounded-md bg-brand-500/10 text-brand-500 text-[10px] font-black uppercase tracking-wider border border-brand-500/20 font-sans">
+                                                        <div className="flex items-center gap-2 mb-4">
+                                                            <div className="px-2.5 py-1 rounded-md bg-brand-light-blue/10 text-brand-light-blue text-[10px] uppercase font-black tracking-widest border border-brand-light-blue/20">
                                                                 до {c.max_score} точки
                                                             </div>
                                                             {selected !== undefined && (
-                                                                <div className="text-[10px] text-emerald-500 font-bold uppercase flex items-center gap-1 font-sans">
+                                                                <div className="text-[10px] text-brand-light-blue font-bold uppercase flex items-center gap-1 font-sans">
                                                                     <CheckCircle2 className="w-3 h-3" /> Оценено
                                                                 </div>
                                                             )}
                                                         </div>
+                                                        {c.description && (
+                                                            <div className="text-slate-300 text-sm font-sans leading-relaxed opacity-90 mb-2" dangerouslySetInnerHTML={{ __html: c.description }} />
+                                                        )}
                                                     </div>
                                                 </div>
 
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10 w-full">
+                                                <div className="flex flex-wrap gap-2 sm:gap-3 relative z-10 w-full mt-2">
                                                     {scoreOptions.map(score => {
                                                         const isSelected = selected === score;
-                                                        const guide = guideLines.find(l => {
-                                                            const match = l.match(/^(\d+)[ ]*т/);
-                                                            return match && parseInt(match[1]) === score;
-                                                        });
 
                                                         return (
                                                             <button
                                                                 key={score}
                                                                 onClick={() => handleScoreChange(c.id, score)}
-                                                                className={`group/score relative flex flex-col p-6 rounded-md border transition-all duration-300 text-left h-full min-h-[160px] shadow-sm ${
+                                                                className={`group/score relative flex-1 min-w-[3rem] sm:min-w-[4rem] flex-col items-center justify-center py-4 rounded-md border transition-all duration-300 shadow-sm ${
                                                                     isSelected
-                                                                    ? "bg-brand-500 border-brand-500 text-[#0A1128] shadow-2xl shadow-brand-500/40 z-10 font-bold"
-                                                                    : "bg-white/[0.03] border-white/5 text-slate-400 hover:border-white/20 hover:bg-white/[0.06]"
+                                                                    ? "bg-brand-light-blue border-brand-light-blue text-brand-dark shadow-2xl scale-105 z-10 font-bold"
+                                                                    : "bg-white/[0.03] border-white/5 text-slate-400 hover:border-white/20 hover:bg-white/[0.06] hover:scale-105"
                                                                 }`}
                                                             >
-                                                                 <span className={`text-3xl font-display font-black mb-4 ${isSelected ? 'text-[#0A1128]' : 'text-white'}`}>
+                                                                 <span className={`text-xl sm:text-2xl font-display font-black leading-none ${isSelected ? 'text-brand-dark' : 'text-white'}`}>
                                                                     {score}
                                                                 </span>
-                                                                <p className={`text-xs md:text-sm leading-relaxed overflow-hidden break-words transition-opacity font-medium font-sans ${isSelected ? 'text-[#0A1128] opacity-100' : 'text-slate-200 opacity-100'}`}>
-                                                                     {guide ? guide.replace(/^\d+[ ]*т[. ]*-?[ ]*/, '') : `${score} точки`}
-                                                                 </p>
-                                                                {isSelected && (
-                                                                    <div className="absolute top-6 right-6 w-2.5 h-2.5 rounded-md bg-[#0A1128] animate-pulse" />
-                                                                )}
                                                             </button>
                                                         );
                                                     })}
@@ -389,14 +400,14 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                     })}
                                 </div>
                             </section>
-                        ))
+                        ))}
+                        </>
                     )}
-
                     {/* Final Comments Area */}
                      <section className="pt-12 pb-32">
                         <div className="glass rounded-md p-10 border border-white/5 shadow-2xl">
                            <div className="flex items-center gap-4 mb-8">
-                                <div className="w-12 h-12 rounded-md bg-white/5 flex items-center justify-center text-brand-500">
+                                <div className="w-12 h-12 rounded-md bg-white/5 flex items-center justify-center text-brand-light-blue">
                                     <Send className="w-6 h-6" />
                                 </div>
                                 <div>
@@ -410,7 +421,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                 onBlur={handleCommentBlur}
                                 placeholder="Напишете своите конструктивни коментари..."
                                 rows={6}
-                                className="w-full p-8 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all resize-none text-xl font-sans"
+                                className="w-full p-8 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-light-blue focus:border-transparent transition-all resize-none text-xl font-sans"
                             />
                         </div>
                     </section>
@@ -418,7 +429,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
 
                 {/* Right: Team Reference Hub */}
                 <div 
-                    className={`fixed top-0 right-0 h-full bg-[#0A1128] border-l border-white/5 z-[60] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] shadow-[0_0_100px_rgba(0,0,0,0.8)] ${
+                    className={`fixed top-0 right-0 h-full bg-bg-main border-l border-white/5 z-[60] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] shadow-[0_0_100px_rgba(0,0,0,0.8)] ${
                         showProfile ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none'
                     } w-full max-w-lg`}
                 >
@@ -426,11 +437,11 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                         <div className="flex items-center justify-between mb-12">
                             <div>
                                 <h2 className="text-3xl font-display font-bold text-white">Проект</h2>
-                                <p className="text-brand-500 text-xs font-black uppercase tracking-widest mt-1 font-sans">Информация • Ресурси</p>
+                                <p className="text-brand-light-blue text-xs font-black uppercase tracking-widest mt-1 font-sans">Информация • Ресурси</p>
                             </div>
                             <button 
                                 onClick={() => setShowProfile(false)}
-                                className="p-4 bg-white/5 hover:bg-brand-500 hover:text-[#0A1128] rounded-md text-slate-400 transition-all active:scale-90"
+                                className="p-4 bg-white/5 hover:bg-brand-light-blue hover:text-brand-dark rounded-md text-slate-400 transition-all active:scale-90"
                             >
                                 <X className="w-6 h-6" />
                             </button>
@@ -445,7 +456,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                             alt="Project" 
                                             className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" 
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-[#0A1128] via-transparent to-transparent opacity-60" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-bg-main via-transparent to-transparent opacity-60" />
                                     </div>
                                 )}
 
@@ -458,9 +469,9 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                     <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] font-sans">Ресурси</h3>
                                     <div className="grid gap-3">
                                         {teamProfile.project_url && (
-                                            <a href={teamProfile.project_url} target="_blank" className="flex items-center justify-between p-6 rounded-md bg-white/[0.02] border border-white/5 hover:border-brand-500 transition-all group shadow-sm">
+                                            <a href={teamProfile.project_url} target="_blank" className="flex items-center justify-between p-6 rounded-md bg-white/[0.02] border border-white/5 hover:border-brand-light-blue transition-all group shadow-sm">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 rounded-md bg-brand-500/10 flex items-center justify-center text-brand-500">
+                                                    <div className="w-12 h-12 rounded-md bg-brand-light-blue/10 flex items-center justify-center text-brand-light-blue">
                                                         <ExternalLink className="w-6 h-6" />
                                                     </div>
                                                     <div>
@@ -468,13 +479,13 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                                         <span className="text-[10px] text-slate-500 uppercase font-bold font-sans">Project Link</span>
                                                     </div>
                                                 </div>
-                                                <ArrowLeft className="w-5 h-5 text-slate-800 rotate-180 group-hover:text-brand-500 transition-colors" />
+                                                <ArrowLeft className="w-5 h-5 text-slate-800 rotate-180 group-hover:text-brand-light-blue transition-colors" />
                                             </a>
                                         )}
                                          {teamProfile.presentation_url && (
-                                            <a href={teamProfile.presentation_url} target="_blank" className="flex items-center justify-between p-6 rounded-md bg-white/[0.02] border border-white/5 hover:border-[#FF9D00] transition-all group shadow-sm">
+                                            <a href={teamProfile.presentation_url} target="_blank" className="flex items-center justify-between p-6 rounded-md bg-white/[0.02] border border-white/5 hover:border-brand-orange transition-all group shadow-sm">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 rounded-md bg-[#FF9D00]/10 flex items-center justify-center text-[#FF9D00]">
+                                                    <div className="w-12 h-12 rounded-md bg-brand-orange/10 flex items-center justify-center text-brand-orange">
                                                         <FileVideo className="w-6 h-6" />
                                                     </div>
                                                     <div>
@@ -482,7 +493,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                                         <span className="text-[10px] text-slate-500 uppercase font-bold font-sans">Slides / Video</span>
                                                     </div>
                                                 </div>
-                                                <ArrowLeft className="w-5 h-5 text-slate-800 rotate-180 group-hover:text-[#FF9D00] transition-colors" />
+                                                <ArrowLeft className="w-5 h-5 text-slate-800 rotate-180 group-hover:text-brand-orange transition-colors" />
                                             </a>
                                         )}
                                         {teamProfile.links?.map((link, i) => (
@@ -513,7 +524,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
             </div>
 
              {/* Sticky Bottom Summary Bar */}
-            <div className="fixed bottom-0 left-0 right-0 py-2 px-6 bg-[#0A1128]/95 backdrop-blur-xl border-t border-white/5 z-[49] shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
+            <div className="fixed bottom-0 left-0 right-0 py-2 px-6 bg-bg-main/95 backdrop-blur-xl border-t border-white/5 z-[49] shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
                 <div className="max-w-[1600px] mx-auto flex items-center justify-between">
                     <div className="flex flex-col">
                         <span className="text-[8px] text-slate-600 font-black uppercase tracking-[0.2em] leading-none mb-1 font-sans opacity-60">ЗАВЪРШЕНИ КРИТЕРИИ</span>
@@ -530,7 +541,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                         className={`group relative flex items-center gap-2 py-2 px-6 rounded-full font-display font-black text-[10px] uppercase tracking-[0.1em] transition-all overflow-hidden ${
                             isSubmitting
                             ? "bg-slate-900 text-slate-600 cursor-not-allowed"
-                            : "bg-[#C4FF00] hover:bg-white text-[#0A1128] shadow-[0_10px_20px_rgba(196,255,0,0.15)] hover:shadow-[#C4FF00]/10 active:scale-95 translate-y-0 hover:-translate-y-px"
+                            : "bg-brand-light-blue hover:bg-white text-brand-dark shadow-[0_10px_20px_color-mix(in_srgb,var(--color-brand-light-blue)_15%,transparent)] hover:shadow-brand-light-blue/10 active:scale-95 translate-y-0 hover:-translate-y-px"
                         }`}
                     >
                         {isSubmitting ? (

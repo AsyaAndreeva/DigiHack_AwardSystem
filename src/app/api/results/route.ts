@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
+import { calculateLeaderboard, EvaluationRaw } from '@/lib/scoring';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -17,25 +18,19 @@ export async function GET() {
   try {
     const sql = neon(process.env.DATABASE_URL);
     
-    // Group by team and sum their scores
-    // We also want to know how many juries evaluated them
-    const leaderboard = await sql`
+    // Fetch raw evaluations directly
+    const rawEvaluations = await sql`
       SELECT 
         team_id,
         team_name,
-        COUNT(jury_name) as evaluations_count,
-        SUM(total_score) as combined_score,
-        json_agg(
-          json_build_object(
-            'jury_name', jury_name,
-            'total_score', total_score,
-            'comments', comments
-          )
-        ) as jury_breakdown
+        jury_name,
+        total_score,
+        comments
       FROM evaluations
-      GROUP BY team_id, team_name
-      ORDER BY combined_score DESC
     `;
+
+    // Calculate leaderboard purely in TypeScript so it can be rigorously unit tested
+    const leaderboard = calculateLeaderboard(rawEvaluations as unknown as EvaluationRaw[]);
 
     return NextResponse.json({ success: true, data: leaderboard });
   } catch (error: any) {

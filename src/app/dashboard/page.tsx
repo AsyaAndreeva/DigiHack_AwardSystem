@@ -44,14 +44,14 @@ export default function Dashboard() {
     return (
         <div className="animate-in fade-in duration-500 min-h-screen">
             {/* Standardized Header */}
-            <header className="flex items-center justify-between px-8 py-6 bg-[#0A1128]/80 backdrop-blur-md border-b border-white/5 relative z-[30]">
+            <header className="flex items-center justify-between px-8 py-6 bg-bg-main/80 backdrop-blur-md border-b border-white/5 relative z-[30]">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-[#C4FF00]/10 flex items-center justify-center text-[#C4FF00]">
+                    <div className="w-12 h-12 rounded-full bg-brand-light-blue/10 flex items-center justify-center text-brand-light-blue">
                         <Activity className="w-6 h-6" />
                     </div>
                     <div>
                         <h1 className="text-3xl font-display font-black text-white uppercase tracking-tight leading-none mb-1">
-                            Добре дошли, <span className="text-[#C4FF00]">{juryName}</span>
+                            Добре дошли, <span className="text-brand-light-blue">{juryName}</span>
                         </h1>
                         <p className="text-[10px] text-slate-500 font-sans font-black uppercase tracking-[0.2em] opacity-60">Табло за оценяване</p>
                     </div>
@@ -72,9 +72,9 @@ export default function Dashboard() {
 
             {/* Progress Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                <div className="glass rounded-md border-l-4 border-[#C4FF00] p-8 flex flex-col shadow-xl">
+                <div className="glass rounded-md border-l-4 border-brand-light-blue p-8 flex flex-col shadow-xl">
                     <div className="flex items-center gap-4 mb-6">
-                        <div className="w-14 h-14 rounded-md bg-[#C4FF00]/10 flex items-center justify-center text-[#C4FF00] shadow-inner">
+                        <div className="w-14 h-14 rounded-md bg-brand-light-blue/10 flex items-center justify-center text-brand-light-blue shadow-inner">
                             <Activity className="w-7 h-7" />
                         </div>
                         <h2 className="text-xl font-display font-black text-white uppercase tracking-tight">Вашият напредък</h2>
@@ -82,11 +82,11 @@ export default function Dashboard() {
                     <div className="flex-1 flex flex-col justify-end">
                         <div className="flex justify-between text-xs font-black uppercase tracking-widest mb-3 text-slate-500 font-sans">
                             <span>{completedCount} оценени</span>
-                            <span className="text-[#C4FF00]">{totalCount} общо</span>
+                            <span className="text-brand-light-blue">{totalCount} общо</span>
                         </div>
                         <div className="w-full bg-slate-900 rounded-md h-4 overflow-hidden border border-white/5">
                             <div
-                                className="bg-[#C4FF00] h-full rounded-md transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(196,255,0,0.3)]"
+                                className="bg-brand-light-blue h-full rounded-md transition-all duration-1000 ease-out shadow-[0_0_15px_color-mix(in_srgb,var(--color-brand-light-blue)_30%,transparent)]"
                                 style={{ width: `${progressPct}%` }}
                             />
                         </div>
@@ -94,9 +94,9 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                <div className="glass rounded-md border-l-4 border-[#FF9D00] p-8 flex flex-col justify-center shadow-xl">
+                <div className="glass rounded-md border-l-4 border-brand-orange p-8 flex flex-col justify-center shadow-xl">
                     <div className="flex items-center gap-4 mb-2">
-                        <div className="w-14 h-14 rounded-md bg-[#FF9D00]/10 flex items-center justify-center text-[#FF9D00] shadow-inner">
+                        <div className="w-14 h-14 rounded-md bg-brand-orange/10 flex items-center justify-center text-brand-orange shadow-inner">
                             <Users className="w-7 h-7" />
                         </div>
                         <h2 className="text-xl font-display font-black text-white uppercase tracking-tight">Отбори</h2>
@@ -111,7 +111,7 @@ export default function Dashboard() {
             <h2 className="text-xl font-display font-semibold text-white mb-4">Участващи Отбори</h2>
 
             {loading ? (
-                <div className="flex justify-center py-12"><Loader2 className="w-7 h-7 animate-spin text-[#C4FF00]" /></div>
+                <div className="flex justify-center py-12"><Loader2 className="w-7 h-7 animate-spin text-brand-light-blue" /></div>
             ) : teams.length === 0 ? (
                 <div className="glass p-10 rounded-md text-center">
                     <Users className="w-12 h-12 text-slate-700 mx-auto mb-3" />
@@ -127,11 +127,11 @@ export default function Dashboard() {
                                 onClick={() => router.push(`/evaluate/${team.id}`)}
                                 className={`group flex items-center justify-between p-6 rounded-md cursor-pointer transition-all duration-500 ${isEvaluated
                                     ? "bg-white/[0.02] border border-white/5 opacity-60 hover:opacity-100"
-                                    : "glass border-l-4 border-l-[#C4FF00] transform hover:-translate-y-1 shadow-lg bg-white/[0.04]"
+                                    : "glass border-l-4 border-l-brand-light-blue transform hover:-translate-y-1 shadow-lg bg-white/[0.04]"
                                     }`}
                             >
                                 <div className="flex items-center gap-6">
-                                    <div className={`w-16 h-16 rounded-md flex items-center justify-center font-display font-black text-2xl transition-all shadow-md ${isEvaluated ? "bg-slate-900 text-slate-700" : "bg-[#C4FF00]/10 text-[#C4FF00] group-hover:bg-[#C4FF00] group-hover:text-[#0A1128]"}`}>
+                                    <div className={`w-16 h-16 rounded-md flex items-center justify-center font-display font-black text-2xl transition-all shadow-md ${isEvaluated ? "bg-slate-900 text-slate-700" : "bg-brand-light-blue/10 text-brand-light-blue group-hover:bg-brand-light-blue group-hover:text-brand-dark"}`}>
                                         {index + 1}
                                     </div>
                                     <div>
@@ -143,9 +143,9 @@ export default function Dashboard() {
                                 </div>
                                 <div className="flex items-center">
                                     {isEvaluated ? (
-                                        <CheckCircle2 className="w-8 h-8 text-[#C4FF00] opacity-30" />
+                                        <CheckCircle2 className="w-8 h-8 text-brand-light-blue opacity-30" />
                                     ) : (
-                                        <div className="w-12 h-12 rounded-md bg-white/5 flex items-center justify-center group-hover:bg-[#C4FF00] group-hover:text-[#0A1128] transition-all shadow-inner">
+                                        <div className="w-12 h-12 rounded-md bg-white/5 flex items-center justify-center group-hover:bg-brand-light-blue group-hover:text-brand-dark transition-all shadow-inner">
                                             <ChevronRight className="w-6 h-6" />
                                         </div>
                                     )}

@@ -9,6 +9,8 @@ export default function TeamDashboard() {
     const [teamName, setTeamName] = useState<string | null>(null);
     const [isMounted, setIsMounted] = useState(false);
 
+    // Removed themeResources
+
     // Form State
     const [description, setDescription] = useState("");
     const [projectUrl, setProjectUrl] = useState("");
@@ -44,6 +46,8 @@ export default function TeamDashboard() {
 
         // Fetch existing profile if any
         fetchProfile(storedTeamId);
+
+        // Theme has moved to the main hub
     }, [router]);
 
     useEffect(() => {
@@ -151,14 +155,14 @@ export default function TeamDashboard() {
     return (
         <div className="animate-in fade-in duration-500 min-h-screen">
             {/* Standardized Header */}
-            <header className="flex items-center justify-between px-8 py-6 bg-[#0A1128]/80 backdrop-blur-md border-b border-white/5 sticky top-0 z-[50]">
+            <header className="flex items-center justify-between px-8 py-6 bg-bg-main/80 backdrop-blur-md border-b border-white/5 sticky top-0 z-[50]">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-[#FF9D00]/10 flex items-center justify-center text-[#FF9D00]">
+                    <div className="w-12 h-12 rounded-full bg-brand-orange/10 flex items-center justify-center text-brand-orange">
                         <Activity className="w-6 h-6" />
                     </div>
                     <div>
                         <h1 className="text-3xl font-display font-black text-white uppercase tracking-tight leading-none mb-1">
-                            <span className="text-[#FF9D00]">{teamName}</span>
+                            <span className="text-brand-orange">{teamName}</span>
                         </h1>
                         <p className="text-[10px] text-slate-500 font-sans font-black uppercase tracking-[0.2em] opacity-60">Профил на отбора</p>
                     </div>
@@ -167,7 +171,7 @@ export default function TeamDashboard() {
                 <div className="flex items-center gap-6">
                     <div className="hidden sm:flex flex-col items-end mr-4">
                         <span className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] mb-1 opacity-60">Оставащо време</span>
-                        <div className="text-[#FF9D00] font-mono text-xl font-bold tracking-widest bg-black/40 px-3 py-1 rounded-md border border-[#FF9D00]/20">
+                        <div className="text-brand-orange font-mono text-xl font-bold tracking-widest bg-black/40 px-3 py-1 rounded-md border border-brand-orange/20">
                             {timeLeft}
                         </div>
                     </div>
@@ -185,26 +189,27 @@ export default function TeamDashboard() {
 
             {isLoading ? (
                 <div className="flex justify-center items-center py-20">
-                    <div className="w-8 h-8 rounded-full border-t-2 border-[#FF9D00] animate-spin"></div>
+                    <div className="w-8 h-8 rounded-full border-t-2 border-brand-orange animate-spin"></div>
                 </div>
             ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <>
+                    <form onSubmit={handleSubmit} className="space-y-6">
                     {errorMsg && (
                         <div className="p-5 bg-red-500/10 border border-red-500/50 rounded-md text-red-500 text-xs font-black uppercase tracking-widest">
                             {errorMsg}
                         </div>
                     )}
                     {successMsg && (
-                        <div className="p-5 bg-[#FF9D00]/10 border border-[#FF9D00]/50 rounded-md text-[#FF9D00] text-xs font-black uppercase tracking-widest flex items-center shadow-[0_0_20px_rgba(255,157,0,0.1)]">
+                        <div className="p-5 bg-brand-orange/10 border border-brand-orange/50 rounded-md text-brand-orange text-xs font-black uppercase tracking-widest flex items-center shadow-[0_0_20px_rgba(243, 155, 45,0.1)]">
                             <CheckCircle2 className="w-5 h-5 mr-3" />
                             {successMsg}
                         </div>
                     )}
 
-                    <div className="glass p-8 md:p-12 rounded-md border-l-4 border-[#FF9D00] space-y-10 shadow-2xl">
+                    <div className="glass p-8 md:p-12 rounded-md border-l-4 border-brand-orange space-y-10 shadow-2xl">
                         <div className="space-y-4">
                             <label className="text-xs font-black text-slate-400 ml-1 block flex items-center gap-2 uppercase tracking-widest font-sans">
-                                <FileText className="w-4 h-4 text-[#FF9D00]" />
+                                <FileText className="w-4 h-4 text-brand-orange" />
                                 Описание на идеята (Elevator Pitch)
                             </label>
                             <textarea
@@ -212,14 +217,14 @@ export default function TeamDashboard() {
                                 onChange={(e) => setDescription(e.target.value)}
                                 placeholder="В един параграф опишете вашето решение..."
                                 rows={6}
-                                className="w-full p-6 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#FF9D00] focus:border-transparent transition-all font-sans text-lg"
+                                className="w-full p-6 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#F39B2D] focus:border-transparent transition-all font-sans text-lg"
                                 required
                             />
                         </div>
 
                         <div className="space-y-4">
                             <label className="text-xs font-black text-slate-400 ml-1 block flex items-center gap-2 uppercase tracking-widest font-sans">
-                                <FileText className="w-4 h-4 text-[#FF9D00]" />
+                                <FileText className="w-4 h-4 text-brand-orange" />
                                 Основна снимка на проекта
                             </label>
                             {imageUrl && (
@@ -239,13 +244,13 @@ export default function TeamDashboard() {
                                         setImageFile(e.target.files[0]);
                                     }
                                 }}
-                                className="w-full text-white file:mr-6 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-xs file:font-black file:uppercase file:tracking-widest file:bg-[#FF9D00] file:text-[#0A1128] hover:file:bg-[#E68D00] transition-all cursor-pointer"
+                                className="w-full text-white file:mr-6 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-xs file:font-black file:uppercase file:tracking-widest file:bg-brand-orange file:text-brand-dark hover:file:bg-[#E68D00] transition-all cursor-pointer"
                             />
                         </div>
 
                         <div className="space-y-4">
                             <label className="text-xs font-black text-slate-400 ml-1 block flex items-center gap-2 uppercase tracking-widest font-sans">
-                                <LinkIcon className="w-4 h-4 text-[#FF9D00]" />
+                                <LinkIcon className="w-4 h-4 text-brand-orange" />
                                 URL на проекта (GitHub, Figma, Vercel, Сайт)
                             </label>
                             <input
@@ -253,13 +258,13 @@ export default function TeamDashboard() {
                                 value={projectUrl}
                                 onChange={(e) => setProjectUrl(e.target.value)}
                                 placeholder="https://github.com/..."
-                                className="w-full p-5 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#FF9D00] focus:border-transparent transition-all font-sans"
+                                className="w-full p-5 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#F39B2D] focus:border-transparent transition-all font-sans"
                             />
                         </div>
 
                         <div className="space-y-4">
                             <label className="text-xs font-black text-slate-400 ml-1 block flex items-center gap-2 uppercase tracking-widest font-sans">
-                                <LinkIcon className="w-4 h-4 text-[#FF9D00]" />
+                                <LinkIcon className="w-4 h-4 text-brand-orange" />
                                 URL на презентацията (Google Slides, Canva)
                             </label>
                             <input
@@ -267,13 +272,13 @@ export default function TeamDashboard() {
                                 value={presentationUrl}
                                 onChange={(e) => setPresentationUrl(e.target.value)}
                                 placeholder="https://docs.google.com/presentation/..."
-                                className="w-full p-5 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#FF9D00] focus:border-transparent transition-all font-sans"
+                                className="w-full p-5 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#F39B2D] focus:border-transparent transition-all font-sans"
                             />
                         </div>
 
                         <div className="space-y-4">
                             <label className="text-xs font-black text-slate-400 ml-1 block flex items-center gap-2 uppercase tracking-widest font-sans">
-                                <LinkIcon className="w-4 h-4 text-[#FF9D00]" />
+                                <LinkIcon className="w-4 h-4 text-brand-orange" />
                                 Допълнителни линкове
                             </label>
                             {links.map((link, idx) => (
@@ -287,7 +292,7 @@ export default function TeamDashboard() {
                                             newLinks[idx].title = e.target.value;
                                             setLinks(newLinks);
                                         }}
-                                        className="w-1/3 p-4 bg-black/40 border border-white/10 rounded-md text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#FF9D00] transition-all font-sans"
+                                        className="w-1/3 p-4 bg-black/40 border border-white/10 rounded-md text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#F39B2D] transition-all font-sans"
                                     />
                                     <input
                                         type="url"
@@ -298,7 +303,7 @@ export default function TeamDashboard() {
                                             newLinks[idx].url = e.target.value;
                                             setLinks(newLinks);
                                         }}
-                                        className="flex-1 p-4 bg-black/40 border border-white/10 rounded-md text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#FF9D00] transition-all font-sans"
+                                        className="flex-1 p-4 bg-black/40 border border-white/10 rounded-md text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#F39B2D] transition-all font-sans"
                                     />
                                     <button
                                         type="button"
@@ -312,7 +317,7 @@ export default function TeamDashboard() {
                             <button
                                 type="button"
                                 onClick={() => setLinks([...links, { title: "", url: "" }])}
-                                className="text-xs font-black uppercase tracking-widest text-[#FF9D00] hover:text-white transition-colors"
+                                className="text-xs font-black uppercase tracking-widest text-brand-orange hover:text-white transition-colors"
                             >
                                 + Добави линк
                             </button>
@@ -322,7 +327,7 @@ export default function TeamDashboard() {
                     <button
                         type="submit"
                         disabled={isSaving}
-                        className="w-full flex items-center justify-center space-x-2 py-4 px-8 bg-[#FF9D00] hover:bg-[#E68D00] disabled:opacity-50 text-[#0A1128] rounded-full font-bold transition-all duration-300 shadow-[0_0_20px_rgba(255,157,0,0.2)] hover:shadow-[0_0_30px_rgba(255,157,0,0.4)] active:scale-95 group"
+                        className="w-full flex items-center justify-center space-x-2 py-4 px-8 bg-brand-orange hover:bg-[#E68D00] disabled:opacity-50 text-brand-dark rounded-full font-bold transition-all duration-300 shadow-[0_0_20px_rgba(243, 155, 45,0.2)] hover:shadow-[0_0_30px_rgba(243, 155, 45,0.4)] active:scale-95 group"
                     >
                         {isSaving ? (
                             <>
@@ -337,6 +342,7 @@ export default function TeamDashboard() {
                         )}
                     </button>
                 </form>
+                </>
             )}
             </main>
         </div>
