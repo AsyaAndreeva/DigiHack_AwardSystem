@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
-import { calculateLeaderboard, EvaluationRaw } from '@/lib/scoring';
+import { calculateLeaderboard, EvaluationRaw } from '../../../lib/scoring';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
