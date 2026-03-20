@@ -255,7 +255,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                     
                     <button
                         onClick={() => setShowProfile(!showProfile)}
-                        className={`flex items-center gap-2 py-3 px-6 rounded-full font-display font-black text-[10px] uppercase tracking-widest transition-all border ${
+                        className={`flex xl:hidden items-center gap-2 py-3 px-6 rounded-full font-display font-black text-[10px] uppercase tracking-widest transition-all border ${
                             showProfile 
                             ? "bg-white text-brand-dark border-white" 
                             : "bg-brand-orange/10 text-brand-orange border-brand-orange/20 hover:bg-brand-orange hover:text-brand-dark"
@@ -272,6 +272,21 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                 
                 {/* Left: Category Mini-Map (Desktop Only) */}
                 <aside className="hidden xl:flex flex-col gap-3 w-72 shrink-0 sticky top-28 h-[calc(100vh-160px)] overflow-y-auto custom-scrollbar pr-2">
+                    <button
+                        onClick={() => setShowProfile(!showProfile)}
+                        className={`flex items-center justify-between w-full p-4 mb-2 rounded-md font-display font-black text-[11px] uppercase tracking-widest transition-all border shadow-lg ${
+                            showProfile 
+                            ? "bg-white text-brand-dark border-white" 
+                            : "bg-brand-orange/10 text-brand-orange border-brand-orange/20 hover:bg-brand-orange hover:text-brand-dark"
+                        }`}
+                    >
+                        <div className="flex items-center gap-3">
+                            <FileText className="w-4 h-4" />
+                            <span>Проект</span>
+                        </div>
+                        <div className={`w-2 h-2 rounded-full ${teamProfile?.description ? 'bg-green-500' : 'bg-red-500'} shadow-[0_0_8px_rgba(34,197,94,0.5)]`} />
+                    </button>
+
                     <p className="text-[10px] text-slate-500 uppercase font-black tracking-[0.2em] mb-4 ml-2 opacity-50">Критерии</p>
                     {Object.keys(grouped).map((category, idx) => {
                         const catCrits = grouped[category];
