@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const members = await sql`SELECT id, name, passcode FROM jury_members ORDER BY name ASC`;
     const evaluations = await sql`SELECT jury_id, scores FROM evaluations`;
-    const criteriaCountRes = await sql`SELECT COUNT(id) as count FROM rubric`;
+    const criteriaCountRes = await sql`SELECT COUNT(id) as count FROM rubric_criteria`;
     const criteriaCount = Number(criteriaCountRes[0].count);
 
     const membersWithCount = members.map((m: any) => {
