@@ -18,16 +18,25 @@ export async function GET() {
   try {
     const sql = neon(process.env.DATABASE_URL);
     
+    const criteriaCountRes = await sql`SELECT COUNT(id) as count FROM rubric_criteria`;
+    const criteriaCount = Number(criteriaCountRes[0].count);
+
     // Fetch raw evaluations directly
-    const rawEvaluations = await sql`
+    const allEvaluations = await sql`
       SELECT 
         team_id,
         team_name,
         jury_name,
         total_score,
+        scores,
         comments
       FROM evaluations
     `;
+
+    const rawEvaluations = allEvaluations.filter((e: any) => {
+       const scoresCount = e.scores ? Object.keys(e.scores).length : 0;
+       return scoresCount === criteriaCount;
+    });
 
     // Calculate leaderboard purely in TypeScript so it can be rigorously unit tested
     const leaderboard = calculateLeaderboard(rawEvaluations as unknown as EvaluationRaw[]);
