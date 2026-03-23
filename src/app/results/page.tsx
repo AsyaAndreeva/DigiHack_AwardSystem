@@ -216,10 +216,10 @@ export default function ResultsPage() {
 
                                 <div className="flex items-center justify-between md:justify-end gap-10 bg-black/40 p-6 rounded-md border border-white/5 shadow-inner">
                                     <div className="flex flex-col text-right">
-                                        <span className="text-[10px] text-slate-600 uppercase font-black tracking-[0.3em] mb-1">TOTAL SCORE</span>
+                                        <span className="text-[10px] text-slate-600 uppercase font-black tracking-[0.3em] mb-1">ОБЩО ТОЧКИ</span>
                                         <div className="text-5xl font-display font-black text-white flex items-baseline tracking-tighter">
                                             {row.combined_score}
-                                            <span className="text-sm text-slate-700 font-bold ml-2 tracking-widest uppercase">pts</span>
+                                            <span className="text-sm text-slate-700 font-bold ml-2 tracking-widest uppercase">т.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -254,7 +254,7 @@ export default function ResultsPage() {
                                 <h3 className="text-2xl font-display font-black text-white tracking-tight">{selectedTeam.team_name}</h3>
                                 <div className="flex items-center gap-4 mt-2">
                                     <span className="text-[10px] text-brand-yellow font-black uppercase tracking-widest bg-brand-yellow/10 px-2 py-1 rounded-md border border-brand-yellow/20">
-                                        Total: {selectedTeam.combined_score} pts
+                                        Общо: {selectedTeam.combined_score} т.
                                     </span>
                                     <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">
                                         {selectedTeam.evaluations_count} Журита
