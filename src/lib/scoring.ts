@@ -4,12 +4,14 @@ export interface EvaluationRaw {
   jury_name: string;
   total_score: number;
   comments: string | null;
+  categories?: { category: string; score: number }[];
 }
 
 export interface JuryBreakdown {
   jury_name: string;
   total_score: number;
   comments: string | null;
+  categories?: { category: string; score: number }[];
 }
 
 export interface LeaderboardEntry {
@@ -44,6 +46,7 @@ export function calculateLeaderboard(evaluations: EvaluationRaw[]): LeaderboardE
       jury_name: evalRaw.jury_name,
       total_score: score,
       comments: evalRaw.comments,
+      categories: evalRaw.categories,
     });
   }
 

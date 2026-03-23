@@ -529,21 +529,31 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                         </div>
                     </div>
 
-                    <button
-                        onClick={handleFinish}
-                        disabled={isSubmitting}
-                        className={`group relative flex items-center gap-2 py-2 px-6 rounded-full font-display font-black text-[10px] uppercase tracking-[0.1em] transition-all overflow-hidden ${
-                            isSubmitting
-                            ? "bg-slate-900 text-slate-600 cursor-not-allowed"
-                            : "bg-brand-light-blue hover:bg-white text-brand-dark shadow-[0_10px_20px_color-mix(in_srgb,var(--color-brand-light-blue)_15%,transparent)] hover:shadow-brand-light-blue/10 active:scale-95 translate-y-0 hover:-translate-y-px"
-                        }`}
-                    >
-                        {isSubmitting ? (
-                            <><Loader2 className="w-4 h-4 animate-spin" /> <span className="uppercase tracking-widest text-[8px]">Запазване...</span></>
-                        ) : (
-                            <><CheckCircle2 className="w-4 h-4" /> <span className="uppercase tracking-widest">Готово</span></>
-                        )}
-                    </button>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => router.push('/dashboard')}
+                            disabled={isSubmitting}
+                            className="group flex items-center gap-2 py-2 px-6 rounded-full font-display font-black text-[10px] uppercase tracking-[0.1em] transition-all bg-white/[0.05] hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 active:scale-95"
+                        >
+                            <ArrowLeft className="w-4 h-4" />
+                            <span className="hidden sm:inline-block uppercase tracking-widest">Назад</span>
+                        </button>
+                        <button
+                            onClick={handleFinish}
+                            disabled={isSubmitting}
+                            className={`group relative flex items-center gap-2 py-2 px-6 rounded-full font-display font-black text-[10px] uppercase tracking-[0.1em] transition-all overflow-hidden ${
+                                isSubmitting
+                                ? "bg-slate-900 text-slate-600 cursor-not-allowed"
+                                : "bg-brand-light-blue hover:bg-white text-brand-dark shadow-[0_10px_20px_color-mix(in_srgb,var(--color-brand-light-blue)_15%,transparent)] hover:shadow-brand-light-blue/10 active:scale-95 translate-y-0 hover:-translate-y-px"
+                            }`}
+                        >
+                            {isSubmitting ? (
+                                <><Loader2 className="w-4 h-4 animate-spin" /> <span className="uppercase tracking-widest text-[8px]">Запазване...</span></>
+                            ) : (
+                                <><CheckCircle2 className="w-4 h-4" /> <span className="uppercase tracking-widest">Готово</span></>
+                            )}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -8,6 +8,7 @@ type JuryBreakdown = {
     jury_name: string;
     total_score: number;
     comments?: string;
+    categories?: { category: string; score: number }[];
 };
 
 type LeaderboardRow = {
@@ -222,23 +223,41 @@ export default function ResultsPage() {
                                 </div>
                             </div>
 
-                            {/* Jury Comments Section (Only show if there are comments) */}
-                            {row.jury_breakdown.some(j => j.comments && j.comments.trim() !== '') && (
+                            {/* Jury Breakdown Section */}
+                            {row.jury_breakdown.length > 0 && (
                                 <div className="mt-10 pt-10 border-t border-white/5">
                                     <h4 className="text-[10px] font-black text-slate-500 flex items-center mb-6 uppercase tracking-[0.3em] font-sans">
                                         <MessageSquare className="w-4 h-4 mr-3 text-brand-yellow" />
-                                        Обратна връзка от журито
+                                        Оценки и обратна връзка
                                     </h4>
                                     <div className="grid gap-4 sm:grid-cols-2">
-                                        {row.jury_breakdown.filter(j => j.comments && j.comments.trim() !== '').map((jury, jIdx) => (
-                                            <div key={jIdx} className="bg-black/20 p-6 rounded-md border border-white/5 shadow-md group/comment">
-                                                <div className="flex justify-between items-center mb-4">
+                                        {row.jury_breakdown.map((jury, jIdx) => (
+                                            <div key={jIdx} className="bg-black/20 p-6 rounded-md border border-white/5 shadow-md flex flex-col">
+                                                <div className="flex justify-between items-center mb-6">
                                                     <span className="text-[10px] font-black text-brand-orange bg-brand-orange/5 px-3 py-1 rounded-md border border-brand-orange/20 uppercase tracking-widest font-sans">{jury.jury_name}</span>
-                                                    <span className="text-[10px] text-slate-700 font-black uppercase tracking-tighter">SCORE: <span className="text-white ml-1">{jury.total_score}</span></span>
+                                                    <span className="text-[10px] text-slate-700 font-black uppercase tracking-tighter">ОБЩО: <span className="text-white ml-1">{jury.total_score} pts</span></span>
                                                 </div>
-                                                <p className="text-sm text-slate-400 italic whitespace-pre-wrap leading-relaxed font-sans font-medium">
-                                                    "{jury.comments}"
-                                                </p>
+                                                
+                                                {/* Category Points */}
+                                                {jury.categories && jury.categories.length > 0 && (
+                                                    <div className="space-y-3 mb-4">
+                                                        {jury.categories.map((cat, cIdx) => (
+                                                            <div key={cIdx} className="flex justify-between items-start text-xs font-sans">
+                                                                <span className="text-slate-400 pr-4 leading-snug">{cat.category}</span>
+                                                                <span className="text-brand-yellow font-black tabular-nums bg-white/5 px-2 py-0.5 rounded-md">{cat.score}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                {/* Jury Comment */}
+                                                {jury.comments && jury.comments.trim() !== '' && (
+                                                    <div className="mt-auto pt-5 border-t border-white/5">
+                                                        <p className="text-sm text-slate-300 italic whitespace-pre-wrap leading-relaxed font-sans font-medium">
+                                                            "{jury.comments}"
+                                                        </p>
+                                                    </div>
+                                                )}
                                             </div>
                                         ))}
                                     </div>

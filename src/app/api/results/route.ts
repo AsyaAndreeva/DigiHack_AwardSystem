@@ -28,8 +28,10 @@ export async function GET() {
   try {
     const sql = neon(process.env.DATABASE_URL);
     
-    const criteriaCountRes = await sql`SELECT COUNT(id) as count FROM rubric_criteria`;
-    const criteriaCount = Number(criteriaCountRes[0].count);
+    const criteriaRes = await sql`SELECT id, category FROM rubric_criteria`;
+    const criteriaCount = criteriaRes.length;
+    const criteriaMap = new Map<string, string>();
+    criteriaRes.forEach(c => criteriaMap.set(c.id.toString(), c.category));
 
     // Fetch raw evaluations directly, joining tables to get current names
     const allEvaluations = await sql`
@@ -57,12 +59,19 @@ export async function GET() {
           (sum, s) => sum + (Number(s) || 0),
           0
         );
+        
+        const categoryScores = Object.entries(scoresMap).map(([critId, score]) => ({
+            category: criteriaMap.get(critId.toString()) || `Критерий ${critId}`,
+            score: Number(score) || 0
+        }));
+
         return {
           team_id: e.team_id,
           team_name: e.team_name,
           jury_name: e.jury_name,
           total_score: computedTotal,
           comments: e.comments,
+          categories: categoryScores,
         };
       });
 
