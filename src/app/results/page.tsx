@@ -282,7 +282,7 @@ export default function ResultsPage() {
                                 <div className="space-y-8">
                                     {(() => {
                                         const aggCategories = new Map<string, number>();
-                                        const comments: string[] = [];
+                                        const commentsList: {name: string, text: string}[] = [];
 
                                         selectedTeam.jury_breakdown.forEach(jury => {
                                             if (jury.categories) {
@@ -291,7 +291,7 @@ export default function ResultsPage() {
                                                 });
                                             }
                                             if (jury.comments && jury.comments.trim() !== '') {
-                                                comments.push(jury.comments.trim());
+                                                commentsList.push({ name: jury.jury_name, text: jury.comments.trim() });
                                             }
                                         });
 
@@ -316,17 +316,22 @@ export default function ResultsPage() {
                                                     </div>
                                                 )}
 
-                                                {/* Anonymous Comments Block */}
-                                                {comments.length > 0 && (
+                                                {/* Jury Comments Block */}
+                                                {commentsList.length > 0 && (
                                                     <div>
                                                         <h5 className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-4 flex items-center gap-2">
                                                             <MessageSquare className="w-4 h-4 text-brand-yellow" /> Коментари от журито
                                                         </h5>
                                                         <div className="grid gap-4 sm:grid-cols-2">
-                                                            {comments.map((comment, idx) => (
-                                                                <div key={idx} className="bg-white/[0.02] p-6 rounded-xl border border-white/5 shadow-md">
+                                                            {commentsList.map((comment, idx) => (
+                                                                <div key={idx} className="bg-white/[0.02] p-6 rounded-xl border border-white/5 shadow-md flex flex-col">
+                                                                    <div className="mb-4">
+                                                                        <span className="text-[10px] font-black text-brand-orange bg-brand-orange/5 px-3 py-1 rounded-md border border-brand-orange/20 uppercase tracking-widest font-sans inline-block">
+                                                                            {comment.name}
+                                                                        </span>
+                                                                    </div>
                                                                     <p className="text-sm text-slate-300 italic whitespace-pre-wrap leading-relaxed font-sans font-medium">
-                                                                        "{comment}"
+                                                                        "{comment.text}"
                                                                     </p>
                                                                 </div>
                                                             ))}
