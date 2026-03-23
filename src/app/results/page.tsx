@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Trophy, RefreshCw, AlertCircle, MessageSquare, ArrowLeft } from "lucide-react";
+import { Trophy, RefreshCw, AlertCircle, MessageSquare, ArrowLeft, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type JuryBreakdown = {
@@ -25,6 +25,7 @@ export default function ResultsPage() {
     const [error, setError] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [passwordInput, setPasswordInput] = useState("");
+    const [selectedTeam, setSelectedTeam] = useState<LeaderboardRow | null>(null);
     const router = useRouter();
 
     const fetchResults = async () => {
@@ -180,7 +181,8 @@ export default function ResultsPage() {
                     {data.map((row, index) => (
                         <div
                             key={row.team_id}
-                            className="glass p-8 rounded-md border-l-4 border-l-slate-800 flex flex-col relative overflow-hidden group shadow-lg hover:bg-white/[0.05] transition-all"
+                            onClick={() => setSelectedTeam(row)}
+                            className="glass p-8 rounded-md border-l-4 border-l-slate-800 flex flex-col relative overflow-hidden group shadow-lg hover:bg-white/[0.05] transition-all cursor-pointer"
                         >
                             {/* Rank Highlight Background for Top 3 */}
                             {index === 0 && <div className="absolute top-0 left-0 w-1 h-full bg-brand-yellow shadow-[0_0_20px_rgba(218, 234, 95,0.5)]"></div>}
@@ -223,51 +225,101 @@ export default function ResultsPage() {
                                 </div>
                             </div>
 
-                            {/* Jury Breakdown Section */}
-                            {row.jury_breakdown.length > 0 && (
-                                <div className="mt-10 pt-10 border-t border-white/5">
-                                    <h4 className="text-[10px] font-black text-slate-500 flex items-center mb-6 uppercase tracking-[0.3em] font-sans">
-                                        <MessageSquare className="w-4 h-4 mr-3 text-brand-yellow" />
-                                        Оценки и обратна връзка
-                                    </h4>
-                                    <div className="grid gap-4 sm:grid-cols-2">
-                                        {row.jury_breakdown.map((jury, jIdx) => (
-                                            <div key={jIdx} className="bg-black/20 p-6 rounded-md border border-white/5 shadow-md flex flex-col">
-                                                <div className="flex justify-between items-center mb-6">
-                                                    <span className="text-[10px] font-black text-brand-orange bg-brand-orange/5 px-3 py-1 rounded-md border border-brand-orange/20 uppercase tracking-widest font-sans">{jury.jury_name}</span>
-                                                    <span className="text-[10px] text-slate-700 font-black uppercase tracking-tighter">ОБЩО: <span className="text-white ml-1">{jury.total_score} pts</span></span>
-                                                </div>
-                                                
-                                                {/* Category Points */}
-                                                {jury.categories && jury.categories.length > 0 && (
-                                                    <div className="space-y-3 mb-4">
-                                                        {jury.categories.map((cat, cIdx) => (
-                                                            <div key={cIdx} className="flex justify-between items-start text-xs font-sans">
-                                                                <span className="text-slate-400 pr-4 leading-snug">{cat.category}</span>
-                                                                <span className="text-brand-yellow font-black tabular-nums bg-white/5 px-2 py-0.5 rounded-md">{cat.score}</span>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                )}
-
-                                                {/* Jury Comment */}
-                                                {jury.comments && jury.comments.trim() !== '' && (
-                                                    <div className="mt-auto pt-5 border-t border-white/5">
-                                                        <p className="text-sm text-slate-300 italic whitespace-pre-wrap leading-relaxed font-sans font-medium">
-                                                            "{jury.comments}"
-                                                        </p>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
+                            {/* UI hint for interactivity - instead of rendering inline breakdown */}
+                            <div className="mt-6 pt-6 border-t border-white/5 flex justify-end">
+                                <span className="text-[10px] text-brand-yellow font-black uppercase tracking-widest flex items-center group-hover:translate-x-1 transition-transform">
+                                    Виж детайли <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
+                                </span>
+                            </div>
                         </div>
                     ))}
                 </div>
             )}
             </main>
+
+            {/* Modal Popup for Details */}
+            {selectedTeam && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    {/* Backdrop */}
+                    <div 
+                        className="absolute inset-0 bg-black/80 backdrop-blur-md animate-in fade-in duration-300"
+                        onClick={() => setSelectedTeam(null)}
+                    />
+                    
+                    {/* Modal Content */}
+                    <div className="relative bg-bg-main border border-white/10 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col animate-in zoom-in-95 duration-300">
+                        {/* Header */}
+                        <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/[0.02]">
+                            <div>
+                                <h3 className="text-2xl font-display font-black text-white tracking-tight">{selectedTeam.team_name}</h3>
+                                <div className="flex items-center gap-4 mt-2">
+                                    <span className="text-[10px] text-brand-yellow font-black uppercase tracking-widest bg-brand-yellow/10 px-2 py-1 rounded-md border border-brand-yellow/20">
+                                        Total: {selectedTeam.combined_score} pts
+                                    </span>
+                                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+                                        {selectedTeam.evaluations_count} Журита
+                                    </span>
+                                </div>
+                            </div>
+                            <button 
+                                onClick={() => setSelectedTeam(null)}
+                                className="w-10 h-10 rounded-md bg-white/5 flex items-center justify-center text-slate-400 hover:bg-white hover:text-brand-dark transition-all active:scale-95"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        {/* Scrolling Content */}
+                        <div className="p-6 overflow-y-auto custom-scrollbar">
+                            <h4 className="text-[10px] font-black text-slate-500 flex items-center mb-6 uppercase tracking-[0.3em] font-sans">
+                                <MessageSquare className="w-4 h-4 mr-3 text-brand-yellow" />
+                                Оценки и обратна връзка
+                            </h4>
+                            
+                            {selectedTeam.jury_breakdown.length === 0 ? (
+                                <p className="text-slate-500 text-sm font-sans">Няма въведени оценки все още.</p>
+                            ) : (
+                                <div className="grid gap-6 sm:grid-cols-2">
+                                    {selectedTeam.jury_breakdown.map((jury, jIdx) => (
+                                        <div key={jIdx} className="bg-black/40 p-6 rounded-xl border border-white/5 shadow-inner flex flex-col">
+                                            <div className="flex justify-between items-center mb-6">
+                                                <span className="text-[10px] font-black text-brand-orange bg-brand-orange/10 px-3 py-1.5 rounded-md border border-brand-orange/20 uppercase tracking-widest font-sans">
+                                                    {jury.jury_name}
+                                                </span>
+                                                <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest">
+                                                    ОБЩО: <span className="text-white ml-1 text-sm">{jury.total_score}</span> <span className="opacity-50">PTS</span>
+                                                </span>
+                                            </div>
+                                            
+                                            {/* Category Points */}
+                                            {jury.categories && jury.categories.length > 0 && (
+                                                <div className="space-y-3 mb-6 bg-white/[0.02] p-4 rounded-lg border border-white/[0.02]">
+                                                    {jury.categories.map((cat, cIdx) => (
+                                                        <div key={cIdx} className="flex justify-between items-start text-xs font-sans">
+                                                            <span className="text-slate-400 pr-4 leading-snug">{cat.category}</span>
+                                                            <span className="text-brand-yellow font-black tabular-nums bg-brand-yellow/10 px-2 py-0.5 rounded-md">{cat.score}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+
+                                            {/* Jury Comment */}
+                                            {jury.comments && jury.comments.trim() !== '' && (
+                                                <div className="mt-auto pt-5 border-t border-white/5">
+                                                    <h5 className="text-[9px] text-slate-600 uppercase font-black tracking-widest mb-3">Коментар</h5>
+                                                    <p className="text-sm text-slate-300 italic whitespace-pre-wrap leading-relaxed font-sans font-medium">
+                                                        "{jury.comments}"
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
