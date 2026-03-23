@@ -421,10 +421,10 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                     </section>
                 </main>
 
-                {/* Right: Team Reference Hub */}
+                {/* Left: Team Reference Hub */}
                 <div 
-                    className={`fixed top-0 right-0 h-full bg-bg-main border-l border-white/5 z-[60] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] shadow-[0_0_100px_rgba(0,0,0,0.8)] ${
-                        showProfile ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none'
+                    className={`fixed top-0 left-0 h-full bg-bg-main border-r border-white/5 z-[60] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] shadow-[0_0_100px_rgba(0,0,0,0.8)] ${
+                        showProfile ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0 pointer-events-none'
                     } w-full max-w-lg`}
                 >
                     <div className="h-full flex flex-col p-10 overflow-y-auto custom-scrollbar">
