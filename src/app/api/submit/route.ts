@@ -9,7 +9,13 @@ export const fetchCache = 'force-no-store';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { juryId, juryName, teamId, teamName, scores, totalScore, comments } = body;
+    const { juryId, juryName, teamId, teamName, scores, comments } = body;
+
+    // Always compute total_score server-side from the scores object
+    // so we never trust a potentially incorrect client-sent value
+    const computedTotalScore = scores && typeof scores === 'object'
+      ? Object.values(scores as Record<string, number>).reduce((sum, s) => sum + (Number(s) || 0), 0)
+      : 0;
 
     if (!process.env.DATABASE_URL) {
       return NextResponse.json({ error: 'Липсва конфигурация на базата данни.' }, { status: 500 });
@@ -17,19 +23,15 @@ export async function POST(req: Request) {
 
     const sql = neon(process.env.DATABASE_URL);
     
-    // Fallback if juryId is missing but we have it passed or have juryName
-    const effectiveJuryId = juryId || juryName;
 
     // First try to update an existing evaluation for this jury and team
     const updateResult = await sql`
       UPDATE evaluations
       SET 
         scores = ${JSON.stringify(scores)},
-        total_score = ${totalScore},
-        comments = ${comments || null},
-        jury_name = ${juryName},
-        team_name = ${teamName}
-      WHERE (jury_id = ${effectiveJuryId} OR (jury_id IS NULL AND jury_name = ${juryName})) 
+        total_score = ${computedTotalScore},
+        comments = ${comments || null}
+      WHERE jury_id = ${juryId} 
         AND team_id = ${teamId}
       RETURNING id
     `;
@@ -37,14 +39,12 @@ export async function POST(req: Request) {
     // If no row was updated, it means this is a new evaluation, so we insert
     if (updateResult.length === 0) {
       await sql`
-        INSERT INTO evaluations (jury_id, jury_name, team_id, team_name, scores, total_score, comments)
+        INSERT INTO evaluations (jury_id, team_id, scores, total_score, comments)
         VALUES (
-          ${effectiveJuryId},
-          ${juryName},
+          ${juryId},
           ${teamId},
-          ${teamName},
           ${JSON.stringify(scores)},
-          ${totalScore},
+          ${computedTotalScore},
           ${comments || null}
         )
       `;

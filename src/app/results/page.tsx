@@ -50,14 +50,25 @@ export default function ResultsPage() {
     //     fetchResults();
     // }, []);
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (passwordInput === "Jury2026!") {
+        setError(null);
+        try {
+            const res = await fetch("/api/results", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password: passwordInput }),
+            });
+            const d = await res.json();
+            if (!res.ok || !d.success) {
+                setError(d.error || "Грешна парола.");
+                return;
+            }
             setIsAuthenticated(true);
             setPasswordInput("");
             fetchResults();
-        } else {
-            setError("Грешна парола.");
+        } catch {
+            setError("Грешка при свързване.");
         }
     };
 

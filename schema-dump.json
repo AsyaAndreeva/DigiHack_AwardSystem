@@ -1,0 +1,327 @@
+{
+  "schema": [
+    {
+      "table_name": "evaluations",
+      "column_name": "id",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "is_nullable": "NO",
+      "column_default": "nextval('evaluations_id_seq'::regclass)"
+    },
+    {
+      "table_name": "evaluations",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "character_maximum_length": null,
+      "is_nullable": "YES",
+      "column_default": "CURRENT_TIMESTAMP"
+    },
+    {
+      "table_name": "evaluations",
+      "column_name": "jury_name",
+      "data_type": "character varying",
+      "character_maximum_length": 255,
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "evaluations",
+      "column_name": "team_id",
+      "data_type": "character varying",
+      "character_maximum_length": 255,
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "evaluations",
+      "column_name": "team_name",
+      "data_type": "character varying",
+      "character_maximum_length": 255,
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "evaluations",
+      "column_name": "scores",
+      "data_type": "jsonb",
+      "character_maximum_length": null,
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "evaluations",
+      "column_name": "total_score",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "evaluations",
+      "column_name": "comments",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "evaluations",
+      "column_name": "jury_id",
+      "data_type": "character varying",
+      "character_maximum_length": 255,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "jury_members",
+      "column_name": "id",
+      "data_type": "character varying",
+      "character_maximum_length": 255,
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "jury_members",
+      "column_name": "name",
+      "data_type": "character varying",
+      "character_maximum_length": 255,
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "jury_members",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "character_maximum_length": null,
+      "is_nullable": "YES",
+      "column_default": "CURRENT_TIMESTAMP"
+    },
+    {
+      "table_name": "jury_members",
+      "column_name": "passcode",
+      "data_type": "character varying",
+      "character_maximum_length": 20,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "rubric_criteria",
+      "column_name": "id",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "is_nullable": "NO",
+      "column_default": "nextval('rubric_criteria_id_seq'::regclass)"
+    },
+    {
+      "table_name": "rubric_criteria",
+      "column_name": "category",
+      "data_type": "character varying",
+      "character_maximum_length": 512,
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "rubric_criteria",
+      "column_name": "criterion",
+      "data_type": "character varying",
+      "character_maximum_length": 512,
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "rubric_criteria",
+      "column_name": "max_score",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "is_nullable": "NO",
+      "column_default": "3"
+    },
+    {
+      "table_name": "rubric_criteria",
+      "column_name": "scoring_guide",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "rubric_criteria",
+      "column_name": "order_idx",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "is_nullable": "NO",
+      "column_default": "0"
+    },
+    {
+      "table_name": "rubric_criteria",
+      "column_name": "description",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "settings",
+      "column_name": "id",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "is_nullable": "NO",
+      "column_default": "nextval('settings_id_seq'::regclass)"
+    },
+    {
+      "table_name": "settings",
+      "column_name": "key",
+      "data_type": "character varying",
+      "character_maximum_length": 255,
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "settings",
+      "column_name": "value",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "team_profiles",
+      "column_name": "team_id",
+      "data_type": "character varying",
+      "character_maximum_length": 255,
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "team_profiles",
+      "column_name": "description",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "team_profiles",
+      "column_name": "project_url",
+      "data_type": "character varying",
+      "character_maximum_length": 1024,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "team_profiles",
+      "column_name": "presentation_url",
+      "data_type": "character varying",
+      "character_maximum_length": 1024,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "team_profiles",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "character_maximum_length": null,
+      "is_nullable": "YES",
+      "column_default": "CURRENT_TIMESTAMP"
+    },
+    {
+      "table_name": "team_profiles",
+      "column_name": "image_url",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "team_profiles",
+      "column_name": "links",
+      "data_type": "jsonb",
+      "character_maximum_length": null,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "teams",
+      "column_name": "id",
+      "data_type": "character varying",
+      "character_maximum_length": 255,
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "teams",
+      "column_name": "name",
+      "data_type": "character varying",
+      "character_maximum_length": 255,
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "teams",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "character_maximum_length": null,
+      "is_nullable": "YES",
+      "column_default": "CURRENT_TIMESTAMP"
+    },
+    {
+      "table_name": "teams",
+      "column_name": "passcode",
+      "data_type": "character varying",
+      "character_maximum_length": 20,
+      "is_nullable": "YES",
+      "column_default": null
+    }
+  ],
+  "constraints": [
+    {
+      "table_name": "evaluations",
+      "constraint_type": "PRIMARY KEY",
+      "column_name": "id",
+      "foreign_table_name": "evaluations",
+      "foreign_column_name": "id"
+    },
+    {
+      "table_name": "team_profiles",
+      "constraint_type": "PRIMARY KEY",
+      "column_name": "team_id",
+      "foreign_table_name": "team_profiles",
+      "foreign_column_name": "team_id"
+    },
+    {
+      "table_name": "jury_members",
+      "constraint_type": "PRIMARY KEY",
+      "column_name": "id",
+      "foreign_table_name": "jury_members",
+      "foreign_column_name": "id"
+    },
+    {
+      "table_name": "teams",
+      "constraint_type": "PRIMARY KEY",
+      "column_name": "id",
+      "foreign_table_name": "teams",
+      "foreign_column_name": "id"
+    },
+    {
+      "table_name": "rubric_criteria",
+      "constraint_type": "PRIMARY KEY",
+      "column_name": "id",
+      "foreign_table_name": "rubric_criteria",
+      "foreign_column_name": "id"
+    },
+    {
+      "table_name": "settings",
+      "constraint_type": "PRIMARY KEY",
+      "column_name": "id",
+      "foreign_table_name": "settings",
+      "foreign_column_name": "id"
+    },
+    {
+      "table_name": "settings",
+      "constraint_type": "UNIQUE",
+      "column_name": "key",
+      "foreign_table_name": "settings",
+      "foreign_column_name": "key"
+    }
+  ]
+}
