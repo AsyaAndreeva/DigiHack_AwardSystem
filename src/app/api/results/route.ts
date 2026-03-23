@@ -60,9 +60,15 @@ export async function GET() {
           0
         );
         
-        const categoryScores = Object.entries(scoresMap).map(([critId, score]) => ({
-            category: criteriaMap.get(critId.toString()) || `Критерий ${critId}`,
-            score: Number(score) || 0
+        const aggregated: Record<string, number> = {};
+        for (const [critId, score] of Object.entries(scoresMap)) {
+            const cat = criteriaMap.get(critId.toString()) || `Критерий ${critId}`;
+            aggregated[cat] = (aggregated[cat] || 0) + (Number(score) || 0);
+        }
+        
+        const categoryScores = Object.entries(aggregated).map(([category, score]) => ({
+            category,
+            score
         }));
 
         return {
