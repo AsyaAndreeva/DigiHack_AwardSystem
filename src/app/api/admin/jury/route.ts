@@ -41,8 +41,15 @@ export async function PATCH(req: Request) {
   if (!isAuthorized(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const sql = getDb();
-    const { id, passcode } = await req.json();
+    const { id, passcode, name } = await req.json();
     if (!id) return NextResponse.json({ error: 'Липсва ID.' }, { status: 400 });
+
+    if (name !== undefined) {
+      if (!name.trim()) return NextResponse.json({ error: 'Името не може да е празно.' }, { status: 400 });
+      await sql`UPDATE jury_members SET name = ${name.trim()} WHERE id = ${id}`;
+      return NextResponse.json({ success: true, name: name.trim() });
+    }
+
     const newPasscode = passcode?.trim() || genPasscode();
     await sql`UPDATE jury_members SET passcode = ${newPasscode} WHERE id = ${id}`;
     return NextResponse.json({ success: true, passcode: newPasscode });

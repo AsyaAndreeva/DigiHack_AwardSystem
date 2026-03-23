@@ -71,6 +71,34 @@ export default function AdminPage() {
         setEditPasscodeValue(current);
     };
 
+    // Name inline edit
+    const [editNameId, setEditNameId] = useState<string | null>(null);
+    const [editNameValue, setEditNameValue] = useState("");
+    const [savingName, setSavingName] = useState(false);
+
+    const startEditName = (id: string, current: string) => {
+        setEditNameId(id);
+        setEditNameValue(current);
+    };
+
+    const updateName = async (type: "teams" | "jury", id: string, name: string) => {
+        if (!name.trim()) return;
+        setSavingName(true);
+        const res = await fetch(`/api/admin/${type}`, {
+            method: "PATCH",
+            headers: adminHeaders(),
+            body: JSON.stringify({ id, name }),
+        });
+        const d = await res.json();
+        setSavingName(false);
+        if (d.success) {
+            if (type === "teams") setTeams(p => p.map(t => t.id === id ? { ...t, name: d.name } : t));
+            else setJury(p => p.map(mj => mj.id === id ? { ...mj, name: d.name } : mj));
+            setEditNameId(null);
+            showFeedback(`Името е обновено!`, true);
+        } else showFeedback(d.error || "Грешка", false);
+    };
+
     const updatePasscode = async (type: "teams" | "jury", id: string, passcode?: string) => {
         setSavingPasscode(true);
         const res = await fetch(`/api/admin/${type}`, {
@@ -440,7 +468,30 @@ export default function AdminPage() {
                                     {teams.map(t => (
                                         <div key={t.id} className="bg-white/[0.02] border border-white/5 p-5 rounded-md flex flex-col gap-4 hover:bg-white/[0.04] transition-all group">
                                             <div className="flex items-center justify-between gap-4">
-                                                <span className="text-white font-black uppercase tracking-tight font-sans text-sm">{t.name}</span>
+                                                {editNameId === t.id ? (
+                                                    <div className="flex items-center gap-2 flex-1 mr-4">
+                                                        <input
+                                                            autoFocus
+                                                            value={editNameValue}
+                                                            onChange={e => setEditNameValue(e.target.value)}
+                                                            onKeyDown={e => { if (e.key === "Enter") updateName("teams", t.id, editNameValue); if (e.key === "Escape") setEditNameId(null); }}
+                                                            className="flex-1 p-1.5 bg-slate-900 border border-brand-yellow/40 rounded-md text-sm font-sans text-white focus:outline-none focus:ring-1 focus:ring-brand-yellow"
+                                                        />
+                                                        <button onClick={() => updateName("teams", t.id, editNameValue)} disabled={savingName} className="p-1.5 bg-brand-yellow hover:brightness-110 text-brand-dark rounded-md transition-colors" title="Запази">
+                                                            {savingName ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                                                        </button>
+                                                        <button onClick={() => setEditNameId(null)} className="p-1.5 text-slate-400 hover:text-white rounded-md transition-colors">
+                                                            <X className="w-4 h-4" />
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-white font-black uppercase tracking-tight font-sans text-sm">{t.name}</span>
+                                                        <button onClick={() => startEditName(t.id, t.name)} className="p-1 text-slate-500 hover:text-brand-yellow transition-colors" title="Промени името">
+                                                            <Edit2 className="w-3 h-3" />
+                                                        </button>
+                                                    </div>
+                                                )}
                                                 <div className="flex items-center gap-2 shrink-0">
                                                     {editPasscodeId === t.id ? (
                                                         <div className="flex items-center gap-1.5">
@@ -533,7 +584,30 @@ export default function AdminPage() {
                                     {jury.map(m => (
                                         <div key={m.id} className="bg-white/[0.02] border border-white/5 p-5 rounded-md flex items-center justify-between gap-4 hover:bg-white/[0.04] transition-all group">
                                             <div className="flex flex-col">
-                                                <span className="text-white font-black uppercase tracking-tight font-sans text-sm">{m.name}</span>
+                                                {editNameId === m.id ? (
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <input
+                                                            autoFocus
+                                                            value={editNameValue}
+                                                            onChange={e => setEditNameValue(e.target.value)}
+                                                            onKeyDown={e => { if (e.key === "Enter") updateName("jury", m.id, editNameValue); if (e.key === "Escape") setEditNameId(null); }}
+                                                            className="flex-1 p-1.5 bg-slate-900 border border-brand-yellow/40 rounded-md text-sm font-sans text-white focus:outline-none focus:ring-1 focus:ring-brand-yellow"
+                                                        />
+                                                        <button onClick={() => updateName("jury", m.id, editNameValue)} disabled={savingName} className="p-1.5 bg-brand-yellow hover:brightness-110 text-brand-dark rounded-md transition-colors" title="Запази">
+                                                            {savingName ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                                                        </button>
+                                                        <button onClick={() => setEditNameId(null)} className="p-1.5 text-slate-400 hover:text-white rounded-md transition-colors">
+                                                            <X className="w-4 h-4" />
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-white font-black uppercase tracking-tight font-sans text-sm">{m.name}</span>
+                                                        <button onClick={() => startEditName(m.id, m.name)} className="p-1 text-slate-500 hover:text-brand-yellow transition-colors" title="Промени името">
+                                                            <Edit2 className="w-3 h-3" />
+                                                        </button>
+                                                    </div>
+                                                )}
                                                 <span className="text-xs text-slate-500 font-sans mt-0.5 font-bold">Оценени отбори: {m.evaluations_count || 0}</span>
                                             </div>
                                             <div className="flex items-center gap-2 shrink-0">

@@ -82,11 +82,8 @@ export default function HubPage() {
     return (
         <div className="animate-in fade-in duration-500 flex flex-col items-center justify-center min-h-[80vh] py-8 px-4 max-w-3xl mx-auto relative">            {/* Header */}
             <div className="text-center mb-16 mt-8 sm:mt-0">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-md bg-brand-yellow shadow-[0_0_40px_color-mix(in_srgb,var(--color-brand-yellow)_30%,transparent)] mb-8">
-                    <Trophy className="w-10 h-10 text-brand-dark" />
-                </div>
                 <h1 className="text-4xl md:text-6xl font-display font-black text-white mb-4 tracking-tight">
-                    DigiHack <span className="text-brand-yellow">2.0</span>
+                    DigiHack <span className="text-brand-pink">2.0</span>
                 </h1>
                 <p className="text-slate-500 text-lg max-w-sm mx-auto font-sans font-medium uppercase tracking-[0.2em] opacity-80">
                     Платформа за оценяване
