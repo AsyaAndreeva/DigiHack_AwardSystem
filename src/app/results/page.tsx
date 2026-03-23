@@ -279,41 +279,63 @@ export default function ResultsPage() {
                             {selectedTeam.jury_breakdown.length === 0 ? (
                                 <p className="text-slate-500 text-sm font-sans">Няма въведени оценки все още.</p>
                             ) : (
-                                <div className="grid gap-6 sm:grid-cols-2">
-                                    {selectedTeam.jury_breakdown.map((jury, jIdx) => (
-                                        <div key={jIdx} className="bg-black/40 p-6 rounded-xl border border-white/5 shadow-inner flex flex-col">
-                                            <div className="flex justify-between items-center mb-6">
-                                                <span className="text-[10px] font-black text-brand-orange bg-brand-orange/10 px-3 py-1.5 rounded-md border border-brand-orange/20 uppercase tracking-widest font-sans">
-                                                    {jury.jury_name}
-                                                </span>
-                                                <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest">
-                                                    ОБЩО: <span className="text-white ml-1 text-sm">{jury.total_score}</span> <span className="opacity-50">PTS</span>
-                                                </span>
-                                            </div>
-                                            
-                                            {/* Category Points */}
-                                            {jury.categories && jury.categories.length > 0 && (
-                                                <div className="space-y-3 mb-6 bg-white/[0.02] p-4 rounded-lg border border-white/[0.02]">
-                                                    {jury.categories.map((cat, cIdx) => (
-                                                        <div key={cIdx} className="flex justify-between items-start text-xs font-sans">
-                                                            <span className="text-slate-400 pr-4 leading-snug">{cat.category}</span>
-                                                            <span className="text-brand-yellow font-black tabular-nums bg-brand-yellow/10 px-2 py-0.5 rounded-md">{cat.score}</span>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
+                                <div className="space-y-8">
+                                    {(() => {
+                                        const aggCategories = new Map<string, number>();
+                                        const comments: string[] = [];
 
-                                            {/* Jury Comment */}
-                                            {jury.comments && jury.comments.trim() !== '' && (
-                                                <div className="mt-auto pt-5 border-t border-white/5">
-                                                    <h5 className="text-[9px] text-slate-600 uppercase font-black tracking-widest mb-3">Коментар</h5>
-                                                    <p className="text-sm text-slate-300 italic whitespace-pre-wrap leading-relaxed font-sans font-medium">
-                                                        "{jury.comments}"
-                                                    </p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))}
+                                        selectedTeam.jury_breakdown.forEach(jury => {
+                                            if (jury.categories) {
+                                                jury.categories.forEach(cat => {
+                                                    aggCategories.set(cat.category, (aggCategories.get(cat.category) || 0) + cat.score);
+                                                });
+                                            }
+                                            if (jury.comments && jury.comments.trim() !== '') {
+                                                comments.push(jury.comments.trim());
+                                            }
+                                        });
+
+                                        const renderCategories = Array.from(aggCategories.entries()).map(([category, score]) => ({ category, score }));
+
+                                        return (
+                                            <>
+                                                {/* Aggregated Categories Block */}
+                                                {renderCategories.length > 0 && (
+                                                    <div className="bg-black/40 p-6 rounded-xl border border-white/5 shadow-inner">
+                                                        <h5 className="text-[10px] text-brand-light-blue uppercase font-black tracking-widest mb-6 flex items-center gap-2">
+                                                            Общ резултат по критерии
+                                                        </h5>
+                                                        <div className="space-y-4">
+                                                            {renderCategories.map((cat, idx) => (
+                                                                <div key={idx} className="flex justify-between items-center text-sm font-sans">
+                                                                    <span className="text-slate-300 pr-4 leading-snug">{cat.category}</span>
+                                                                    <span className="text-brand-yellow font-black text-lg tabular-nums bg-brand-yellow/10 px-3 py-1 rounded-md">{cat.score}</span>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {/* Anonymous Comments Block */}
+                                                {comments.length > 0 && (
+                                                    <div>
+                                                        <h5 className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-4 flex items-center gap-2">
+                                                            <MessageSquare className="w-4 h-4 text-brand-yellow" /> Коментари от журито
+                                                        </h5>
+                                                        <div className="grid gap-4 sm:grid-cols-2">
+                                                            {comments.map((comment, idx) => (
+                                                                <div key={idx} className="bg-white/[0.02] p-6 rounded-xl border border-white/5 shadow-md">
+                                                                    <p className="text-sm text-slate-300 italic whitespace-pre-wrap leading-relaxed font-sans font-medium">
+                                                                        "{comment}"
+                                                                    </p>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </>
+                                        );
+                                    })()}
                                 </div>
                             )}
                         </div>
