@@ -225,9 +225,9 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
 
                 <div className="flex items-center gap-6">
                     <div className="hidden sm:flex flex-col items-end">
-                      <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest font-sans mb-1 opacity-60">ПРОГРЕС</span>
+                      <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest font-sans mb-1 opacity-60">ОБЩ КЪМ МОМЕНТА</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-2xl font-display font-black text-brand-light-blue">{Object.keys(scores).length * 10}</span>
+                        <span className="text-2xl font-display font-black text-brand-light-blue">{Object.values(scores).reduce((sum, s) => sum + s, 0)}</span>
                         <span className="text-[10px] text-slate-700 font-bold uppercase tracking-widest font-sans">точки</span>
                       </div>
                     </div>
