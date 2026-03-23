@@ -63,8 +63,8 @@ export async function GET(req: Request) {
     const juryId = searchParams.get('juryId');
     const teamId = searchParams.get('teamId');
 
-    if (!juryId || !teamId) {
-      return NextResponse.json({ error: 'Missing juryId or teamId' }, { status: 400 });
+    if (!juryId) {
+      return NextResponse.json({ error: 'Missing juryId' }, { status: 400 });
     }
 
     if (!process.env.DATABASE_URL) {
@@ -72,6 +72,16 @@ export async function GET(req: Request) {
     }
 
     const sql = neon(process.env.DATABASE_URL);
+
+    if (!teamId) {
+      const evaluations = await sql`
+        SELECT team_id, scores 
+        FROM evaluations 
+        WHERE jury_id = ${juryId}
+      `;
+      return NextResponse.json({ evaluations });
+    }
+
     const evaluation = await sql`
       SELECT scores, comments 
       FROM evaluations 

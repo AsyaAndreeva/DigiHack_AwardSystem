@@ -89,7 +89,7 @@ body {
     @apply bg-brand-yellow/20 border-brand-yellow/50 shadow-[0_0_15px_color-mix(in_srgb,var(--color-brand-yellow)_20%,transparent)];
   }
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 to-brand-yellow;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-light-blue to-brand-yellow;
   }
 }
 

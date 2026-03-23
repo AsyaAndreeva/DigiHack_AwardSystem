@@ -80,14 +80,6 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                         if (evalData.evaluation) {
                             if (evalData.evaluation.scores) {
                                 setScores(evalData.evaluation.scores);
-                                const isFullyEvaluated = Object.keys(evalData.evaluation.scores).length === rubricData.criteria.length;
-                                const evaluated = JSON.parse(localStorage.getItem("evaluatedTeams") || "{}");
-                                if (isFullyEvaluated) {
-                                    evaluated[resolvedParams.teamId] = true;
-                                } else {
-                                    delete evaluated[resolvedParams.teamId];
-                                }
-                                localStorage.setItem("evaluatedTeams", JSON.stringify(evaluated));
                             }
                             if (evalData.evaluation.comments) {
                                 setComments(evalData.evaluation.comments);
@@ -142,15 +134,6 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
             if (!res.ok) {
                 const e = await res.json();
                 console.error("Auto-save error", e);
-            } else {
-                const isFullyEvaluated = Object.keys(newScores).length === criteria.length;
-                const evaluated = JSON.parse(localStorage.getItem("evaluatedTeams") || "{}");
-                if (isFullyEvaluated) {
-                    evaluated[resolvedParams.teamId] = true;
-                } else {
-                    delete evaluated[resolvedParams.teamId];
-                }
-                localStorage.setItem("evaluatedTeams", JSON.stringify(evaluated));
             }
         } catch (err: any) {
              console.error("Auto-save network error", err);
@@ -206,10 +189,6 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                 throw new Error(e.error || "Грешка при изпращане");
             }
 
-            const evaluated = JSON.parse(localStorage.getItem("evaluatedTeams") || "{}");
-            evaluated[resolvedParams.teamId] = true;
-            localStorage.setItem("evaluatedTeams", JSON.stringify(evaluated));
-
             router.push("/dashboard");
         } catch (err: any) {
             setError(err.message || "Неочаквана грешка");
@@ -263,7 +242,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                     >
                         <FileText className="w-4 h-4" />
                         Проект
-                        <div className={`w-2 h-2 rounded-full ${teamProfile?.description ? 'bg-green-500' : 'bg-red-500'} shadow-[0_0_8px_rgba(34,197,94,0.5)] ml-1`} />
+                        <div className={`w-2 h-2 rounded-full ${teamProfile?.description ? 'bg-brand-yellow' : 'bg-red-500'} shadow-[0_0_8px_var(--color-brand-yellow)] ml-1`} />
                     </button>
                 </div>
             </header>
@@ -284,7 +263,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                             <FileText className="w-4 h-4" />
                             <span>Проект</span>
                         </div>
-                        <div className={`w-2 h-2 rounded-full ${teamProfile?.description ? 'bg-green-500' : 'bg-red-500'} shadow-[0_0_8px_rgba(34,197,94,0.5)]`} />
+                        <div className={`w-2 h-2 rounded-full ${teamProfile?.description ? 'bg-brand-yellow' : 'bg-red-500'} shadow-[0_0_8px_var(--color-brand-yellow)]`} />
                     </button>
 
                     <p className="text-[10px] text-slate-500 uppercase font-black tracking-[0.2em] mb-4 ml-2 opacity-50">Критерии</p>
@@ -300,7 +279,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                 }}
                                 className={`group flex items-center justify-between p-4 rounded-md text-left text-xs font-bold transition-all border shadow-sm ${
                                     isDone 
-                                    ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-400" 
+                                    ? "bg-brand-yellow/5 border-brand-yellow/20 text-brand-yellow" 
                                     : "bg-white/[0.02] border-white/5 text-slate-500 hover:border-white/10 hover:text-white"
                                 }`}
                             >
@@ -308,7 +287,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                     {category.split('.')[1] || category}
                                 </span>
                                 {isDone ? (
-                                    <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-500" />
+                                    <CheckCircle2 className="w-4 h-4 shrink-0 text-brand-yellow" />
                                 ) : (
                                     <div className="w-4 h-4 rounded-md border border-white/10 shrink-0" />
                                 )}

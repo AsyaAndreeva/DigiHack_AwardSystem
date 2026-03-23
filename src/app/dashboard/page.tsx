@@ -17,16 +17,35 @@ export default function Dashboard() {
     useEffect(() => {
         setIsMounted(true);
         const storedName = localStorage.getItem("juryName");
+        const storedJuryId = localStorage.getItem("juryId");
+        
         if (!storedName) { router.push("/jury"); return; }
         setJuryName(storedName);
 
-        const stored = localStorage.getItem("evaluatedTeams");
-        if (stored) { try { setEvaluatedTeams(JSON.parse(stored)); } catch { } }
-
-        fetch("/api/teams")
-            .then(r => r.json())
-            .then(d => setTeams(d.teams || []))
-            .finally(() => setLoading(false));
+        Promise.all([
+            fetch("/api/teams").then(r => r.json()),
+            fetch("/api/rubric").then(r => r.json()),
+            storedJuryId ? fetch(`/api/submit?juryId=${storedJuryId}`).then(r => r.json()) : Promise.resolve({ evaluations: [] })
+        ]).then(([teamsData, rubricData, evalsData]) => {
+            setTeams(teamsData.teams || []);
+            
+            const criteriaCount = (rubricData.criteria || []).length;
+            const serverEvaluated: Record<string, boolean> = {};
+            
+            if (criteriaCount > 0 && evalsData.evaluations) {
+                evalsData.evaluations.forEach((ev: any) => {
+                    const hasScores = ev.scores ? Object.keys(ev.scores).length : 0;
+                    if (hasScores === criteriaCount) {
+                        serverEvaluated[ev.team_id] = true;
+                    }
+                });
+                
+                // Keep state in sync with server truth
+                setEvaluatedTeams(serverEvaluated);
+            }
+        }).finally(() => {
+            setLoading(false);
+        });
     }, [router]);
 
     if (!isMounted || !juryName) return null;
