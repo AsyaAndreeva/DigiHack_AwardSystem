@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
+
+
 
 function genPasscode(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no ambiguous I,O,1,0
@@ -11,7 +16,14 @@ function getDb() {
   return neon(process.env.DATABASE_URL);
 }
 
+function isAuthorized(req: Request): boolean {
+  const adminCode = req.headers.get('x-admin-code');
+  const validCode = process.env.ADMIN_CODE || process.env.NEXT_PUBLIC_ADMIN_CODE || 'digihack2026';
+  return adminCode === validCode;
+}
+
 export async function POST(req: Request) {
+  if (!isAuthorized(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const sql = getDb();
     const { name } = await req.json();
@@ -26,6 +38,7 @@ export async function POST(req: Request) {
 }
 
 export async function PATCH(req: Request) {
+  if (!isAuthorized(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const sql = getDb();
     const { id, passcode } = await req.json();
@@ -39,10 +52,12 @@ export async function PATCH(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  if (!isAuthorized(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const sql = getDb();
     const { id } = await req.json();
     if (!id) return NextResponse.json({ error: 'Липсва ID.' }, { status: 400 });
+    await sql`DELETE FROM evaluations WHERE jury_id = ${id}`;
     await sql`DELETE FROM jury_members WHERE id = ${id}`;
     return NextResponse.json({ success: true });
   } catch (e: any) {

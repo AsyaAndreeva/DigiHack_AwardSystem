@@ -1,54 +1,82 @@
-import { expect, test, describe } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { calculateLeaderboard, EvaluationRaw } from './scoring';
 
-describe('calculateLeaderboard', () => {
-  test('groups evaluations by team correctly', () => {
-    const raw: EvaluationRaw[] = [
-      { team_id: 't1', team_name: 'Team Alpha', jury_name: 'Jury 1', total_score: 80, comments: 'Good' },
-      { team_id: 't1', team_name: 'Team Alpha', jury_name: 'Jury 2', total_score: 90, comments: 'Great' },
-      { team_id: 't2', team_name: 'Team Beta', jury_name: 'Jury 1', total_score: 85, comments: null }
-    ];
+describe('Scoring Logic - calculateLeaderboard', () => {
 
-    const results = calculateLeaderboard(raw);
-
-    // Alpha: 80 + 90 = 170. Beta: 85.
-    expect(results.length).toBe(2);
-    expect(results[0].team_name).toBe('Team Alpha');
-    expect(results[0].combined_score).toBe(170);
-    expect(results[0].evaluations_count).toBe(2);
-    expect(results[0].jury_breakdown.length).toBe(2);
-
-    expect(results[1].team_name).toBe('Team Beta');
-    expect(results[1].combined_score).toBe(85);
-    expect(results[1].evaluations_count).toBe(1);
+  it('should return an empty array if there are no evaluations', () => {
+    const result = calculateLeaderboard([]);
+    expect(result).toEqual([]);
   });
 
-  test('sorts teams by combined_score correctly', () => {
-    const raw: EvaluationRaw[] = [
-      { team_id: 't1', team_name: 'Team Last', jury_name: 'Jury 1', total_score: 10, comments: null },
-      { team_id: 't2', team_name: 'Team First', jury_name: 'Jury 1', total_score: 99, comments: null },
-      { team_id: 't3', team_name: 'Team Middle', jury_name: 'Jury 1', total_score: 50, comments: null }
+  it('should correctly aggregate scores for a single team with multiple evaluations', () => {
+    const evaluations: EvaluationRaw[] = [
+      { team_id: 't1', team_name: 'Team Alpha', jury_name: 'Jury A', total_score: 50, comments: 'Good' },
+      { team_id: 't1', team_name: 'Team Alpha', jury_name: 'Jury B', total_score: 30, comments: 'Okayish' }
     ];
 
-    const results = calculateLeaderboard(raw);
+    const result = calculateLeaderboard(evaluations);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].team_id).toBe('t1');
+    expect(result[0].team_name).toBe('Team Alpha');
+    expect(result[0].evaluations_count).toBe(2);
+    expect(result[0].combined_score).toBe(80);
+    expect(result[0].jury_breakdown).toHaveLength(2);
+  });
+
+  it('should sort teams in descending order of their total combined_score', () => {
+    const evaluations: EvaluationRaw[] = [
+      { team_id: 't1', team_name: 'Team Alpha', jury_name: 'Jury A', total_score: 50, comments: null },
+      { team_id: 't2', team_name: 'Team Beta', jury_name: 'Jury A', total_score: 90, comments: null },
+      { team_id: 't3', team_name: 'Team Gamma', jury_name: 'Jury B', total_score: 75, comments: null },
+    ];
+
+    const result = calculateLeaderboard(evaluations);
+
+    expect(result).toHaveLength(3);
     
-    expect(results[0].team_id).toBe('t2'); // 99
-    expect(results[1].team_id).toBe('t3'); // 50
-    expect(results[2].team_id).toBe('t1'); // 10
+    // Top should be Beta (90)
+    expect(result[0].team_id).toBe('t2');
+    // Middle should be Gamma (75)
+    expect(result[1].team_id).toBe('t3');
+    // Bottom should be Alpha (50)
+    expect(result[2].team_id).toBe('t1');
   });
 
-  test('handles empty evaluations', () => {
-    const results = calculateLeaderboard([]);
-    expect(results).toEqual([]);
-  });
-
-  test('handles string-based numeric scores gracefully', () => {
-    const raw: any[] = [
-      { team_id: 't1', team_name: 'Team String', jury_name: 'Jury 1', total_score: '50.5', comments: null },
-      { team_id: 't1', team_name: 'Team String', jury_name: 'Jury 2', total_score: '49.5', comments: null }
+  it('should gracefully handle stringified scores by converting them to numbers', () => {
+    const evaluations: any[] = [
+      { team_id: 't1', team_name: 'Team Str', jury_name: 'Jury A', total_score: '20', comments: '' },
+      { team_id: 't1', team_name: 'Team Str', jury_name: 'Jury B', total_score: '30.5', comments: '' }
     ];
 
-    const results = calculateLeaderboard(raw);
-    expect(results[0].combined_score).toBe(100);
+    const result = calculateLeaderboard(evaluations as EvaluationRaw[]);
+
+    expect(result[0].combined_score).toBe(50.5);
   });
+
+  it('should handle NaN or undefined scores gracefully by treating them as 0', () => {
+    const evaluations: any[] = [
+      { team_id: 't-nan', team_name: 'Team NaN', jury_name: 'Jury Weird', total_score: undefined, comments: 'Broken' },
+      { team_id: 't-nan', team_name: 'Team NaN', jury_name: 'Jury Normal', total_score: 10, comments: 'Fine' }
+    ];
+
+    const result = calculateLeaderboard(evaluations as EvaluationRaw[]);
+
+    expect(result[0].combined_score).toBe(10);
+    expect(result[0].evaluations_count).toBe(2);
+  });
+
+  it('should maintain the integrity of jury breakdown data', () => {
+    const evaluations: EvaluationRaw[] = [
+      { team_id: 't1', team_name: 'Team Data', jury_name: 'Jury Strict', total_score: 10, comments: 'Too little code' }
+    ];
+
+    const result = calculateLeaderboard(evaluations);
+    const breakdown = result[0].jury_breakdown[0];
+
+    expect(breakdown.jury_name).toBe('Jury Strict');
+    expect(breakdown.total_score).toBe(10);
+    expect(breakdown.comments).toBe('Too little code');
+  });
+
 });

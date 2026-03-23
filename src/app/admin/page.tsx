@@ -109,6 +109,13 @@ export default function AdminPage() {
         setTimeout(() => setFeedback(null), 3000);
     };
 
+
+    const adminHeaders = (extra?: Record<string, string>) => ({
+        'Content-Type': 'application/json',
+        'x-admin-code': code,
+        ...extra,
+    });
+
     const loadData = useCallback(async () => {
         setLoading(true);
         try {
@@ -155,7 +162,7 @@ export default function AdminPage() {
     const addTeam = async () => {
         if (!newTeamName.trim()) return;
         setSaving(true);
-        const res = await fetch("/api/admin/teams", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: newTeamName }) });
+        const res = await fetch("/api/admin/teams", { method: "POST", headers: adminHeaders(), body: JSON.stringify({ name: newTeamName }) });
         const d = await res.json();
         setSaving(false);
         if (d.success) { setTeams(p => [...p, d.team]); setNewTeamName(""); showFeedback(`Отборът е добавен! Парола: ${d.team.passcode}`, true); }
@@ -163,7 +170,7 @@ export default function AdminPage() {
     };
 
     const deleteTeam = async (id: string) => {
-        const res = await fetch("/api/admin/teams", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
+        const res = await fetch("/api/admin/teams", { method: "DELETE", headers: adminHeaders(), body: JSON.stringify({ id }) });
         const d = await res.json();
         if (d.success) { setTeams(p => p.filter(t => t.id !== id)); showFeedback("Отборът е изтрит.", true); }
         else showFeedback(d.error || "Грешка", false);
@@ -173,7 +180,7 @@ export default function AdminPage() {
     const addJury = async () => {
         if (!newJuryName.trim()) return;
         setSaving(true);
-        const res = await fetch("/api/admin/jury", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: newJuryName }) });
+        const res = await fetch("/api/admin/jury", { method: "POST", headers: adminHeaders(), body: JSON.stringify({ name: newJuryName }) });
         const d = await res.json();
         setSaving(false);
         if (d.success) { setJury(p => [...p, d.member]); setNewJuryName(""); showFeedback(`Журистът е добавен! Парола: ${d.member.passcode}`, true); }
@@ -181,7 +188,7 @@ export default function AdminPage() {
     };
 
     const deleteJury = async (id: string) => {
-        const res = await fetch("/api/admin/jury", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
+        const res = await fetch("/api/admin/jury", { method: "DELETE", headers: adminHeaders(), body: JSON.stringify({ id }) });
         const d = await res.json();
         if (d.success) { setJury(p => p.filter(m => m.id !== id)); showFeedback("Членът е премахнат.", true); }
         else showFeedback(d.error || "Грешка", false);
@@ -190,7 +197,7 @@ export default function AdminPage() {
     // Clear all evaluations
     const clearEvaluations = async () => {
         if (!window.confirm("Сигурни ли сте? Това ще изтрие ВСИЧКИ резултати от оценяването!")) return;
-        const res = await fetch("/api/admin/evaluations", { method: "DELETE" });
+        const res = await fetch("/api/admin/evaluations", { method: "DELETE", headers: adminHeaders() });
         const d = await res.json();
         if (d.success) showFeedback("Всички резултати са изтрити.", true);
         else showFeedback(d.error || "Грешка", false);
@@ -201,7 +208,7 @@ export default function AdminPage() {
         if (!newCrit.category.trim() || !newCrit.criterion.trim()) return;
         setSaving(true);
         const payload = { ...newCrit, max_score: parseInt(newCrit.max_score), order_idx: criteria.length };
-        const res = await fetch("/api/admin/rubric", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+        const res = await fetch("/api/admin/rubric", { method: "POST", headers: adminHeaders(), body: JSON.stringify(payload) });
         const d = await res.json();
         setSaving(false);
         if (d.success) {
@@ -216,7 +223,7 @@ export default function AdminPage() {
         if (!inlineAddData.criterion.trim()) return;
         setSaving(true);
         const payload = { category, criterion: inlineAddData.criterion, description: inlineAddData.description, max_score: parseInt(inlineAddData.max_score), scoring_guide: "", order_idx: criteria.length };
-        const res = await fetch("/api/admin/rubric", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+        const res = await fetch("/api/admin/rubric", { method: "POST", headers: adminHeaders(), body: JSON.stringify(payload) });
         const d = await res.json();
         setSaving(false);
         if (d.success) {
@@ -231,7 +238,7 @@ export default function AdminPage() {
         if (!editId) return;
         setSaving(true);
         const payload = { id: editId, ...editData, max_score: parseInt(editData.max_score) };
-        const res = await fetch("/api/admin/rubric", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+        const res = await fetch("/api/admin/rubric", { method: "PUT", headers: adminHeaders(), body: JSON.stringify(payload) });
         const d = await res.json();
         setSaving(false);
         if (d.success) { await loadData(); setEditId(null); showFeedback("Критерият е обновен!", true); }
@@ -239,7 +246,7 @@ export default function AdminPage() {
     };
 
     const deleteCriterion = async (id: number) => {
-        const res = await fetch("/api/admin/rubric", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
+        const res = await fetch("/api/admin/rubric", { method: "DELETE", headers: adminHeaders(), body: JSON.stringify({ id }) });
         const d = await res.json();
         if (d.success) { setCriteria(p => p.filter(c => c.id !== id)); showFeedback("Критерият е изтрит.", true); }
         else showFeedback(d.error || "Грешка", false);
@@ -317,7 +324,7 @@ export default function AdminPage() {
     const saveSettings = async () => {
         setSaving(true);
         const res = await fetch("/api/admin/settings", { 
-            method: "POST", headers: { "Content-Type": "application/json" }, 
+            method: "POST", headers: adminHeaders(), 
             body: JSON.stringify({ 
                 deadline: new Date(deadline).toISOString(), 
                 themeColor, 

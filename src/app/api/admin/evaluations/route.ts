@@ -1,7 +1,17 @@
 import { NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
 
-export async function DELETE() {
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
+
+export async function DELETE(req: Request) {
+  const adminCode = req.headers.get('x-admin-code');
+  const validCode = process.env.ADMIN_CODE || process.env.NEXT_PUBLIC_ADMIN_CODE || 'digihack2026';
+  if (adminCode !== validCode) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   if (!process.env.DATABASE_URL) return NextResponse.json({ error: 'No DB URL' }, { status: 500 });
   const sql = neon(process.env.DATABASE_URL);
   try {

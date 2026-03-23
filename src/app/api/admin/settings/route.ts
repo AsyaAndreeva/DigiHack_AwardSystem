@@ -1,7 +1,19 @@
 import { neon } from '@neondatabase/serverless';
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
+
+
+function isAuthorized(req: Request): boolean {
+  const adminCode = req.headers.get('x-admin-code');
+  const validCode = process.env.ADMIN_CODE || process.env.NEXT_PUBLIC_ADMIN_CODE || 'digihack2026';
+  return adminCode === validCode;
+}
+
 export async function POST(req: Request) {
+  if (!isAuthorized(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     try {
         const sql = neon(process.env.DATABASE_URL!);
         const body = await req.json();

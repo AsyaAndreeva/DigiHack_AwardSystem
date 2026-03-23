@@ -1,12 +1,24 @@
 import { NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
+
+
 
 function getDb() {
   if (!process.env.DATABASE_URL) throw new Error('No DB URL');
   return neon(process.env.DATABASE_URL);
 }
 
+function isAuthorized(req: Request): boolean {
+  const adminCode = req.headers.get('x-admin-code');
+  const validCode = process.env.ADMIN_CODE || process.env.NEXT_PUBLIC_ADMIN_CODE || 'digihack2026';
+  return adminCode === validCode;
+}
+
 export async function POST(req: Request) {
+  if (!isAuthorized(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const sql = getDb();
     const { category, description, criterion, max_score, scoring_guide, order_idx } = await req.json();
@@ -25,6 +37,7 @@ export async function POST(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  if (!isAuthorized(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const sql = getDb();
     const { id, category, description, criterion, max_score, scoring_guide, order_idx } = await req.json();
@@ -42,6 +55,7 @@ export async function PUT(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  if (!isAuthorized(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const sql = getDb();
     const { id } = await req.json();

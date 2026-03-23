@@ -25,7 +25,7 @@ export default function Dashboard() {
         Promise.all([
             fetch("/api/teams").then(r => r.json()),
             fetch("/api/rubric").then(r => r.json()),
-            storedJuryId ? fetch(`/api/submit?juryId=${storedJuryId}`).then(r => r.json()) : Promise.resolve({ evaluations: [] })
+            storedJuryId ? fetch(`/api/submit?juryId=${storedJuryId}`, { cache: "no-store" }).then(r => r.json()) : Promise.resolve({ evaluations: [] })
         ]).then(([teamsData, rubricData, evalsData]) => {
             setTeams(teamsData.teams || []);
             

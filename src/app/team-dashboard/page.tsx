@@ -28,6 +28,7 @@ export default function TeamDashboard() {
     
     // Countdown Timer State
     const [timeLeft, setTimeLeft] = useState<string>("");
+    const [deadline, setDeadline] = useState<string>("2026-03-29T13:30:00+03:00");
 
     const router = useRouter();
 
@@ -47,12 +48,20 @@ export default function TeamDashboard() {
         // Fetch existing profile if any
         fetchProfile(storedTeamId);
 
-        // Theme has moved to the main hub
+        // Fetch dynamic deadline from admin settings
+        fetch('/api/settings', { cache: 'no-store' })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.deadline) {
+                    setDeadline(data.deadline);
+                }
+            })
+            .catch(err => console.error("Could not fetch deadline", err));
     }, [router]);
 
     useEffect(() => {
         const calculateTimeLeft = () => {
-            const difference = new Date('2026-03-29T13:30:00+03:00').getTime() - new Date().getTime();
+            const difference = new Date(deadline).getTime() - new Date().getTime();
             if (difference > 0) {
                 const days = Math.floor(difference / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
@@ -68,7 +77,7 @@ export default function TeamDashboard() {
         calculateTimeLeft();
         const timer = setInterval(calculateTimeLeft, 1000);
         return () => clearInterval(timer);
-    }, []);
+    }, [deadline]);
 
     const fetchProfile = async (id: string) => {
         try {

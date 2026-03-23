@@ -74,7 +74,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
 
                 // Load existing evaluation if any
                 if (storedJuryId) {
-                    const evalRes = await fetch(`/api/submit?juryId=${storedJuryId}&teamId=${resolvedParams.teamId}`);
+                    const evalRes = await fetch(`/api/submit?juryId=${storedJuryId}&teamId=${resolvedParams.teamId}`, { cache: "no-store" });
                     if (evalRes.ok) {
                         const evalData = await evalRes.json();
                         if (evalData.evaluation) {
