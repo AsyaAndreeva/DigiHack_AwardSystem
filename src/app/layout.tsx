@@ -5,6 +5,10 @@ import { neon } from '@neondatabase/serverless';
 export const metadata: Metadata = {
     title: 'DigiHack NBU - Hackathon App',
     description: 'Official DigiHack NBU Evaluation System',
+    icons: {
+        icon: '/favicon.png',
+        apple: '/favicon.png',
+    }
 };
 
 export const dynamic = 'force-dynamic';
