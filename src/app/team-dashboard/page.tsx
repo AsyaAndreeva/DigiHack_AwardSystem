@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, Save, Loader2, Link as LinkIcon, FileText, CheckCircle2, ArrowLeft, Activity } from "lucide-react";
+import { LogOut, Save, Loader2, Link as LinkIcon, FileText, CheckCircle2, ArrowLeft, Activity, AlertCircle } from "lucide-react";
 
 export default function TeamDashboard() {
     const [teamId, setTeamId] = useState<string | null>(null);
@@ -19,6 +19,7 @@ export default function TeamDashboard() {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [links, setLinks] = useState<{title: string, url: string}[]>([]);
+    const [lastSavedData, setLastSavedData] = useState<any>(null);
 
     // UI State
     const [isSaving, setIsSaving] = useState(false);
@@ -95,6 +96,7 @@ export default function TeamDashboard() {
                     if (data.profile.links && Array.isArray(data.profile.links)) {
                         setLinks(data.profile.links);
                     }
+                    setLastSavedData(data.profile);
                 }
             }
         } catch (err) {
@@ -152,6 +154,16 @@ export default function TeamDashboard() {
 
             if (!res.ok) throw new Error("Failed to save profile");
 
+            setLastSavedData({
+                project_name: projectName,
+                description,
+                project_url: projectUrl,
+                presentation_url: presentationUrl,
+                image_url: finalImageUrl,
+                links: JSON.parse(JSON.stringify(links))
+            });
+            setImageFile(null);
+
             setSuccessMsg("Профилът е запазен успешно! Журито вече може да разгледа проекта ви.");
             setTimeout(() => setSuccessMsg(null), 5000);
         } catch (err: any) {
@@ -161,6 +173,30 @@ export default function TeamDashboard() {
             setIsSaving(false);
         }
     };
+
+    const isDirty = (() => {
+        if (!lastSavedData) return true; // Treat as dirty if no data loaded yet (to allow first save)
+        
+        const currentData = {
+            project_name: projectName,
+            description: description,
+            project_url: projectUrl,
+            presentation_url: presentationUrl,
+            image_url: imageUrl,
+            links: links
+        };
+
+        const savedData = {
+            project_name: lastSavedData.project_name || "",
+            description: lastSavedData.description || "",
+            project_url: lastSavedData.project_url || "",
+            presentation_url: lastSavedData.presentation_url || "",
+            image_url: lastSavedData.image_url || null,
+            links: lastSavedData.links || []
+        };
+
+        return JSON.stringify(currentData) !== JSON.stringify(savedData) || !!imageFile;
+    })();
 
     if (!isMounted || !teamId) return null;
 
@@ -176,7 +212,21 @@ export default function TeamDashboard() {
                         <h1 className="text-3xl font-display font-black text-white uppercase tracking-tight leading-none mb-1">
                             <span className="text-brand-orange">{teamName}</span>
                         </h1>
-                        <p className="text-[10px] text-slate-500 font-sans font-black uppercase tracking-[0.2em] opacity-60">Профил на отбора</p>
+                        <div className="flex items-center gap-3">
+                            <p className="text-[10px] text-slate-500 font-sans font-black uppercase tracking-[0.2em] opacity-60">Профил на отбора</p>
+                            <span className="h-1 w-1 rounded-full bg-white/10" />
+                            {isDirty ? (
+                                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-brand-orange/5 border border-brand-orange/20 animate-pulse">
+                                    <AlertCircle className="w-3 h-3 text-brand-orange" />
+                                    <span className="text-[9px] font-black text-brand-orange uppercase tracking-wider">Имате незапазени промени</span>
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-green-500/5 border border-green-500/20">
+                                    <CheckCircle2 className="w-3 h-3 text-green-500" />
+                                    <span className="text-[9px] font-black text-green-500 uppercase tracking-wider">Запазено</span>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
 
@@ -353,13 +403,24 @@ export default function TeamDashboard() {
 
                     <button
                         type="submit"
-                        disabled={isSaving}
-                        className="w-full flex items-center justify-center space-x-2 py-4 px-8 bg-brand-orange hover:bg-[#E68D00] disabled:opacity-50 text-brand-dark rounded-full font-bold transition-all duration-300 shadow-[0_0_20px_rgba(243, 155, 45,0.2)] hover:shadow-[0_0_30px_rgba(243, 155, 45,0.4)] active:scale-95 group"
+                        disabled={isSaving || !isDirty}
+                        className={`
+                            w-full flex items-center justify-center space-x-2 py-4 px-8 rounded-full font-bold transition-all duration-300 active:scale-95 group shadow-lg
+                            ${isDirty 
+                                ? "bg-brand-orange hover:bg-[#E68D00] text-brand-dark hover:shadow-[0_0_30px_rgba(243, 155, 45,0.4)]" 
+                                : "bg-white/5 text-slate-500 border border-white/10 cursor-not-allowed opacity-80"
+                            }
+                        `}
                     >
                         {isSaving ? (
                             <>
                                 <Loader2 className="w-5 h-5 animate-spin" />
                                 <span>Запазва се...</span>
+                            </>
+                        ) : !isDirty ? (
+                            <>
+                                <CheckCircle2 className="w-5 h-5 text-green-500" />
+                                <span>Всички промени са запазени</span>
                             </>
                         ) : (
                             <>
