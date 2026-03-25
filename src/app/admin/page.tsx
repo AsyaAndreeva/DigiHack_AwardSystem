@@ -103,7 +103,7 @@ export default function AdminPage() {
         setSavingPasscode(true);
         const res = await fetch(`/api/admin/${type}`, {
             method: "PATCH",
-            headers: { "Content-Type": "application/json" },
+            headers: adminHeaders(),
             body: JSON.stringify({ id, passcode: passcode ?? "" }),
         });
         const d = await res.json();
