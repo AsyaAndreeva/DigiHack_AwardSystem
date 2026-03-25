@@ -397,6 +397,15 @@ export default function AdminPage() {
 
                 <div className="flex items-center gap-6">
                     <button
+                        onClick={loadData}
+                        disabled={loading}
+                        className="flex items-center gap-2 py-3 px-6 rounded-full font-display font-black text-[10px] uppercase tracking-widest transition-all bg-brand-yellow/10 text-brand-yellow border border-brand-yellow/20 hover:bg-brand-yellow hover:text-brand-dark"
+                        title="Опресни данните"
+                    >
+                        <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                        Опресни
+                    </button>
+                    <button
                         onClick={() => {
                             setAuthed(false);
                             router.push('/');
