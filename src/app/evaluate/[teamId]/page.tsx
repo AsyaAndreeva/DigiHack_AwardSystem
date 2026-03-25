@@ -456,7 +456,7 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
 
                                 <div className="space-y-4">
                                     <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] font-sans">Концепция</h3>
-                                    <p className="text-white text-lg leading-relaxed font-sans">{teamProfile.description}</p>
+                                    <p className="text-white text-lg leading-relaxed font-sans break-words">{teamProfile.description}</p>
                                 </div>
 
                                 <div className="space-y-4">

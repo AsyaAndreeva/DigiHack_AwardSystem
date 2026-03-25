@@ -330,7 +330,7 @@ export default function ResultsPage() {
                                                                             {comment.name}
                                                                         </span>
                                                                     </div>
-                                                                    <p className="text-sm text-slate-300 italic whitespace-pre-wrap leading-relaxed font-sans font-medium">
+                                                                    <p className="text-sm text-slate-300 italic whitespace-pre-wrap break-words leading-relaxed font-sans font-medium">
                                                                         "{comment.text}"
                                                                     </p>
                                                                 </div>
