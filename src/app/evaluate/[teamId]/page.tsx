@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 type TeamProfile = {
+    project_name?: string;
     description?: string;
     project_url?: string;
     presentation_url?: string;
@@ -454,9 +455,16 @@ export default function EvaluateTeam({ params }: { params: Promise<{ teamId: str
                                     </div>
                                 )}
 
+                                {teamProfile.project_name && (
+                                    <div className="space-y-4">
+                                        <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] font-sans">Проект / Платформа</h3>
+                                        <p className="text-white text-2xl font-black font-sans leading-tight border-b-2 border-brand-orange/30 pb-4">{teamProfile.project_name}</p>
+                                    </div>
+                                )}
+
                                 <div className="space-y-4">
                                     <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] font-sans">Концепция</h3>
-                                    <p className="text-white text-lg leading-relaxed font-sans break-words">{teamProfile.description}</p>
+                                    <p className="text-white text-lg leading-relaxed font-sans break-words italic">&ldquo;{teamProfile.description}&rdquo;</p>
                                 </div>
 
                                 <div className="space-y-4">

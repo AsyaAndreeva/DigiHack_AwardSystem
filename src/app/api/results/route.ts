@@ -38,12 +38,14 @@ export async function GET() {
       SELECT 
         e.team_id,
         t.name AS team_name,
+        tp.project_name,
         j.name AS jury_name,
         e.scores,
         e.comments
       FROM evaluations e
       JOIN teams t ON e.team_id = t.id
       JOIN jury_members j ON e.jury_id = j.id
+      LEFT JOIN team_profiles tp ON e.team_id = tp.team_id
     `;
 
     const rawEvaluations = allEvaluations
@@ -74,6 +76,7 @@ export async function GET() {
         return {
           team_id: e.team_id,
           team_name: e.team_name,
+          project_name: e.project_name,
           jury_name: e.jury_name,
           total_score: computedTotal,
           comments: e.comments,

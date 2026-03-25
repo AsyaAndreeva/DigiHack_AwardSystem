@@ -1,6 +1,7 @@
 export interface EvaluationRaw {
   team_id: string;
   team_name: string;
+  project_name?: string;
   jury_name: string;
   total_score: number;
   comments: string | null;
@@ -17,6 +18,7 @@ export interface JuryBreakdown {
 export interface LeaderboardEntry {
   team_id: string;
   team_name: string;
+  project_name?: string;
   evaluations_count: number;
   combined_score: number;
   jury_breakdown: JuryBreakdown[];
@@ -30,6 +32,7 @@ export function calculateLeaderboard(evaluations: EvaluationRaw[]): LeaderboardE
       teamMap.set(evalRaw.team_id, {
         team_id: evalRaw.team_id,
         team_name: evalRaw.team_name,
+        project_name: evalRaw.project_name,
         evaluations_count: 0,
         combined_score: 0,
         jury_breakdown: [],

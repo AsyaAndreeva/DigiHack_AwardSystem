@@ -14,6 +14,7 @@ type JuryBreakdown = {
 type LeaderboardRow = {
     team_id: string;
     team_name: string;
+    project_name?: string;
     evaluations_count: number;
     combined_score: number;
     jury_breakdown: JuryBreakdown[];
@@ -205,6 +206,11 @@ export default function ResultsPage() {
                                         <h3 className="text-3xl font-display font-black text-white group-hover:text-brand-yellow transition-colors tracking-tight">
                                             {row.team_name}
                                         </h3>
+                                        {row.project_name && (
+                                            <p className="text-sm font-bold text-brand-orange uppercase tracking-wider mt-1">
+                                                {row.project_name}
+                                            </p>
+                                        )}
                                         <p className="text-xs font-sans font-black uppercase tracking-[0.2em] flex items-center mt-2 opacity-60">
                                             <span className="bg-brand-yellow/10 text-brand-yellow px-3 py-1 rounded-md mr-3 border border-brand-yellow/20">
                                                 {row.evaluations_count} Журита
@@ -252,6 +258,9 @@ export default function ResultsPage() {
                         <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/[0.02]">
                             <div>
                                 <h3 className="text-2xl font-display font-black text-white tracking-tight">{selectedTeam.team_name}</h3>
+                                {selectedTeam.project_name && (
+                                    <p className="text-sm font-bold text-brand-orange uppercase tracking-wider mt-0.5">{selectedTeam.project_name}</p>
+                                )}
                                 <div className="flex items-center gap-4 mt-2">
                                     <span className="text-[10px] text-brand-yellow font-black uppercase tracking-widest bg-brand-yellow/10 px-2 py-1 rounded-md border border-brand-yellow/20">
                                         Общо: {selectedTeam.combined_score} т.

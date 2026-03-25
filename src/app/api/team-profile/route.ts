@@ -4,8 +4,6 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 export const fetchCache = 'force-no-store';
 
-
-
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -43,7 +41,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { team_id, description, project_url, presentation_url, image_url, links } = body;
+    const { team_id, project_name, description, project_url, presentation_url, image_url, links } = body;
 
     if (!team_id) {
       return NextResponse.json({ error: 'team_id is required' }, { status: 400 });
@@ -57,10 +55,11 @@ export async function POST(req: Request) {
 
     // Upsert (Insert or Update if exists) profile
     await sql`
-      INSERT INTO team_profiles (team_id, description, project_url, presentation_url, image_url, links, updated_at)
-      VALUES (${team_id}, ${description}, ${project_url}, ${presentation_url}, ${image_url}, ${linksJson}::jsonb, CURRENT_TIMESTAMP)
+      INSERT INTO team_profiles (team_id, project_name, description, project_url, presentation_url, image_url, links, updated_at)
+      VALUES (${team_id}, ${project_name}, ${description}, ${project_url}, ${presentation_url}, ${image_url}, ${linksJson}::jsonb, CURRENT_TIMESTAMP)
       ON CONFLICT (team_id)
       DO UPDATE SET
+        project_name = EXCLUDED.project_name,
         description = EXCLUDED.description,
         project_url = EXCLUDED.project_url,
         presentation_url = EXCLUDED.presentation_url,

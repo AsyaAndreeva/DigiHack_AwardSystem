@@ -12,6 +12,7 @@ export default function TeamDashboard() {
     // Removed themeResources
 
     // Form State
+    const [projectName, setProjectName] = useState("");
     const [description, setDescription] = useState("");
     const [projectUrl, setProjectUrl] = useState("");
     const [presentationUrl, setPresentationUrl] = useState("");
@@ -86,6 +87,7 @@ export default function TeamDashboard() {
             if (res.ok) {
                 const data = await res.json();
                 if (data.profile) {
+                    setProjectName(data.profile.project_name || "");
                     setDescription(data.profile.description || "");
                     setProjectUrl(data.profile.project_url || "");
                     setPresentationUrl(data.profile.presentation_url || "");
@@ -139,6 +141,7 @@ export default function TeamDashboard() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     team_id: teamId,
+                    project_name: projectName,
                     description,
                     project_url: projectUrl,
                     presentation_url: presentationUrl,
@@ -216,6 +219,21 @@ export default function TeamDashboard() {
                     )}
 
                     <div className="glass p-8 md:p-12 rounded-md border-l-4 border-brand-orange space-y-10 shadow-2xl">
+                        <div className="space-y-4">
+                            <label className="text-xs font-black text-slate-400 ml-1 block flex items-center gap-2 uppercase tracking-widest font-sans">
+                                <Activity className="w-4 h-4 text-brand-orange" />
+                                Име на проекта / Платформата
+                            </label>
+                            <input
+                                type="text"
+                                value={projectName}
+                                onChange={(e) => setProjectName(e.target.value)}
+                                placeholder="Име на проекта..."
+                                className="w-full p-6 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#F39B2D] focus:border-transparent transition-all font-sans text-xl font-bold"
+                                required
+                            />
+                        </div>
+
                         <div className="space-y-4">
                             <label className="text-xs font-black text-slate-400 ml-1 block flex items-center gap-2 uppercase tracking-widest font-sans">
                                 <FileText className="w-4 h-4 text-brand-orange" />
