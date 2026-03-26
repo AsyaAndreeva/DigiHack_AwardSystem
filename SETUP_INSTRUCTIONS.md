@@ -7,7 +7,7 @@
 5. Copy this entire connection string.
 
 ## Local Development (.env.local)
-Create a file named `.env.local` in the root of your project (`digihack-award-system/.env.local`) and add the variable:
+Create a file named `.env.local` in the root of your project (`award-system/.env.local`) and add the variable:
 
 ```env
 DATABASE_URL="postgres://[your-copied-connection-string-here]"

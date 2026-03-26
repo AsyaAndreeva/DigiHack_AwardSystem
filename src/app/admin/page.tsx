@@ -7,7 +7,7 @@ import {
     LogOut, ArrowLeft, Check, Edit2, X, Copy, RefreshCw, Settings, Calendar, FileText
 } from "lucide-react";
 
-const ADMIN_CODE = process.env.NEXT_PUBLIC_ADMIN_CODE || "digihack2026";
+const ADMIN_CODE = process.env.NEXT_PUBLIC_ADMIN_CODE || "2026";
 
 type Team = { 
     id: string; 
@@ -811,7 +811,7 @@ export default function AdminPage() {
                                             type="text"
                                             value={themeTitle}
                                             onChange={e => setThemeTitle(e.target.value)}
-                                            placeholder="Пр: DigiHack 2026: Бъдещето на AI..."
+                                            placeholder="Пр: 2026: Бъдещето на AI..."
                                             className="w-full p-4 bg-black/40 border border-white/10 rounded-md text-white font-sans placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-brand-yellow transition-all font-black text-lg"
                                         />
                                     </div>

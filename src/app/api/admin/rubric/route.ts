@@ -13,7 +13,7 @@ function getDb() {
 
 function isAuthorized(req: Request): boolean {
   const adminCode = req.headers.get('x-admin-code');
-  const validCode = process.env.ADMIN_CODE || process.env.NEXT_PUBLIC_ADMIN_CODE || 'digihack2026';
+  const validCode = process.env.ADMIN_CODE || process.env.NEXT_PUBLIC_ADMIN_CODE || '2026';
   return adminCode === validCode;
 }
 
