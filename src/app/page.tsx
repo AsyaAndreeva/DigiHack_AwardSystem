@@ -83,7 +83,7 @@ export default function HubPage() {
         <div className="animate-in fade-in duration-500 flex flex-col items-center justify-center min-h-[80vh] py-8 px-4 max-w-3xl mx-auto relative">            {/* Header */}
             <div className="text-center mb-16 mt-8 sm:mt-0">
                 <h1 className="text-4xl md:text-6xl font-display font-black text-white mb-4 tracking-tight">
-                    <span className="text-white">Digitalen maraton</span> <span className="text-brand-pink">2.0</span>
+                    <span className="text-white">Digitalen maraton</span>
                 </h1>
                 <p className="text-slate-500 text-lg max-w-sm mx-auto font-sans font-medium uppercase tracking-[0.2em] opacity-80">
                     Платформа за оценяване

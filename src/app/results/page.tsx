@@ -88,7 +88,7 @@ export default function ResultsPage() {
                         </button>
                         <div>
                             <h1 className="text-3xl font-display font-black text-white uppercase tracking-tight leading-none mb-1">Класатори</h1>
-                             <p className="text-[10px] text-slate-500 font-sans font-black uppercase tracking-[0.2em] opacity-60">Резултати от 2.0</p>
+                             <p className="text-[10px] text-slate-500 font-sans font-black uppercase tracking-[0.2em] opacity-60">Резултати</p>
                         </div>
                     </div>
                 </header>
