@@ -3,8 +3,8 @@ import './globals.css';
 import { neon } from '@neondatabase/serverless';
 
 export const metadata: Metadata = {
-    title: 'NBU - Hackathon App',
-    description: 'Official NBU Evaluation System',
+    title: 'NBU - Digitalen maraton',
+    description: 'Official Digitalen maraton Evaluation System',
     icons: {
         icon: '/favicon.png',
         apple: '/favicon.png',
