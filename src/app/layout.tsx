@@ -3,8 +3,8 @@ import './globals.css';
 import { neon } from '@neondatabase/serverless';
 
 export const metadata: Metadata = {
-    title: 'NBU - Digitalen maraton',
-    description: 'Official Digitalen maraton Evaluation System',
+    title: 'NBU - Дигитален маратон',
+    description: 'Официална система за оценяване на Дигитален маратон',
     icons: {
         icon: '/favicon.png',
         apple: '/favicon.png',

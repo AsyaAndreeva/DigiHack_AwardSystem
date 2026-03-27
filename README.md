@@ -1,4 +1,4 @@
-# Digitalen maraton 🏆
+# Дигитален маратон 🏆
 
 A comprehensive, scalable, and dynamic hackathon evaluation and leaderboard system built with Next.js and Neon PostgreSQL.
 
