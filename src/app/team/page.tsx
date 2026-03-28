@@ -108,7 +108,7 @@ export default function TeamLogin() {
                             <KeyRound className="w-4 h-4 text-brand-orange" /> Парола на отбора
                         </label>
                         <input
-                            type="text"
+                            type="password"
                             value={passcode}
                             onChange={e => setPasscode(e.target.value.toUpperCase())}
                             placeholder="B7RX4K"

@@ -100,7 +100,7 @@ export default function JuryLogin() {
                                 <KeyRound className="w-4 h-4 text-brand-light-blue" /> Парола за жури
                             </label>
                             <input
-                                type="text"
+                                type="password"
                                 value={passcode}
                                 onChange={(e) => setPasscode(e.target.value.toUpperCase())}
                                 onKeyDown={(e) => { if (e.key === 'Enter') handleEnter(); }}
