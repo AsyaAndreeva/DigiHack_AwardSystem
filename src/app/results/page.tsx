@@ -40,7 +40,8 @@ export default function ResultsPage() {
             const json = await res.json();
             if (json.error) throw new Error(json.error);
 
-            setData(json.data || []);
+            const sortedData = (json.data || []).sort((a: any, b: any) => b.combined_score - a.combined_score);
+            setData(sortedData);
         } catch (err: any) {
             setError(err.message || "An unexpected error occurred");
         } finally {

@@ -57,7 +57,10 @@ export function calculateLeaderboard(evaluations: EvaluationRaw[]): LeaderboardE
 
   // Sort by combined_score descending
   results.sort((a, b) => {
-    return b.combined_score - a.combined_score;
+    if (b.combined_score !== a.combined_score) {
+      return b.combined_score - a.combined_score;
+    }
+    return a.team_name.localeCompare(b.team_name);
   });
 
   return results;
