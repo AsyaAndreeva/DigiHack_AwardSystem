@@ -30,7 +30,7 @@ export default function TeamDashboard() {
     
     // Countdown Timer State
     const [timeLeft, setTimeLeft] = useState<string>("");
-    const [deadline, setDeadline] = useState<string>("2026-03-29T13:30:00+03:00");
+    const [deadline, setDeadline] = useState<string>("2026-03-29T13:45:00+03:00");
 
     const router = useRouter();
 

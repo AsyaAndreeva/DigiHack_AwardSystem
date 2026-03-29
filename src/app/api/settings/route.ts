@@ -22,7 +22,7 @@ export async function GET() {
         // Fetch settings
         const result = await sql`SELECT key, value FROM settings WHERE key IN ('deadline', 'theme_color', 'theme_resources')`;
         
-        let deadline = '2026-03-29T13:30:00+03:00';
+        let deadline = '2026-03-29T13:45:00+03:00';
         let theme_color = '#DAEA5F';
         let theme_resources = '';
 
