@@ -27,7 +27,21 @@ export default function Dashboard() {
             fetch("/api/rubric").then(r => r.json()),
             storedJuryId ? fetch(`/api/submit?juryId=${storedJuryId}`, { cache: "no-store" }).then(r => r.json()) : Promise.resolve({ evaluations: [] })
         ]).then(([teamsData, rubricData, evalsData]) => {
-            setTeams(teamsData.teams || []);
+            const rawTeams = (teamsData.teams || []) as Team[];
+            const customOrder = [
+                "Екип 10", "Екип 11", "Екип 1", "Екип 4", 
+                "Екип 3", "Екип 5", "Екип 9", "Екип 12", 
+                "Екип 6", "Екип 7", "Екип 8", "Екип 2"
+            ];
+            const sortedTeams = [...rawTeams].sort((a, b) => {
+                const idxA = customOrder.indexOf(a.name);
+                const idxB = customOrder.indexOf(b.name);
+                if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                if (idxA !== -1) return -1;
+                if (idxB !== -1) return 1;
+                return a.name.localeCompare(b.name, 'bg', { numeric: true });
+            });
+            setTeams(sortedTeams);
             
             const criteriaCount = (rubricData.criteria || []).length;
             const serverEvaluated: Record<string, boolean> = {};
