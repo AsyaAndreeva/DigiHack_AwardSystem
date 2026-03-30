@@ -44,6 +44,7 @@ export default function ResultsPage() {
         const sortedCategories = Array.from(categoryNames).sort();
 
         // 2. Create CSV headers
+        const separator = ";";
         const headers = ["Отбор", "Проект", "Общо точки (отбор)", "Жури", "Точки (жури)", "Коментар", ...sortedCategories];
         
         // 3. Create CSV rows (one row per evaluation)
@@ -69,10 +70,11 @@ export default function ResultsPage() {
             });
         });
 
-        // 4. Convert to CSV string with proper escaping
+        // 4. Convert to CSV string with proper escaping and separator hint
         const csvContent = [
-            headers.join(","),
-            ...rows.map(r => r.map(cell => `"${cell || ''}"`).join(","))
+            `sep=${separator}`,
+            headers.join(separator),
+            ...rows.map(r => r.map(cell => `"${(cell || '').toString().replace(/"/g, '""')}"`).join(separator))
         ].join("\n");
 
         // 5. Trigger download with UTF-8 BOM for better Excel support
