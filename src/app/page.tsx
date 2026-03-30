@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Trophy, Users, Shield, BarChart3, ArrowRight, Play, FileText, Link as LinkIcon } from "lucide-react";
+import { Trophy, Users, Shield, BarChart3, ArrowRight, Play, FileText, Link as LinkIcon, GraduationCap } from "lucide-react";
 
 const portals = [
     {
@@ -30,6 +30,19 @@ const portals = [
         glow: "hover:shadow-[0_0_30px_rgba(243, 155, 45,0.15)]",
         badge: "Отбор",
         badgeClass: "bg-brand-orange/10 text-brand-orange border-brand-orange/20",
+    },
+    {
+        href: "/mentor",
+        icon: GraduationCap,
+        title: "Портал на Менторите",
+        subtitle: "Вход за ментори",
+        color: "purple",
+        border: "border-violet-500/30 hover:border-violet-500",
+        iconBg: "bg-violet-600",
+        iconColor: "text-white",
+        glow: "hover:shadow-[0_0_30px_rgba(139,92,246,0.2)]",
+        badge: "Ментор",
+        badgeClass: "bg-violet-500/10 text-violet-400 border-violet-500/20",
     },
     {
         href: "/results",
