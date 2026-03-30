@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Trophy, RefreshCw, AlertCircle, MessageSquare, ArrowLeft, X } from "lucide-react";
+import { Trophy, RefreshCw, AlertCircle, MessageSquare, ArrowLeft, X, Download } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type JuryBreakdown = {
@@ -28,6 +28,63 @@ export default function ResultsPage() {
     const [passwordInput, setPasswordInput] = useState("");
     const [selectedTeam, setSelectedTeam] = useState<LeaderboardRow | null>(null);
     const router = useRouter();
+    
+    const handleDownload = () => {
+        if (!data.length) return;
+
+        // 1. Collect all unique category names for headers
+        const categoryNames = new Set<string>();
+        data.forEach(team => {
+            team.jury_breakdown.forEach(jury => {
+                jury.categories?.forEach(cat => {
+                    categoryNames.add(cat.category);
+                });
+            });
+        });
+        const sortedCategories = Array.from(categoryNames).sort();
+
+        // 2. Create CSV headers
+        const headers = ["Отбор", "Проект", "Общо точки (отбор)", "Жури", "Точки (жури)", "Коментар", ...sortedCategories];
+        
+        // 3. Create CSV rows (one row per evaluation)
+        const rows: string[][] = [];
+        data.forEach(team => {
+            team.jury_breakdown.forEach(jury => {
+                const row = [
+                    team.team_name,
+                    team.project_name || "",
+                    team.combined_score.toString(),
+                    jury.jury_name,
+                    jury.total_score.toString(),
+                    (jury.comments || "").replace(/"/g, '""').replace(/\n/g, ' '),
+                ];
+
+                // Add category scores
+                sortedCategories.forEach(catName => {
+                    const catScore = jury.categories?.find(c => c.category === catName)?.score;
+                    row.push(catScore !== undefined ? catScore.toString() : "0");
+                });
+
+                rows.push(row);
+            });
+        });
+
+        // 4. Convert to CSV string with proper escaping
+        const csvContent = [
+            headers.join(","),
+            ...rows.map(r => r.map(cell => `"${cell || ''}"`).join(","))
+        ].join("\n");
+
+        // 5. Trigger download with UTF-8 BOM for better Excel support
+        const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `results_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     const fetchResults = async () => {
         try {
@@ -145,6 +202,14 @@ export default function ResultsPage() {
                 </div>
 
                 <div className="flex items-center gap-6">
+                    <button
+                        onClick={handleDownload}
+                        disabled={loading || !data.length}
+                        className="flex items-center gap-2 py-3 px-6 rounded-full font-display font-black text-[10px] uppercase tracking-widest transition-all bg-white/5 text-slate-400 border border-white/10 hover:bg-white hover:text-brand-dark disabled:opacity-50"
+                    >
+                        <Download className="w-4 h-4" />
+                        Изтегли CSV
+                    </button>
                     <button
                         onClick={fetchResults}
                         disabled={loading}
