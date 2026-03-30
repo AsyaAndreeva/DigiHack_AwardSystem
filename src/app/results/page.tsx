@@ -43,11 +43,11 @@ export default function ResultsPage() {
         });
         const sortedCategories = Array.from(categoryNames).sort();
 
-        // 2. Create CSV headers
+        // 2. Create headers
         const separator = ";";
         const headers = ["Отбор", "Проект", "Общо точки (отбор)", "Жури", "Точки (жури)", "Коментар", ...sortedCategories];
         
-        // 3. Create CSV rows (one row per evaluation)
+        // 3. Create rows (one row per evaluation)
         const rows: string[][] = [];
         data.forEach(team => {
             team.jury_breakdown.forEach(jury => {
@@ -70,19 +70,25 @@ export default function ResultsPage() {
             });
         });
 
-        // 4. Convert to CSV string with proper escaping and separator hint
+        // 4. Convert to string with semicolon separator
         const csvContent = [
-            `sep=${separator}`,
             headers.join(separator),
             ...rows.map(r => r.map(cell => `"${(cell || '').toString().replace(/"/g, '""')}"`).join(separator))
-        ].join("\n");
+        ].join("\r\n");
 
-        // 5. Trigger download with UTF-8 BOM for better Excel support
-        const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+        // 5. Convert to UTF-16LE with BOM - This is the most reliable way for Excel to read Cyrillic
+        const charCodes = new Uint16Array(csvContent.length + 1);
+        charCodes[0] = 0xFEFF; // Byte Order Mark
+        for (let i = 0; i < csvContent.length; i++) {
+            charCodes[i + 1] = csvContent.charCodeAt(i);
+        }
+
+        // 6. Trigger download
+        const blob = new Blob([charCodes], { type: 'text/csv;charset=utf-16le;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", `results_${new Date().toISOString().split('T')[0]}.csv`);
+        link.setAttribute("download", `results_detailed_${new Date().toISOString().split('T')[0]}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
