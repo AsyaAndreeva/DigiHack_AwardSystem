@@ -443,7 +443,7 @@ export default function TeamDashboard() {
                 {/* Mentor Feedback Section */}
                 <div className="mt-20 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-md bg-violet-600/10 flex items-center justify-center text-violet-400">
+                        <div className="w-12 h-12 rounded-md bg-white flex items-center justify-center text-brand-dark shadow-xl">
                            <GraduationCap className="w-6 h-6" />
                         </div>
                         <div>
@@ -460,12 +460,15 @@ export default function TeamDashboard() {
                     ) : (
                         <div className="space-y-4">
                             {mentorFeedback.map((f: any, idx) => (
-                                <div key={idx} className="glass p-8 rounded-md border-l-4 border-violet-500 shadow-xl bg-violet-500/5 hover:bg-violet-500/10 transition-colors">
+                                <div key={idx} className="glass p-8 rounded-md border-l-4 border-white shadow-xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.1] transition-opacity">
+                                        <GraduationCap className="w-20 h-20 text-white" />
+                                    </div>
                                     <div className="flex items-center justify-between mb-4">
-                                        <h4 className="text-violet-400 font-display font-black text-lg uppercase tracking-tight">{f.mentor_name}</h4>
+                                        <h4 className="text-white font-display font-black text-lg uppercase tracking-tight">{f.mentor_name}</h4>
                                         <span className="text-[9px] text-slate-600 font-bold uppercase tracking-[0.2em]">{new Date(f.created_at).toLocaleDateString('bg-BG')}</span>
                                     </div>
-                                    <p className="text-white text-lg font-sans leading-relaxed italic">&ldquo;{f.comment}&rdquo;</p>
+                                    <p className="text-slate-200 text-lg font-sans leading-relaxed italic relative z-10">&ldquo;{f.comment}&rdquo;</p>
                                 </div>
                             ))}
                         </div>

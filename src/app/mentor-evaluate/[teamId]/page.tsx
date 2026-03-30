@@ -227,18 +227,18 @@ export default function MentorEvaluateTeam({ params }: { params: Promise<{ teamI
                     </div>
 
                     <div className="glass rounded-md p-10 border border-white/5 shadow-2xl relative overflow-hidden group min-h-[500px] flex flex-col">
-                        <div className="absolute -top-20 -right-20 w-64 h-64 bg-violet-600/5 rounded-md blur-[100px]" />
+                        <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/5 rounded-md blur-[100px]" />
                         
                         <textarea
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
                             placeholder="Напишете своите конструктивни коментари и препоръки..."
-                            className="flex-1 w-full bg-black/40 border border-white/10 rounded-md p-8 text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all text-xl font-sans leading-relaxed resize-none relative z-10"
+                            className="flex-1 w-full bg-black/40 border border-white/10 rounded-md p-8 text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-all text-xl font-sans leading-relaxed resize-none relative z-10"
                         />
                         
                         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10 border-t border-white/5 mt-8">
                             <div className="text-slate-500 text-[10px] font-black uppercase tracking-widest font-sans flex items-center gap-2">
-                                <AlertCircle className="w-4 h-4 text-violet-400" />
+                                <AlertCircle className="w-4 h-4 text-white" />
                                 Окуражете отбора с конструктивна критика
                             </div>
                             

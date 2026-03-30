@@ -87,17 +87,17 @@ export default function MentorLogin() {
             <main className="flex flex-col items-center justify-center pt-20 px-4">
                 <div className="w-full max-w-sm">
                     <div className="text-center mb-12">
-                        <div className={`inline-flex w-16 h-16 rounded-md items-center justify-center shadow-[0_0_30px_rgba(139,92,246,0.3)] mb-6 transition-colors ${isLocked ? 'bg-red-500/20' : 'bg-violet-600'}`}>
-                            {isLocked ? <Lock className="w-8 h-8 text-red-400" /> : <GraduationCap className="w-8 h-8 text-white" />}
+                        <div className={`inline-flex w-16 h-16 rounded-md items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.1)] mb-6 transition-colors ${isLocked ? 'bg-red-500/20' : 'bg-white'}`}>
+                            {isLocked ? <Lock className="w-8 h-8 text-red-400" /> : <GraduationCap className="w-8 h-8 text-brand-dark" />}
                         </div>
                         <h1 className="text-4xl font-display font-black text-white mb-2 uppercase tracking-tight">Вход за Ментори</h1>
                         <p className="text-slate-500 text-sm font-sans font-medium uppercase tracking-widest opacity-80">Код за достъп</p>
                     </div>
 
-                    <div className={`glass p-8 rounded-md border-l-4 space-y-6 transition-colors ${isLocked ? 'border-red-500/50' : 'border-violet-500'}`}>
+                    <div className={`glass p-8 rounded-md border-l-4 space-y-6 transition-colors ${isLocked ? 'border-red-500/50' : 'border-white'}`}>
                         <div className="space-y-3">
                             <label className="text-xs font-black text-slate-400 ml-1 flex items-center gap-2 uppercase tracking-widest font-sans">
-                                <KeyRound className="w-4 h-4 text-violet-400" /> Парола за ментор
+                                <KeyRound className="w-4 h-4 text-white" /> Парола за ментор
                             </label>
                             <input
                                 type="password"
@@ -107,7 +107,7 @@ export default function MentorLogin() {
                                 placeholder="MNT..."
                                 maxLength={8}
                                 disabled={isLocked}
-                                className="w-full p-5 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all tracking-[0.4em] text-center font-mono text-2xl uppercase disabled:opacity-40 disabled:cursor-not-allowed"
+                                className="w-full p-5 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-all tracking-[0.4em] text-center font-mono text-2xl uppercase disabled:opacity-40 disabled:cursor-not-allowed"
                             />
                             {error && (
                                 <p className={`text-xs font-bold uppercase tracking-wider ml-1 mt-2 ${isLocked ? 'text-orange-400' : 'text-red-500'}`}>
@@ -119,7 +119,7 @@ export default function MentorLogin() {
                         <button
                             onClick={handleEnter}
                             disabled={!passcode.trim() || loading || isLocked}
-                            className="w-full flex items-center justify-center gap-3 py-4 px-6 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-full font-bold transition-all shadow-[0_0_20px_rgba(139,92,246,0.2)] active:scale-95"
+                            className="w-full flex items-center justify-center gap-3 py-4 px-6 bg-white hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed text-brand-dark rounded-full font-bold transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] active:scale-95"
                         >
                             {loading ? (
                                 <Loader2 className="w-5 h-5 animate-spin" />
