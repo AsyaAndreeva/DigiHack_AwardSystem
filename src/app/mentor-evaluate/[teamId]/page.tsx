@@ -31,6 +31,7 @@ export default function MentorEvaluateTeam({ params }: { params: Promise<{ teamI
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [showProfile, setShowProfile] = useState(true); 
+    const [isSaved, setIsSaved] = useState(false);
 
     useEffect(() => {
         setIsMounted(true);
@@ -96,9 +97,11 @@ export default function MentorEvaluateTeam({ params }: { params: Promise<{ teamI
                 throw new Error(e.error || "Грешка при запазване");
             }
             
+            setIsSaved(true);
             setTimeout(() => {
               setIsSubmitting(false);
-            }, 1000);
+              setIsSaved(false);
+            }, 3000);
         } catch (err: any) {
             setError(err.message || "Неочаквана грешка");
             setIsSubmitting(false);
@@ -234,7 +237,9 @@ export default function MentorEvaluateTeam({ params }: { params: Promise<{ teamI
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
                             placeholder="Напишете своите конструктивни коментари и препоръки..."
-                            className="flex-1 w-full bg-black/40 border border-white/10 rounded-md p-8 text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-all text-xl font-sans leading-relaxed resize-none relative z-10"
+                            className={`flex-1 w-full bg-black/40 border rounded-md p-8 text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-all text-xl font-sans leading-relaxed resize-none relative z-10 ${
+                                isSaved ? "border-green-500 shadow-[0_0_20px_rgba(34,197,94,0.1)]" : "border-white/10"
+                            }`}
                         />
                         
                         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10 border-t border-white/5 mt-8">
@@ -247,14 +252,21 @@ export default function MentorEvaluateTeam({ params }: { params: Promise<{ teamI
                                 onClick={handleSave}
                                 disabled={isSubmitting || !comment.trim()}
                                 className={`flex items-center gap-3 py-4 px-10 rounded-full font-display font-black text-xs uppercase tracking-widest transition-all shadow-xl active:scale-95 ${
-                                    isSubmitting 
-                                    ? "bg-slate-900 text-slate-500 cursor-not-allowed" 
-                                    : comment.trim().length > 0
-                                        ? "bg-white hover:bg-slate-200 text-brand-dark shadow-[0_0_30px_rgba(255,255,255,0.1)]" 
-                                        : "bg-white/5 text-slate-700 border border-white/5 cursor-not-allowed"
+                                    isSaved 
+                                    ? "bg-green-500 text-white shadow-[0_0_30px_rgba(34,197,94,0.3)]"
+                                    : isSubmitting 
+                                        ? "bg-slate-900 text-slate-500 cursor-not-allowed" 
+                                        : comment.trim().length > 0
+                                            ? "bg-white hover:bg-slate-200 text-brand-dark shadow-[0_0_30px_rgba(255,255,255,0.1)]" 
+                                            : "bg-white/5 text-slate-700 border border-white/5 cursor-not-allowed"
                                 }`}
                             >
-                                {isSubmitting ? (
+                                {isSaved ? (
+                                    <>
+                                        <CheckCircle2 className="w-4 h-4" />
+                                        <span>Запазено!</span>
+                                    </>
+                                ) : isSubmitting ? (
                                     <>
                                         <Loader2 className="w-4 h-4 animate-spin" />
                                         <span>Запазване...</span>

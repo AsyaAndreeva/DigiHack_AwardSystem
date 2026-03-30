@@ -461,9 +461,6 @@ export default function TeamDashboard() {
                         <div className="space-y-4">
                             {mentorFeedback.map((f: any, idx) => (
                                 <div key={idx} className="glass p-8 rounded-md border-l-4 border-white shadow-xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.1] transition-opacity">
-                                        <GraduationCap className="w-20 h-20 text-white" />
-                                    </div>
                                     <div className="flex items-center justify-between mb-4">
                                         <h4 className="text-white font-display font-black text-lg uppercase tracking-tight">{f.mentor_name}</h4>
                                         <span className="text-[9px] text-slate-600 font-bold uppercase tracking-[0.2em]">{new Date(f.created_at).toLocaleDateString('bg-BG')}</span>
