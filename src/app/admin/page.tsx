@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
     Shield, Users, BookOpen, Plus, Trash2, Loader2,
-    LogOut, ArrowLeft, Check, Edit2, X, Copy, RefreshCw, Settings, Calendar, FileText
+    LogOut, ArrowLeft, Check, Edit2, X, Copy, RefreshCw, Settings, Calendar, FileText, GraduationCap
 } from "lucide-react";
 
 const ADMIN_CODE = process.env.NEXT_PUBLIC_ADMIN_CODE || "2026";
@@ -44,9 +44,10 @@ export default function AdminPage() {
     // Data
     const [teams, setTeams] = useState<Team[]>([]);
     const [jury, setJury] = useState<JuryMember[]>([]);
+    const [mentors, setMentors] = useState<JuryMember[]>([]);
     const [criteria, setCriteria] = useState<Criterion[]>([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<"teams" | "jury" | "rubric" | "theme" | "settings">("teams");
+    const [activeTab, setActiveTab] = useState<"teams" | "jury" | "mentors" | "rubric" | "theme" | "settings">("teams");
     const [deadline, setDeadline] = useState("");
     const [themeColor, setThemeColor] = useState("#DAEA5F");
     const [themeTitle, setThemeTitle] = useState("");
@@ -56,6 +57,7 @@ export default function AdminPage() {
     // Add forms
     const [newTeamName, setNewTeamName] = useState("");
     const [newJuryName, setNewJuryName] = useState("");
+    const [newMentorName, setNewMentorName] = useState("");
     const [newCrit, setNewCrit] = useState({ category: "", description: "", criterion: "", max_score: "3", scoring_guide: "" });
     const [saving, setSaving] = useState(false);
     const [feedback, setFeedback] = useState<{ msg: string; ok: boolean } | null>(null);
@@ -81,7 +83,7 @@ export default function AdminPage() {
         setEditNameValue(current);
     };
 
-    const updateName = async (type: "teams" | "jury", id: string, name: string) => {
+    const updateName = async (type: "teams" | "jury" | "mentors", id: string, name: string) => {
         if (!name.trim()) return;
         setSavingName(true);
         const res = await fetch(`/api/admin/${type}`, {
@@ -92,14 +94,15 @@ export default function AdminPage() {
         const d = await res.json();
         setSavingName(false);
         if (d.success) {
-            if (type === "teams") setTeams(p => p.map(t => t.id === id ? { ...t, name: d.name } : t));
-            else setJury(p => p.map(mj => mj.id === id ? { ...mj, name: d.name } : mj));
+            if (type === "teams") setTeams(p => p.map(t => t.id === id ? { ...t, name: d.name || d.mentor?.name || d.team?.name } : t));
+            else if (type === "jury") setJury(p => p.map(mj => mj.id === id ? { ...mj, name: d.name || d.member?.name } : mj));
+            else if (type === "mentors") setMentors(p => p.map(m => m.id === id ? { ...m, name: d.mentor?.name } : m));
             setEditNameId(null);
             showFeedback(`Името е обновено!`, true);
         } else showFeedback(d.error || "Грешка", false);
     };
 
-    const updatePasscode = async (type: "teams" | "jury", id: string, passcode?: string) => {
+    const updatePasscode = async (type: "teams" | "jury" | "mentors", id: string, passcode?: string) => {
         setSavingPasscode(true);
         const res = await fetch(`/api/admin/${type}`, {
             method: "PATCH",
@@ -109,9 +112,10 @@ export default function AdminPage() {
         const d = await res.json();
         setSavingPasscode(false);
         if (d.success) {
-            const newCode: string = d.passcode;
+            const newCode: string = d.passcode || d.mentor?.passcode || d.team?.passcode || d.member?.passcode;
             if (type === "teams") setTeams(p => p.map(t => t.id === id ? { ...t, passcode: newCode } : t));
-            else setJury(p => p.map(m => m.id === id ? { ...m, passcode: newCode } : m));
+            else if (type === "jury") setJury(p => p.map(m => m.id === id ? { ...m, passcode: newCode } : m));
+            else if (type === "mentors") setMentors(p => p.map(m => m.id === id ? { ...m, passcode: newCode } : m));
             setEditPasscodeId(null);
             showFeedback(`Паролата е сменена: ${newCode}`, true);
         } else showFeedback(d.error || "Грешка", false);
@@ -147,14 +151,16 @@ export default function AdminPage() {
     const loadData = useCallback(async () => {
         setLoading(true);
         try {
-            const [t, j, r, s] = await Promise.all([
+            const [t, j, m, r, s] = await Promise.all([
                 fetch("/api/teams").then(x => x.json()),
                 fetch("/api/jury").then(x => x.json()),
+                fetch("/api/admin/mentors", { headers: adminHeaders() }).then(x => x.json()),
                 fetch("/api/rubric").then(x => x.json()),
                 fetch("/api/settings").then(x => x.json()),
             ]);
             setTeams(t.teams || []);
             setJury(j.members || []);
+            setMentors(m.mentors || []);
             setCriteria(r.criteria || []);
             if (s.success && s.deadline) {
                 const dateObj = new Date(s.deadline);
@@ -219,6 +225,25 @@ export default function AdminPage() {
         const res = await fetch("/api/admin/jury", { method: "DELETE", headers: adminHeaders(), body: JSON.stringify({ id }) });
         const d = await res.json();
         if (d.success) { setJury(p => p.filter(m => m.id !== id)); showFeedback("Членът е премахнат.", true); }
+        else showFeedback(d.error || "Грешка", false);
+    };
+
+    // Mentors
+    const addMentor = async () => {
+        if (!newMentorName.trim()) return;
+        setSaving(true);
+        const res = await fetch("/api/admin/mentors", { method: "POST", headers: adminHeaders(), body: JSON.stringify({ name: newMentorName }) });
+        const d = await res.json();
+        setSaving(false);
+        if (d.success) { setMentors(p => [...p, d.mentor]); setNewMentorName(""); showFeedback(`Менторът е добавен! Парола: ${d.mentor.passcode}`, true); }
+        else showFeedback(d.error || "Грешка", false);
+    };
+
+    const deleteMentor = async (id: string) => {
+        if (!window.confirm("Сигурни ли сте? Това ще изтрие и всички коментари от него!")) return;
+        const res = await fetch("/api/admin/mentors", { method: "DELETE", headers: adminHeaders(), body: JSON.stringify({ id }) });
+        const d = await res.json();
+        if (d.success) { setMentors(p => p.filter(m => m.id !== id)); showFeedback("Менторът е премахнат.", true); }
         else showFeedback(d.error || "Грешка", false);
     };
 
@@ -376,6 +401,7 @@ export default function AdminPage() {
     const tabs = [
         { key: "teams" as const, label: "Отбори", icon: Users, count: teams.length },
         { key: "jury" as const, label: "Жури", icon: Shield, count: jury.length },
+        { key: "mentors" as const, label: "Ментори", icon: GraduationCap, count: mentors.length },
         { key: "rubric" as const, label: "Рубрика", icon: BookOpen, count: criteria.length },
         { key: "theme" as const, label: "Тема", icon: FileText },
         { key: "settings" as const, label: "Настройки", icon: Settings },
@@ -659,6 +685,109 @@ export default function AdminPage() {
                                                     )
                                                 )}
                                                  <button onClick={() => deleteJury(m.id)} className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-md transition-colors">
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* MENTORS TAB */}
+                    {activeTab === "mentors" && (
+                        <div className="space-y-6">
+                            <div className="glass p-8 rounded-md border-l-4 border-violet-500 shadow-xl">
+                                <h3 className="text-xs font-black text-white mb-6 flex items-center gap-2 uppercase tracking-[0.2em] font-sans">
+                                    <Plus className="w-4 h-4 text-violet-400" /> Добави Ментор
+                                </h3>
+                                <div className="flex gap-4">
+                                    <input
+                                        value={newMentorName}
+                                        onChange={e => setNewMentorName(e.target.value)}
+                                        onKeyDown={e => e.key === "Enter" && addMentor()}
+                                        placeholder="Пълно име..."
+                                        className="flex-1 p-4 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-all text-sm font-sans"
+                                    />
+                                    <button onClick={addMentor} disabled={saving || !newMentorName.trim()} className="px-8 py-3 bg-violet-600 hover:bg-violet-500 text-white rounded-full font-black text-[10px] uppercase tracking-widest disabled:opacity-30 transition-all flex items-center gap-2 shadow-lg active:scale-95">
+                                        {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />} Добави
+                                    </button>
+                                </div>
+                            </div>
+                            {mentors.length === 0 ? (
+                                <p className="text-center text-slate-500 py-8">Все още няма добавени ментори.</p>
+                            ) : (
+                                <div className="space-y-3">
+                                    {mentors.map(m => (
+                                        <div key={m.id} className="bg-white/[0.02] border border-white/5 p-5 rounded-md flex items-center justify-between gap-4 hover:bg-white/[0.04] transition-all group">
+                                            <div className="flex flex-col">
+                                                {editNameId === m.id ? (
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <input
+                                                            autoFocus
+                                                            value={editNameValue}
+                                                            onChange={e => setEditNameValue(e.target.value)}
+                                                            onKeyDown={e => { if (e.key === "Enter") updateName("mentors", m.id, editNameValue); if (e.key === "Escape") setEditNameId(null); }}
+                                                            className="flex-1 p-1.5 bg-slate-900 border border-violet-500/40 rounded-md text-sm font-sans text-white focus:outline-none focus:ring-1 focus:ring-violet-500"
+                                                        />
+                                                        <button onClick={() => updateName("mentors", m.id, editNameValue)} disabled={savingName} className="p-1.5 bg-violet-600 hover:brightness-110 text-white rounded-md transition-colors" title="Запази">
+                                                            {savingName ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                                                        </button>
+                                                        <button onClick={() => setEditNameId(null)} className="p-1.5 text-slate-400 hover:text-white rounded-md transition-colors">
+                                                            <X className="w-4 h-4" />
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-white font-black uppercase tracking-tight font-sans text-sm">{m.name}</span>
+                                                        <button onClick={() => startEditName(m.id, m.name)} className="p-1 text-slate-500 hover:text-violet-400 transition-colors" title="Промени името">
+                                                            <Edit2 className="w-3 h-3" />
+                                                        </button>
+                                                    </div>
+                                                )}
+                                                <span className="text-[10px] text-slate-500 font-sans mt-0.5 font-bold uppercase tracking-widest opacity-60">Ментор</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 shrink-0">
+                                                {editPasscodeId === m.id ? (
+                                                    <div className="flex items-center gap-1.5">
+                                                        <input
+                                                            autoFocus
+                                                            value={editPasscodeValue}
+                                                            onChange={e => setEditPasscodeValue(e.target.value.toUpperCase())}
+                                                            onKeyDown={e => { if (e.key === "Enter") updatePasscode("mentors", m.id, editPasscodeValue); if (e.key === "Escape") setEditPasscodeId(null); }}
+                                                            placeholder="нова парола..."
+                                                            maxLength={12}
+                                                            className="w-28 p-1.5 bg-slate-900 border border-violet-500/40 rounded-xl text-xs font-mono text-violet-400 text-center focus:outline-none focus:ring-1 focus:ring-violet-500"
+                                                        />
+                                                        <button onClick={() => updatePasscode("mentors", m.id, editPasscodeValue)} disabled={savingPasscode} className="p-1.5 bg-violet-600 hover:brightness-110 text-white rounded-lg transition-colors" title="Запази">
+                                                            {savingPasscode ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
+                                                        </button>
+                                                         <button onClick={() => updatePasscode("mentors", m.id, "")} disabled={savingPasscode} className="p-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-md transition-colors" title="Генерирай нова">
+                                                            <RefreshCw className="w-3 h-3" />
+                                                        </button>
+                                                        <button onClick={() => setEditPasscodeId(null)} className="p-1.5 text-slate-400 hover:text-white rounded-md transition-colors">
+                                                            <X className="w-3 h-3" />
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    m.passcode && (
+                                                        <div className="flex items-center gap-1">
+                                                            <button
+                                                                onClick={() => copyPasscode(m.id, m.passcode!)}
+                                                                className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-md text-xs font-mono text-violet-400 transition-colors"
+                                                                title="Копирай паролата"
+                                                            >
+                                                                {copiedId === m.id ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                                                                {m.passcode}
+                                                            </button>
+                                                             <button onClick={() => startEditPasscode(m.id, m.passcode!)} className="p-1.5 text-slate-500 hover:text-violet-400 hover:bg-violet-500/10 rounded-md transition-colors" title="Промени паролата">
+                                                                <Edit2 className="w-3 h-3" />
+                                                            </button>
+                                                        </div>
+                                                    )
+                                                )}
+                                                 <button onClick={() => deleteMentor(m.id)} className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-md transition-colors">
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
                                             </div>
