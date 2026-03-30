@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
     Users, GraduationCap, LogOut, ArrowRight,
-    CheckCircle2, Loader2, Search, Filter
+    CheckCircle2, Loader2, Search
 } from "lucide-react";
 
 type Team = {
@@ -29,17 +29,33 @@ export default function MentorDashboard() {
         const session = JSON.parse(stored);
         setMentorName(session.name);
 
-        fetch("/api/mentor/feedback", {
-            headers: { "x-mentor-passcode": session.passcode }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                setTeams(data.teams);
+        const loadData = async () => {
+            try {
+                // 1. Load all teams
+                const teamsRes = await fetch("/api/teams");
+                const teamsData = await teamsRes.json();
+                const allTeams = teamsData.teams || [];
+
+                // 2. Load my feedback
+                const feedbackRes = await fetch(`/api/mentor/feedback?mentorId=${session.id}`);
+                const feedbackData = await feedbackRes.json();
+                const myFeedback = feedbackData.feedback || [];
+                const commentedIds = new Set(myFeedback.map((f: any) => f.team_id));
+
+                // 3. Combine
+                setTeams(allTeams.map((t: any) => ({
+                    ...t,
+                    hasFeedback: commentedIds.has(t.id)
+                })));
+
+            } catch (err) {
+                console.error("Dashboard load failed", err);
+            } finally {
+                setLoading(false);
             }
-        })
-        .catch(console.error)
-        .finally(() => setLoading(false));
+        };
+
+        loadData();
     }, [router]);
 
     const handleLogout = () => {
@@ -63,8 +79,8 @@ export default function MentorDashboard() {
         <div className="animate-in fade-in duration-500 min-h-screen">
             <header className="flex items-center justify-between px-8 py-6 bg-bg-main/80 backdrop-blur-md border-b border-white/5 sticky top-0 z-[50]">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-md bg-white flex items-center justify-center shadow-xl">
-                        <GraduationCap className="w-6 h-6 text-brand-dark" />
+                    <div className="w-12 h-12 rounded-md bg-white flex items-center justify-center shadow-xl text-brand-dark">
+                        <GraduationCap className="w-6 h-6" />
                     </div>
                     <div>
                         <h1 className="text-3xl font-display font-black text-white uppercase tracking-tight leading-none mb-1">Табло на Ментора</h1>
@@ -105,7 +121,9 @@ export default function MentorDashboard() {
                 </div>
 
                 <div className="mb-8 relative group">
-                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-white transition-colors" />
+                    <div className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600">
+                        <Search className="w-5 h-5" />
+                    </div>
                     <input 
                         type="text"
                         value={searchQuery}

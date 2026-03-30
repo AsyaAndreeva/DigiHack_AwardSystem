@@ -56,8 +56,12 @@ export default function MentorLogin() {
                 setLoading(false);
                 return;
             }
-            localStorage.setItem("mentorId", d.id);
-            localStorage.setItem("mentorName", d.name);
+            const session = {
+                id: d.id,
+                name: d.name,
+                passcode: passcode.trim().toUpperCase()
+            };
+            localStorage.setItem("mentor_session", JSON.stringify(session));
             router.push("/mentor-dashboard");
         } catch {
             setError("Грешка при свързване.");
