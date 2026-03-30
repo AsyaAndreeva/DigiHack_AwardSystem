@@ -115,6 +115,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true, id: rows[0].id, name: rows[0].name });
     }
 
+    if (type === 'mentor') {
+        const rows = await sql`SELECT id, name FROM mentors WHERE passcode = ${code} LIMIT 1`;
+        if (rows.length === 0) {
+          recordFailedAttempt(ip);
+          return NextResponse.json({ error: 'Грешна парола. Опитайте отново.' }, { status: 401 });
+        }
+        resetAttempts(ip);
+        return NextResponse.json({ success: true, id: rows[0].id, name: rows[0].name });
+      }
+
     if (type === 'team') {
       const rows = await sql`SELECT id, name FROM teams WHERE passcode = ${code} LIMIT 1`;
       if (rows.length === 0) {

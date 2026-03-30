@@ -1,0 +1,143 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { GraduationCap, ArrowLeft, Loader2, ArrowRight, KeyRound, Lock } from "lucide-react";
+
+export default function MentorLogin() {
+    const [passcode, setPasscode] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [lockoutSeconds, setLockoutSeconds] = useState(0);
+    const lockoutTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+    const router = useRouter();
+
+    useEffect(() => {
+        return () => { if (lockoutTimer.current) clearInterval(lockoutTimer.current); };
+    }, []);
+
+    const startLockoutCountdown = (seconds: number) => {
+        setLockoutSeconds(seconds);
+        if (lockoutTimer.current) clearInterval(lockoutTimer.current);
+        lockoutTimer.current = setInterval(() => {
+            setLockoutSeconds(prev => {
+                if (prev <= 1) {
+                    clearInterval(lockoutTimer.current!);
+                    setError("");
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+    };
+
+    const handleEnter = async () => {
+        if (!passcode.trim() || lockoutSeconds > 0) return;
+        setLoading(true);
+        setError("");
+        try {
+            const res = await fetch("/api/auth/verify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ type: "mentor", passcode: passcode.trim() }),
+            });
+            const d = await res.json();
+
+            if (res.status === 429) {
+                const retryAfter = parseInt(res.headers.get("Retry-After") || "60", 10);
+                startLockoutCountdown(retryAfter);
+                setError(d.error || "Твърде много опити.");
+                setLoading(false);
+                return;
+            }
+
+            if (!res.ok || !d.success) {
+                setError(d.error || "Грешна парола.");
+                setLoading(false);
+                return;
+            }
+            localStorage.setItem("mentorId", d.id);
+            localStorage.setItem("mentorName", d.name);
+            router.push("/mentor-dashboard");
+        } catch {
+            setError("Грешка при свързване.");
+            setLoading(false);
+        }
+    };
+
+    const isLocked = lockoutSeconds > 0;
+
+    return (
+        <div className="animate-in fade-in duration-500 min-h-screen">
+            <header className="flex items-center justify-between px-8 py-6 bg-bg-main/80 backdrop-blur-md border-b border-white/5 sticky top-0 z-[50]">
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={() => router.push('/')}
+                        className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-white hover:text-brand-dark transition-all group"
+                    >
+                        <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
+                    </button>
+                    <div>
+                        <h1 className="text-3xl font-display font-black text-white uppercase tracking-tight leading-none mb-1">Ментор</h1>
+                        <p className="text-[10px] text-slate-500 font-sans font-black uppercase tracking-[0.2em] opacity-60">Вход за ментори</p>
+                    </div>
+                </div>
+            </header>
+
+            <main className="flex flex-col items-center justify-center pt-20 px-4">
+                <div className="w-full max-w-sm">
+                    <div className="text-center mb-12">
+                        <div className={`inline-flex w-16 h-16 rounded-md items-center justify-center shadow-[0_0_30px_rgba(139,92,246,0.3)] mb-6 transition-colors ${isLocked ? 'bg-red-500/20' : 'bg-violet-600'}`}>
+                            {isLocked ? <Lock className="w-8 h-8 text-red-400" /> : <GraduationCap className="w-8 h-8 text-white" />}
+                        </div>
+                        <h1 className="text-4xl font-display font-black text-white mb-2 uppercase tracking-tight">Вход за Ментори</h1>
+                        <p className="text-slate-500 text-sm font-sans font-medium uppercase tracking-widest opacity-80">Код за достъп</p>
+                    </div>
+
+                    <div className={`glass p-8 rounded-md border-l-4 space-y-6 transition-colors ${isLocked ? 'border-red-500/50' : 'border-violet-500'}`}>
+                        <div className="space-y-3">
+                            <label className="text-xs font-black text-slate-400 ml-1 flex items-center gap-2 uppercase tracking-widest font-sans">
+                                <KeyRound className="w-4 h-4 text-violet-400" /> Парола за ментор
+                            </label>
+                            <input
+                                type="password"
+                                value={passcode}
+                                onChange={(e) => setPasscode(e.target.value.toUpperCase())}
+                                onKeyDown={(e) => { if (e.key === 'Enter') handleEnter(); }}
+                                placeholder="MNT..."
+                                maxLength={8}
+                                disabled={isLocked}
+                                className="w-full p-5 bg-black/40 border border-white/10 rounded-md text-white placeholder:text-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all tracking-[0.4em] text-center font-mono text-2xl uppercase disabled:opacity-40 disabled:cursor-not-allowed"
+                            />
+                            {error && (
+                                <p className={`text-xs font-bold uppercase tracking-wider ml-1 mt-2 ${isLocked ? 'text-orange-400' : 'text-red-500'}`}>
+                                    {error}
+                                </p>
+                            )}
+                        </div>
+
+                        <button
+                            onClick={handleEnter}
+                            disabled={!passcode.trim() || loading || isLocked}
+                            className="w-full flex items-center justify-center gap-3 py-4 px-6 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-full font-bold transition-all shadow-[0_0_20px_rgba(139,92,246,0.2)] active:scale-95"
+                        >
+                            {loading ? (
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                            ) : isLocked ? (
+                                <div className="flex items-center gap-2 font-mono text-sm">
+                                    <Lock className="w-4 h-4" />
+                                    <span>Заключено за {lockoutSeconds}с</span>
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-2">
+                                    <span>Влезте в таблото</span>
+                                    <ArrowRight className="w-5 h-5" />
+                                </div>
+                            )}
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
+}

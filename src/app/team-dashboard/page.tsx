@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, Save, Loader2, Link as LinkIcon, FileText, CheckCircle2, ArrowLeft, Activity, AlertCircle } from "lucide-react";
+import { LogOut, Save, Loader2, Link as LinkIcon, FileText, CheckCircle2, ArrowLeft, Activity, AlertCircle, GraduationCap } from "lucide-react";
 
 export default function TeamDashboard() {
     const [teamId, setTeamId] = useState<string | null>(null);
@@ -20,6 +20,7 @@ export default function TeamDashboard() {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [links, setLinks] = useState<{title: string, url: string}[]>([]);
     const [lastSavedData, setLastSavedData] = useState<any>(null);
+    const [mentorFeedback, setMentorFeedback] = useState<{comment: string, created_at: string, mentor_name: string}[]>([]);
 
     // UI State
     const [isSaving, setIsSaving] = useState(false);
@@ -59,6 +60,14 @@ export default function TeamDashboard() {
                 }
             })
             .catch(err => console.error("Could not fetch deadline", err));
+
+        // Fetch mentor feedback
+        fetch(`/api/mentor/feedback?teamId=${storedTeamId}`, { cache: 'no-store' })
+            .then(res => res.json())
+            .then(data => {
+                if (data.feedback) setMentorFeedback(data.feedback);
+            })
+            .catch(err => console.error("Could not fetch mentor feedback", err));
     }, [router]);
 
     useEffect(() => {
@@ -425,11 +434,43 @@ export default function TeamDashboard() {
                         ) : (
                             <>
                                 <Save className="w-5 h-5" />
-                                <span>Запази подаването на проекта</span>
+                            <span>Запази подаването на проекта</span>
                             </>
                         )}
                     </button>
                 </form>
+
+                {/* Mentor Feedback Section */}
+                <div className="mt-20 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-md bg-violet-600/10 flex items-center justify-center text-violet-400">
+                           <GraduationCap className="w-6 h-6" />
+                        </div>
+                        <div>
+                             <h2 className="text-2xl font-display font-black text-white uppercase tracking-tight">Обратна връзка от менторите</h2>
+                             <p className="text-slate-500 text-xs font-sans font-medium uppercase tracking-widest opacity-80">Какво казват експертите?</p>
+                        </div>
+                    </div>
+
+                    {mentorFeedback.length === 0 ? (
+                        <div className="glass p-10 rounded-md text-center border-dashed border-2 border-white/5 opacity-60">
+                            <AlertCircle className="w-10 h-10 text-slate-700 mx-auto mb-3" />
+                            <p className="text-slate-500 text-sm font-sans font-bold uppercase tracking-widest">Все още няма коментари от ментори</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            {mentorFeedback.map((f: any, idx) => (
+                                <div key={idx} className="glass p-8 rounded-md border-l-4 border-violet-500 shadow-xl bg-violet-500/5 hover:bg-violet-500/10 transition-colors">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h4 className="text-violet-400 font-display font-black text-lg uppercase tracking-tight">{f.mentor_name}</h4>
+                                        <span className="text-[9px] text-slate-600 font-bold uppercase tracking-[0.2em]">{new Date(f.created_at).toLocaleDateString('bg-BG')}</span>
+                                    </div>
+                                    <p className="text-white text-lg font-sans leading-relaxed italic">&ldquo;{f.comment}&rdquo;</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
                 </>
             )}
             </main>
