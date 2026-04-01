@@ -60,6 +60,8 @@ export async function PATCH(req: Request) {
 
 export async function DELETE(req: Request) {
   if (!isAuthorized(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  return NextResponse.json({ error: 'Deletion is disabled' }, { status: 403 });
+  /*
   try {
     const sql = getDb();
     const { id } = await req.json();
@@ -70,4 +72,5 @@ export async function DELETE(req: Request) {
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }
+  */
 }

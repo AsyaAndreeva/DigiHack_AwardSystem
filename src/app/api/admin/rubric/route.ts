@@ -4,8 +4,6 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 export const fetchCache = 'force-no-store';
 
-
-
 function getDb() {
   if (!process.env.DATABASE_URL) throw new Error('No DB URL');
   return neon(process.env.DATABASE_URL);
@@ -56,6 +54,8 @@ export async function PUT(req: Request) {
 
 export async function DELETE(req: Request) {
   if (!isAuthorized(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  return NextResponse.json({ error: 'Deletion is disabled' }, { status: 403 });
+  /*
   try {
     const sql = getDb();
     const { id } = await req.json();
@@ -65,4 +65,5 @@ export async function DELETE(req: Request) {
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }
+  */
 }

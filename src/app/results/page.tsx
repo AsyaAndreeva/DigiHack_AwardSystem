@@ -210,14 +210,14 @@ export default function ResultsPage() {
                 </div>
 
                 <div className="flex items-center gap-6">
-                    <button
+{/* <button
                         onClick={handleDownload}
                         disabled={loading || !data.length}
                         className="flex items-center gap-2 py-3 px-6 rounded-full font-display font-black text-[10px] uppercase tracking-widest transition-all bg-white/5 text-slate-400 border border-white/10 hover:bg-white hover:text-brand-dark disabled:opacity-50"
                     >
                         <Download className="w-4 h-4" />
                         Изтегли CSV
-                    </button>
+                    </button> */}
                     <button
                         onClick={fetchResults}
                         disabled={loading}

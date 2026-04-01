@@ -74,6 +74,8 @@ export async function PATCH(req: Request) {
 // DELETE /api/admin/mentors - Delete mentor
 export async function DELETE(req: Request) {
     if (!checkAdmin(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: 'Deletion is disabled' }, { status: 403 });
+    /*
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: 'No DB URL' }, { status: 500 });
     const sql = neon(process.env.DATABASE_URL);
 
@@ -90,4 +92,5 @@ export async function DELETE(req: Request) {
     } catch (e: any) {
         return NextResponse.json({ error: e.message }, { status: 500 });
     }
+    */
 }

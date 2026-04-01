@@ -409,7 +409,7 @@ export default function AdminPage() {
                                                         {t.passcode}
                                                     </button>
                                                 )}
-                                                <button onClick={() => deleteTeam(t.id)} className="p-2 text-slate-600 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
+{/* <button onClick={() => deleteTeam(t.id)} className="p-2 text-slate-600 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button> */}
                                             </div>
                                         </div>
                                     ))}
@@ -449,7 +449,7 @@ export default function AdminPage() {
                                                         {m.passcode}
                                                     </button>
                                                 )}
-                                                <button onClick={() => deleteMentor(m.id)} className="p-2 text-slate-600 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
+{/* <button onClick={() => deleteMentor(m.id)} className="p-2 text-slate-600 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button> */}
                                             </div>
                                         </div>
                                     ))}
@@ -457,12 +457,117 @@ export default function AdminPage() {
                             </div>
                         )}
 
-                        {/* Fallback for other tabs - they follow same corrected pattern */}
-                        {activeTab !== "teams" && activeTab !== "mentors" && (
-                             <div className="glass p-16 text-center rounded-md border border-dashed border-white/10 opacity-60">
-                                <p className="text-slate-500 font-black uppercase tracking-[0.3em] text-xs">Тази секция е в процес на зареждане...</p>
-                                <button onClick={loadData} className="mt-8 px-8 py-3 bg-white/5 text-white rounded-full hover:bg-white hover:text-brand-dark transition-all font-black text-[10px] uppercase tracking-widest">Кликвайте тук за презареждане</button>
-                             </div>
+                        {/* JURY */}
+                        {activeTab === "jury" && (
+                            <div className="space-y-6">
+                                <div className="glass p-10 rounded-md border-l-4 border-white shadow-xl">
+                                    <h3 className="text-xs font-black text-white mb-6 uppercase tracking-widest flex items-center gap-2"><Plus className="w-4 h-4" /> Добави Жури</h3>
+                                    <div className="flex gap-4">
+                                        <input value={newJuryName} onChange={e => setNewJuryName(e.target.value)} onKeyDown={e => e.key === "Enter" && addJury()} placeholder="Име на журито..." className="flex-1 p-5 bg-black/50 border border-white/10 rounded-md text-white focus:ring-1 focus:ring-white outline-none text-sm font-sans" />
+                                        <button onClick={addJury} disabled={saving || !newJuryName.trim()} className="px-10 bg-white text-brand-dark rounded-full font-black text-[10px] uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-xl">Добави</button>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {jury.map(j => (
+                                        <div key={j.id} className="bg-white/[0.02] border border-white/5 p-6 rounded-md flex items-center justify-between hover:bg-white/[0.05] transition-all group">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-10 h-10 rounded-md bg-white/5 flex items-center justify-center text-slate-500 group-hover:bg-white group-hover:text-brand-dark transition-all">
+                                                    <Shield className="w-5 h-5" />
+                                                </div>
+                                                <div>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-white font-bold text-sm uppercase tracking-tight">{j.name}</span>
+                                                        <button onClick={() => { setEditNameId(j.id); setEditNameValue(j.name); }} className="text-slate-600 hover:text-white opacity-0 group-hover:opacity-100 transition-all"><Edit2 className="w-3 h-3" /></button>
+                                                    </div>
+                                                    <p className="text-[9px] text-slate-500 font-black uppercase tracking-widest mt-1 opacity-60">{j.evaluations_count || 0} оценки</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                {j.passcode && (
+                                                    <button onClick={() => copyPasscode(j.id, j.passcode!)} className="bg-white/5 hover:bg-white/10 px-4 py-2 rounded-md text-xs font-mono text-white flex items-center gap-3 border border-white/5 transition-all">
+                                                        {copiedId === j.id ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3 text-slate-500" />}
+                                                        {j.passcode}
+                                                    </button>
+                                                )}
+                                                {/* <button onClick={() => deleteJury(j.id)} className="p-2 text-slate-600 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button> */}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* RUBRIC / QUESTIONS */}
+                        {activeTab === "rubric" && (
+                            <div className="space-y-6">
+                                <div className="glass p-10 rounded-md border-l-4 border-white shadow-xl">
+                                    <h3 className="text-xs font-black text-white mb-6 uppercase tracking-widest flex items-center gap-2"><Plus className="w-4 h-4" /> Добави Критерий</h3>
+                                    <div className="grid gap-4 sm:grid-cols-2 mb-6">
+                                        <input value={newCrit.category} onChange={e => setNewCrit({...newCrit, category: e.target.value})} placeholder="Категория..." className="p-5 bg-black/50 border border-white/10 rounded-md text-white focus:ring-1 focus:ring-white outline-none text-sm font-sans" />
+                                        <input value={newCrit.criterion} onChange={e => setNewCrit({...newCrit, criterion: e.target.value})} placeholder="Критерий..." className="p-5 bg-black/50 border border-white/10 rounded-md text-white focus:ring-1 focus:ring-white outline-none text-sm font-sans" />
+                                        <input value={newCrit.max_score} onChange={e => setNewCrit({...newCrit, max_score: e.target.value})} placeholder="Макс. точки..." type="number" className="p-5 bg-black/50 border border-white/10 rounded-md text-white focus:ring-1 focus:ring-white outline-none text-sm font-sans" />
+                                    </div>
+                                    <button onClick={addCriterion} disabled={saving || !newCrit.category.trim()} className="w-full py-4 bg-white text-brand-dark rounded-full font-black text-[10px] uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-95 shadow-xl">Запази критерий</button>
+                                </div>
+                                <div className="space-y-4">
+                                    {criteria.map((c, idx) => (
+                                        <div key={c.id || idx} className="bg-white/[0.02] border border-white/5 p-6 rounded-md hover:bg-white/[0.05] transition-all">
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <span className="text-brand-orange font-black text-[10px] uppercase tracking-[0.2em]">{c.category}</span>
+                                                    <h4 className="text-white font-bold text-sm mt-1">{c.criterion}</h4>
+                                                </div>
+                                                <div className="text-right">
+                                                    <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest">Максимално: {c.max_score}т.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* THEME */}
+                        {activeTab === "theme" && (
+                            <div className="space-y-6">
+                                <div className="glass p-10 rounded-md border-l-4 border-white shadow-xl space-y-8">
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Заглавие на събитието</label>
+                                        <input value={themeTitle} onChange={e => setThemeTitle(e.target.value)} placeholder="Дигитален маратон..." className="w-full p-5 bg-black/50 border border-white/10 rounded-md text-white focus:ring-1 focus:ring-white outline-none text-sm font-sans" />
+                                    </div>
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Описание / Правила</label>
+                                        <textarea value={themeDescription} onChange={e => setThemeDescription(e.target.value)} rows={4} placeholder="Описание..." className="w-full p-5 bg-black/50 border border-white/10 rounded-md text-white focus:ring-1 focus:ring-white outline-none text-sm font-sans" />
+                                    </div>
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Бранд Цвят (HEX)</label>
+                                        <div className="flex gap-4">
+                                            <input value={themeColor} onChange={e => setThemeColor(e.target.value)} className="flex-1 p-5 bg-black/50 border border-white/10 rounded-md text-white focus:ring-1 focus:ring-white outline-none text-sm font-mono" />
+                                            <div className="w-16 h-16 rounded-md border border-white/10" style={{ backgroundColor: themeColor }} />
+                                        </div>
+                                    </div>
+                                    <button onClick={saveSettings} disabled={saving} className="w-full py-5 bg-white text-brand-dark rounded-full font-black text-[10px] uppercase tracking-widest transition-all hover:scale-[1.01] active:scale-95 shadow-xl">Запази Темата</button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* SETTINGS */}
+                        {activeTab === "settings" && (
+                            <div className="space-y-6">
+                                <div className="glass p-10 rounded-md border-l-4 border-white shadow-xl space-y-8">
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Краен срок за оценяване</label>
+                                        <input type="datetime-local" value={deadline} onChange={e => setDeadline(e.target.value)} className="w-full p-5 bg-black/50 border border-white/10 rounded-md text-white focus:ring-1 focus:ring-white outline-none text-sm font-sans" />
+                                    </div>
+                                    <button onClick={saveSettings} disabled={saving} className="w-full py-5 bg-white text-brand-dark rounded-full font-black text-[10px] uppercase tracking-widest transition-all hover:scale-[1.01] active:scale-95 shadow-xl">Обнови Настройките</button>
+                                </div>
+                                <div className="bg-red-500/10 border border-dashed border-red-500/20 p-10 rounded-md">
+                                    <h4 className="text-red-500 text-xs font-black uppercase tracking-widest mb-4">Опасна Зона</h4>
+                                    <p className="text-slate-500 text-xs mb-6 uppercase tracking-widest leading-relaxed">Внимание! Тези действия са необратими и засягат всички резултати.</p>
+                                    {/* <button onClick={clearEvaluations} className="px-8 py-3 bg-red-500/20 text-red-500 border border-red-500/40 rounded-full hover:bg-red-500 hover:text-white transition-all font-black text-[10px] uppercase tracking-widest">Изчисти всички оценки</button> */}
+                                    <span className="text-red-500/50 text-[9px] font-black uppercase tracking-widest">Бутонът е деактивиран по заявка на администратора.</span>
+                                </div>
+                            </div>
                         )}
                     </div>
                 )}
